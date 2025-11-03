@@ -43,7 +43,7 @@
             filter: grayscale(0.8);
         }
         .badge-icon {
-            font-size: 5rem;
+            font-size: 3rem;
             animation: bounce 2s infinite;
         }
         .badge-card.earned .badge-icon {
@@ -51,15 +51,15 @@
         }
         .sparkle {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
+            top: 8px;
+            right: 8px;
+            font-size: 1.2rem;
             animation: sparkle 1.5s infinite;
         }
         .celebration-section {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             margin-bottom: 30px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(252, 182, 159, 0.3);
@@ -67,8 +67,8 @@
         .challenge-button {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 12px 30px;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 50px;
             color: white;
@@ -81,31 +81,31 @@
             color: white;
         }
         .section-title {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
         }
         .congrats-emoji {
-            font-size: 3rem;
+            font-size: 2.5rem;
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .badge-name {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin: 15px 0 10px;
+            margin: 10px 0 8px;
         }
         .badge-description {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.9;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .badge-condition {
             background: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: inline-block;
         }
         .badge-card.locked .badge-condition {
@@ -157,7 +157,7 @@
             <h2 class="section-title">🌟 다음 뱃지에 도전해보세요!</h2>
             <div class="row g-4 mb-4">
                 <div class="col-md-6 mx-auto">
-                    <div id="nextBadgeCard" class="badge-card next-challenge p-5 text-center">
+                    <div id="nextBadgeCard" class="badge-card next-challenge p-4 text-center">
                         <span class="sparkle">✨</span>
                         <div id="nextBadgeIcon" class="badge-icon mb-3"></div>
                         <div id="nextBadgeName" class="badge-name"></div>
@@ -306,7 +306,7 @@
                 
                 document.getElementById('earnedBadges').innerHTML = earnedBadges.map(badge => `
                     <div class="col-md-4 col-6">
-                        <div class="badge-card earned p-4 text-center h-100">
+                        <div class="badge-card earned p-3 text-center h-100">
                             <div class="badge-icon">${badge.icon}</div>
                             <div class="badge-name">${badge.name}</div>
                             <div class="badge-description">${badge.description}</div>
@@ -367,7 +367,7 @@
                                     const hasBadge = userBadgeIds.includes(badge.id);
                                     return `
                                         <div class="col-md-4 col-6">
-                                            <div class="badge-card ${hasBadge ? 'earned' : 'locked'} p-4 text-center h-100">
+                                            <div class="badge-card ${hasBadge ? 'earned' : 'locked'} p-3 text-center h-100">
                                                 ${hasBadge ? '<span class="sparkle">✨</span>' : ''}
                                                 <div class="badge-icon" ${!hasBadge ? 'style="opacity: 0.5;"' : ''}>${badge.icon}</div>
                                                 <div class="badge-name">${badge.name}</div>
