@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        #comparisonChart {
+            max-height: 300px !important;
+        }
         .ranking-table tbody tr:hover {
             background-color: #f8f9fa;
         }
@@ -166,7 +173,9 @@
         <div class="card border-0 shadow-sm mt-4">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-4">내 vs 평균 vs 상위권</h5>
-                <canvas id="comparisonChart" height="100"></canvas>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -277,6 +286,12 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -284,7 +299,11 @@
                     },
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '절약량 (kWh)'
+                            }
                         }
                     }
                 }
