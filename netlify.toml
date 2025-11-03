@@ -1,6 +1,6 @@
 [build]
   publish = "frontend"
-  command = "echo 'No build needed'"
+  command = "npm run build"
 
 [[redirects]]
   from = "/*"

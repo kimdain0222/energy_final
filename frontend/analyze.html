@@ -88,6 +88,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.API_BASE_URL = window.API_BASE_URL || '';
+    </script>
     <script src="js/common.js"></script>
     <script>
         // 데모 샘플 클릭
@@ -110,7 +113,7 @@
 
             // 분석 결과를 로컬스토리지에 저장하고 결과 페이지로 이동
             try {
-                const response = await fetch('/api/analyze', {
+                const response = await fetch(getApiUrl('/api/analyze'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 

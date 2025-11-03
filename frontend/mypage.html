@@ -78,6 +78,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.API_BASE_URL = window.API_BASE_URL || '';
+    </script>
     <script src="js/common.js"></script>
     <script>
         // 사용자 정보 확인
@@ -96,7 +99,7 @@
             async function loadUserInfo() {
                 try {
                     console.log('사용자 정보 로드 시작:', user.id);
-                    const response = await fetch(`/api/user/${user.id}`);
+                    const response = await fetch(getApiUrl(`/api/user/${user.id}`));
                     const data = await response.json();
                     console.log('사용자 정보 응답:', data);
 
@@ -246,7 +249,7 @@
             async function loadAnalysisHistory() {
                 try {
                     console.log('분석 기록 로드 시작:', user.id);
-                    const response = await fetch(`/api/user/${user.id}`);
+                    const response = await fetch(getApiUrl(`/api/user/${user.id}`));
                     const data = await response.json();
                     console.log('분석 기록 응답:', data);
 
@@ -306,7 +309,7 @@
             async function loadViewedPrograms() {
                 try {
                     console.log('조회 기록 로드 시작:', user.id);
-                    const response = await fetch(`/api/user/${user.id}`);
+                    const response = await fetch(getApiUrl(`/api/user/${user.id}`));
                     const data = await response.json();
                     console.log('조회 기록 응답:', data);
 

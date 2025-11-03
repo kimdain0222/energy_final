@@ -160,6 +160,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.API_BASE_URL = window.API_BASE_URL || '';
+    </script>
     <script src="js/common.js"></script>
     <script>
         const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -207,7 +210,7 @@
         // 챌린지 조회
         async function loadChallenge() {
             try {
-                const response = await fetch(`/api/challenge/user/${user.id}`);
+                const response = await fetch(getApiUrl(`/api/challenge/user/${user.id}`));
                 const data = await response.json();
 
                 if (data.success) {
@@ -367,7 +370,7 @@
         // 랭킹 조회
         async function loadMyRank() {
             try {
-                const response = await fetch('/api/ranking');
+                const response = await fetch(getApiUrl('/api/ranking'));
                 const data = await response.json();
 
                 if (data.success) {
@@ -384,7 +387,7 @@
         // 배지 목록 로드
         async function loadBadges() {
             try {
-                const response = await fetch('/api/badges');
+                const response = await fetch(getApiUrl('/api/badges'));
                 const data = await response.json();
 
                 if (data.success) {
@@ -440,7 +443,7 @@
         // 통계 로드
         async function loadStats() {
             try {
-                const response = await fetch('/api/challenge/stats');
+                const response = await fetch(getApiUrl('/api/challenge/stats'));
                 const data = await response.json();
 
                 if (data.success) {
@@ -481,7 +484,7 @@
             }
 
             try {
-                const response = await fetch('/api/challenge/create', {
+                const response = await fetch(getApiUrl('/api/challenge/create'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

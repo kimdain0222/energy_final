@@ -3,10 +3,20 @@
 // API Base URL 설정 (환경 변수 또는 기본값)
 const API_BASE_URL = window.API_BASE_URL || '';
 
+// API URL 생성 헬퍼 함수
+function getApiUrl(path) {
+    if (path.startsWith('http')) {
+        return path;
+    }
+    // path가 /로 시작하면 그대로 사용
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${API_BASE_URL}${cleanPath}`;
+}
+
 // API 호출 헬퍼 함수
 async function apiCall(url, options = {}) {
     try {
-        const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+        const fullUrl = getApiUrl(url);
         const response = await fetch(fullUrl, {
             headers: {
                 'Content-Type': 'application/json',
