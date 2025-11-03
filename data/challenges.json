@@ -1,0 +1,56 @@
+{
+  "activeChallenges": [],
+  "completedChallenges": [],
+  "badges": [
+    {
+      "id": "badge001",
+      "name": "첫 절약",
+      "description": "첫 번째 목표 설정",
+      "icon": "🌱",
+      "condition": "첫 목표 설정"
+    },
+    {
+      "id": "badge002",
+      "name": "에너지 마스터",
+      "description": "100kWh 절약 달성",
+      "icon": "⚡",
+      "condition": "100kWh 절약"
+    },
+    {
+      "id": "badge003",
+      "name": "주간 챔피언",
+      "description": "주간 1위 달성",
+      "icon": "🥇",
+      "condition": "주간 1위"
+    },
+    {
+      "id": "badge004",
+      "name": "지속의 달인",
+      "description": "4주 연속 참여",
+      "icon": "🔥",
+      "condition": "4주 연속 참여"
+    },
+    {
+      "id": "badge005",
+      "name": "지역 히어로",
+      "description": "지역별 1위 달성",
+      "icon": "🏆",
+      "condition": "지역별 1위"
+    },
+    {
+      "id": "badge006",
+      "name": "50kWh 클럽",
+      "description": "50kWh 절약 달성",
+      "icon": "💚",
+      "condition": "50kWh 절약"
+    },
+    {
+      "id": "badge007",
+      "name": "목표 달성왕",
+      "description": "목표 150% 초과 달성",
+      "icon": "🎯",
+      "condition": "목표 150% 초과"
+    }
+  ]
+}
+

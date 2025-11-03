@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랭킹 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .ranking-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .top-rank {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            font-weight: bold;
+        }
+        .my-rank {
+            background-color: #e7f3ff;
+            border-left: 4px solid #0d6efd;
+        }
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+        }
+        .rank-1 { background: #ffd700; color: #000; }
+        .rank-2 { background: #c0c0c0; color: #000; }
+        .rank-3 { background: #cd7f32; color: #fff; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">대시보드</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="challenge.html">챌린지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ranking.html">랭킹</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="programs.html">지원사업</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold mb-2">🏆 에너지 절약 랭킹</h2>
+                <p class="text-muted">다른 사용자와 절약량을 비교해보세요</p>
+            </div>
+        </div>
+
+        <!-- 필터 -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">지역</label>
+                        <select class="form-select" id="filterRegion" onchange="loadRankings()">
+                            <option value="전체">전체</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                            <option value="부산">부산</option>
+                            <option value="대구">대구</option>
+                            <option value="대전">대전</option>
+                            <option value="광주">광주</option>
+                            <option value="울산">울산</option>
+                            <option value="세종">세종</option>
+                            <option value="경북">경북</option>
+                            <option value="경남">경남</option>
+                            <option value="충북">충북</option>
+                            <option value="충남">충남</option>
+                            <option value="전북">전북</option>
+                            <option value="전남">전남</option>
+                            <option value="강원">강원</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">주택 유형</label>
+                        <select class="form-select" id="filterHousingType" onchange="loadRankings()">
+                            <option value="전체">전체</option>
+                            <option value="아파트">아파트</option>
+                            <option value="주택">주택</option>
+                            <option value="오피스텔">오피스텔</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-secondary w-100" onclick="resetFilters()">필터 초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 내 순위 카드 -->
+        <div class="card border-0 shadow-lg mb-4 bg-primary text-white" id="myRankCard" style="display: none;">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center">
+                        <h2 class="fw-bold mb-0" id="myRankNumber">-</h2>
+                        <small>위</small>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold mb-1" id="myRankName">-</h5>
+                        <p class="mb-0">절약량: <span id="myRankSaved">0</span> kWh | 달성률: <span id="myRankAchievement">0</span>%</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="challenge.html" class="btn btn-light">챌린지 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 리더보드 -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table ranking-table mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 80px;">순위</th>
+                                <th>사용자</th>
+                                <th>지역</th>
+                                <th class="text-end">절약량</th>
+                                <th class="text-end">목표달성률</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingTable">
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">로딩 중...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비교 차트 -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">내 vs 평균 vs 상위권</h5>
+                <canvas id="comparisonChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!user.id) {
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.html';
+        }
+
+        let comparisonChart = null;
+
+        async function loadRankings() {
+            const region = document.getElementById('filterRegion').value;
+            const housingType = document.getElementById('filterHousingType').value;
+
+            try {
+                let url = '/api/ranking?';
+                if (region && region !== '전체') url += `region=${encodeURIComponent(region)}&`;
+                if (housingType && housingType !== '전체') url += `housingType=${encodeURIComponent(housingType)}&`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayRankings(data.rankings);
+                    updateComparisonChart(data.rankings);
+                }
+            } catch (error) {
+                console.error('랭킹 조회 실패:', error);
+            }
+        }
+
+        function displayRankings(rankings) {
+            const tbody = document.getElementById('rankingTable');
+            const myRanking = rankings.find(r => r.id === user.id);
+
+            if (myRanking) {
+                document.getElementById('myRankCard').style.display = 'block';
+                document.getElementById('myRankNumber').textContent = myRanking.rank;
+                document.getElementById('myRankName').textContent = myRanking.name || user.name;
+                document.getElementById('myRankSaved').textContent = (myRanking.savedKwh || 0).toLocaleString();
+                document.getElementById('myRankAchievement').textContent = myRanking.achievementRate || 0;
+            } else {
+                document.getElementById('myRankCard').style.display = 'none';
+            }
+
+            tbody.innerHTML = rankings.slice(0, 50).map((r, index) => {
+                const rankClass = r.rank === 1 ? 'rank-1' : r.rank === 2 ? 'rank-2' : r.rank === 3 ? 'rank-3' : '';
+                const rowClass = r.id === user.id ? 'my-rank' : (r.rank <= 3 ? 'top-rank' : '');
+                
+                return `
+                    <tr class="${rowClass}">
+                        <td>
+                            ${r.rank <= 3 ? `<span class="rank-badge ${rankClass}">${r.rank}</span>` : r.rank}
+                        </td>
+                        <td>
+                            <strong>${r.name || '사용자'}</strong>
+                            ${r.rank === 1 ? ' 🥇' : r.rank === 2 ? ' 🥈' : r.rank === 3 ? ' 🥉' : ''}
+                        </td>
+                        <td>${r.region || '-'}</td>
+                        <td class="text-end">
+                            <strong class="text-success">${(r.savedKwh || 0).toLocaleString()}</strong> kWh
+                        </td>
+                        <td class="text-end">
+                            <span class="badge ${r.achievementRate >= 100 ? 'bg-success' : 'bg-warning'}">
+                                ${r.achievementRate || 0}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateComparisonChart(rankings) {
+            const myRanking = rankings.find(r => r.id === user.id);
+            const avgSaved = rankings.length > 0 
+                ? Math.round(rankings.reduce((sum, r) => sum + (r.savedKwh || 0), 0) / rankings.length)
+                : 0;
+            const topSaved = rankings.length > 0 
+                ? Math.round(rankings.slice(0, Math.ceil(rankings.length * 0.1)).reduce((sum, r) => sum + (r.savedKwh || 0), 0) / Math.ceil(rankings.length * 0.1))
+                : 0;
+
+            const ctx = document.getElementById('comparisonChart');
+            
+            if (comparisonChart) {
+                comparisonChart.destroy();
+            }
+
+            comparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['내 절약량', '평균', '상위 10%'],
+                    datasets: [{
+                        label: '절약량 (kWh)',
+                        data: [
+                            myRanking?.savedKwh || 0,
+                            avgSaved,
+                            topSaved
+                        ],
+                        backgroundColor: ['#0d6efd', '#6c757d', '#ffc107']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('filterRegion').value = '전체';
+            document.getElementById('filterHousingType').value = '전체';
+            loadRankings();
+        }
+
+        loadRankings();
+    </script>
+</body>
+</html>
+

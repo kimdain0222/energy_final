@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>챌린지 상세 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a href="challenge.html" class="text-muted">← 챌린지로</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div id="challengeDetail">
+            <!-- 동적으로 생성 -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!user.id) {
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.html';
+        }
+
+        let chartInstance = null;
+        let userEnergyTier = 2; // 기본값 2구간
+
+        // kWh → 금액 환산 함수
+        function convertKwhToMoney(kwh, tier = null) {
+            const rates = {
+                1: 93.3,    // 1구간 (200kWh 이하)
+                2: 187.9,   // 2구간 (201-400kWh)
+                3: 280.6,   // 3구간 (401kWh 이상)
+                4: 416.1    // 4구간 (특고압)
+            };
+            
+            const rate = tier ? rates[tier] || 187.9 : 187.9;
+            return Math.round(kwh * rate);
+        }
+
+        // 금액 포맷팅
+        function formatMoney(amount) {
+            return amount.toLocaleString() + '원';
+        }
+
+        async function loadChallengeDetail() {
+            try {
+                const response = await fetch(`/api/challenge/user/${user.id}`);
+                const data = await response.json();
+
+                if (data.success && data.challenge) {
+                    userEnergyTier = data.energyTier || 2;
+                    displayChallengeDetail(data.challenge, data.energyTier || 2);
+                } else {
+                    document.getElementById('challengeDetail').innerHTML = `
+                        <div class="alert alert-info">
+                            <p class="mb-0">진행 중인 챌린지가 없습니다. <a href="challenge.html">챌린지를 시작해보세요!</a></p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('챌린지 조회 실패:', error);
+            }
+        }
+
+        function displayChallengeDetail(challenge, tier = 2) {
+            const achievementRate = challenge.achievementRate || 0;
+            const remaining = Math.max(0, (challenge.targetKwh || 0) - (challenge.savedKwh || 0));
+            const daysLeft = Math.ceil((new Date(challenge.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+            const savedKwh = challenge.savedKwh || 0;
+            const targetKwh = challenge.targetKwh || 0;
+
+            // 금액 환산
+            const savedMoney = convertKwhToMoney(savedKwh, tier);
+            const targetMoney = convertKwhToMoney(targetKwh, tier);
+            const remainingMoney = convertKwhToMoney(remaining, tier);
+
+            document.getElementById('challengeDetail').innerHTML = `
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="fw-bold mb-2">${challenge.type === 'weekly' ? '주간' : '월간'} 절약 챌린지</h2>
+                        <p class="text-muted">${challenge.startDate} ~ ${challenge.endDate}</p>
+                        <div class="alert alert-info mb-0">
+                            <small><strong>현재 ${tier}구간 기준</strong>으로 금액을 계산합니다.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 진행률 -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold mb-2">목표 달성률</h3>
+                            <div class="progress-ring mb-3 position-relative" style="width: 200px; height: 200px; margin: 0 auto;">
+                                <canvas id="progressChart" width="200" height="200"></canvas>
+                                <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                    <h2 class="fw-bold mb-0">${achievementRate}%</h2>
+                                    <small class="text-muted">달성</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h4 class="fw-bold text-success">${savedKwh}</h4>
+                                    <p class="text-muted mb-1">절약량 (kWh)</p>
+                                    <p class="text-success fw-bold mb-0">월 ${formatMoney(savedMoney)}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h4 class="fw-bold text-primary">${targetKwh}</h4>
+                                    <p class="text-muted mb-1">목표량 (kWh)</p>
+                                    <p class="text-primary fw-bold mb-0">월 ${formatMoney(targetMoney)}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h4 class="fw-bold text-warning">${remaining}</h4>
+                                    <p class="text-muted mb-1">남은량 (kWh)</p>
+                                    <p class="text-warning fw-bold mb-0">약 ${formatMoney(remainingMoney)}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h4 class="fw-bold text-info">${daysLeft}</h4>
+                                    <p class="text-muted mb-0">남은 일수</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="progress" style="height: 30px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                     role="progressbar" 
+                                     style="width: ${Math.min(achievementRate, 100)}%">
+                                    ${achievementRate}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 절약량 그래프 -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">일별 절약량 추이</h5>
+                        <canvas id="savingsChart" height="100"></canvas>
+                    </div>
+                </div>
+
+                <!-- 절약량 입력 -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">절약량 업데이트</h5>
+                        <form id="updateForm">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label">절약한 전기량 (kWh)</label>
+                                    <input type="number" class="form-control" id="savedKwh" 
+                                           placeholder="예: 15" step="0.1" required oninput="updateSavedMoneyPreview()">
+                                    <small class="text-muted mt-2 d-block" id="savedMoneyPreview">
+                                        예상 절약 금액: <span id="savedMoneyAmount">-</span> (${tier}구간 기준)
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                        업데이트
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            // 원형 차트
+            const progressCtx = document.getElementById('progressChart');
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(progressCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [achievementRate, 100 - achievementRate],
+                        backgroundColor: ['#198754', '#e9ecef'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // 절약량 추이 차트 (더미 데이터)
+            const savingsCtx = document.getElementById('savingsChart');
+            const days = Array.from({ length: daysLeft > 0 ? 30 - daysLeft : 30 }, (_, i) => `Day ${i + 1}`);
+            const savingsData = Array.from({ length: days.length }, () => 
+                Math.random() * 5 + (challenge.savedKwh || 0) / days.length
+            );
+
+            new Chart(savingsCtx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: '일별 절약량 (kWh)',
+                        data: savingsData,
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 절약량 입력 시 금액 미리보기
+            window.updateSavedMoneyPreview = function() {
+                const inputKwh = parseFloat(document.getElementById('savedKwh')?.value || 0);
+                if (inputKwh > 0) {
+                    const money = convertKwhToMoney(inputKwh, tier);
+                    const totalSaved = inputKwh + savedKwh;
+                    const totalMoney = convertKwhToMoney(totalSaved, tier);
+                    
+                    document.getElementById('savedMoneyAmount').textContent = formatMoney(money);
+                    document.getElementById('savedMoneyPreview').style.display = 'block';
+                    document.getElementById('savedMoneyPreview').innerHTML = `
+                        예상 절약 금액: <strong>${formatMoney(money)}</strong> (${tier}구간 기준)<br>
+                        <small class="text-muted">총 절약: ${totalSaved.toFixed(1)}kWh → ${formatMoney(totalMoney)}</small>
+                    `;
+                } else {
+                    document.getElementById('savedMoneyPreview').style.display = 'none';
+                }
+            };
+
+            // 업데이트 폼
+            document.getElementById('updateForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const newKwh = parseFloat(document.getElementById('savedKwh').value);
+                const totalKwh = newKwh + savedKwh;
+                const totalMoney = convertKwhToMoney(totalKwh, tier);
+
+                if (!confirm(`${newKwh.toFixed(1)}kWh를 추가하시겠습니까?\n총 절약: ${totalKwh.toFixed(1)}kWh (월 ${formatMoney(totalMoney)})`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/challenge/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: user.id,
+                            savedKwh: totalKwh
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert(`절약량이 업데이트되었습니다!\n총 절약: ${totalKwh.toFixed(1)}kWh (월 ${formatMoney(totalMoney)})`);
+                        location.reload();
+                    } else {
+                        alert(data.message || '업데이트 실패');
+                    }
+                } catch (error) {
+                    alert('서버 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        loadChallengeDetail();
+    </script>
+</body>
+</html>
+

@@ -24,6 +24,7 @@ app.use(express.static('frontend'));
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const PROGRAMS_FILE = path.join(DATA_DIR, 'programs.json');
+const CHALLENGES_FILE = path.join(DATA_DIR, 'challenges.json');
 
 // 데이터 파일 초기화
 async function initializeData() {
@@ -45,6 +46,26 @@ async function initializeData() {
     await fs.access(PROGRAMS_FILE);
   } catch {
     await fs.writeFile(PROGRAMS_FILE, JSON.stringify([], null, 2));
+  }
+
+  // challenges.json 초기화
+  try {
+    await fs.access(CHALLENGES_FILE);
+  } catch {
+    const defaultChallenges = {
+      activeChallenges: [],
+      completedChallenges: [],
+      badges: [
+        { id: 'badge001', name: '첫 절약', description: '첫 번째 목표 설정', icon: '🌱', condition: '첫 목표 설정' },
+        { id: 'badge002', name: '에너지 마스터', description: '100kWh 절약 달성', icon: '⚡', condition: '100kWh 절약' },
+        { id: 'badge003', name: '주간 챔피언', description: '주간 1위 달성', icon: '🥇', condition: '주간 1위' },
+        { id: 'badge004', name: '지속의 달인', description: '4주 연속 참여', icon: '🔥', condition: '4주 연속 참여' },
+        { id: 'badge005', name: '지역 히어로', description: '지역별 1위 달성', icon: '🏆', condition: '지역별 1위' },
+        { id: 'badge006', name: '50kWh 클럽', description: '50kWh 절약 달성', icon: '💚', condition: '50kWh 절약' },
+        { id: 'badge007', name: '목표 달성왕', description: '목표 150% 초과 달성', icon: '🎯', condition: '목표 150% 초과' }
+      ]
+    };
+    await fs.writeFile(CHALLENGES_FILE, JSON.stringify(defaultChallenges, null, 2));
   }
 }
 
@@ -362,6 +383,21 @@ async function writeProgramsCache(programs) {
   await fs.writeFile(PROGRAMS_FILE, JSON.stringify(programs, null, 2));
 }
 
+// 챌린지 데이터 읽기
+async function readChallenges() {
+  try {
+    const data = await fs.readFile(CHALLENGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return { activeChallenges: [], completedChallenges: [], badges: [] };
+  }
+}
+
+// 챌린지 데이터 쓰기
+async function writeChallenges(challenges) {
+  await fs.writeFile(CHALLENGES_FILE, JSON.stringify(challenges, null, 2));
+}
+
 // ============ API 라우트 ============
 
 // 회원가입
@@ -515,6 +551,255 @@ app.post('/api/programs/refresh', async (req, res) => {
     res.json({ success: true, programs, total: programs.length });
   } catch (error) {
     res.status(500).json({ success: false, message: '새로고침 실패' });
+  }
+});
+
+// ============ 챌린지 API ============
+
+// 챌린지 생성
+app.post('/api/challenge/create', async (req, res) => {
+  try {
+    const { userId, type, targetKwh, targetAmount, startDate } = req.body;
+
+    if (!userId || !type || (!targetKwh && !targetAmount)) {
+      return res.status(400).json({ success: false, message: '필수 정보를 입력해주세요.' });
+    }
+
+    const users = await readUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // 기간 계산
+    const days = type === 'weekly' ? 7 : 30;
+    const endDate = new Date(startDate || new Date());
+    endDate.setDate(endDate.getDate() + days);
+
+    const challenge = {
+      id: `challenge_${Date.now()}`,
+      userId,
+      type,
+      targetKwh: targetKwh || 0,
+      targetAmount: targetAmount || 0,
+      savedKwh: 0,
+      savedAmount: 0,
+      startDate: startDate || new Date().toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      achievementRate: 0,
+      status: 'active',
+      createdAt: new Date().toISOString()
+    };
+
+    // 사용자 정보 업데이트
+    if (!user.currentChallenge) {
+      user.currentChallenge = challenge;
+      user.totalSaved = user.totalSaved || 0;
+      user.points = user.points || 0;
+      user.badges = user.badges || [];
+      
+      // 첫 절약 배지 체크
+      if (!user.badges.includes('badge001')) {
+        user.badges.push('badge001');
+        user.points += 50; // 첫 절약 보너스
+      }
+    }
+
+    await writeUsers(users);
+
+    res.json({ success: true, challenge });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '챌린지 생성 실패' });
+  }
+});
+
+// 절약량 업데이트
+app.post('/api/challenge/update', async (req, res) => {
+  try {
+    const { userId, savedKwh, savedAmount } = req.body;
+
+    const users = await readUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user || !user.currentChallenge) {
+      return res.status(404).json({ success: false, message: '진행 중인 챌린지가 없습니다.' });
+    }
+
+    const challenge = user.currentChallenge;
+    challenge.savedKwh = savedKwh || challenge.savedKwh;
+    challenge.savedAmount = savedAmount || challenge.savedAmount;
+    
+    const target = challenge.targetKwh || challenge.targetAmount;
+    const saved = challenge.savedKwh || challenge.savedAmount;
+    challenge.achievementRate = Math.round((saved / target) * 100);
+
+    // 총 절약량 업데이트
+    user.totalSaved = (user.totalSaved || 0) + (savedKwh || 0);
+    
+    // 포인트 계산 (1kWh당 10포인트)
+    const newPoints = (savedKwh || 0) * 10;
+    user.points = (user.points || 0) + newPoints;
+
+    // 목표 달성 시 보너스
+    if (challenge.achievementRate >= 100 && challenge.status === 'active') {
+      user.points += 500;
+      challenge.status = 'completed';
+    }
+
+    // 배지 체크
+    const challengesData = await readChallenges();
+    checkAndAwardBadges(user, challengesData.badges);
+
+    await writeUsers(users);
+
+    res.json({ success: true, challenge, user: { points: user.points, badges: user.badges } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '업데이트 실패' });
+  }
+});
+
+// 배지 체크 함수
+function checkAndAwardBadges(user, availableBadges) {
+  if (!user.badges) user.badges = [];
+
+  availableBadges.forEach(badge => {
+    if (user.badges.includes(badge.id)) return;
+
+    let shouldAward = false;
+
+    switch (badge.id) {
+      case 'badge002': // 100kWh 절약
+        shouldAward = (user.totalSaved || 0) >= 100;
+        break;
+      case 'badge006': // 50kWh 절약
+        shouldAward = (user.totalSaved || 0) >= 50;
+        break;
+      case 'badge007': // 목표 150% 초과
+        shouldAward = user.currentChallenge?.achievementRate >= 150;
+        break;
+    }
+
+    if (shouldAward) {
+      user.badges.push(badge.id);
+      user.points = (user.points || 0) + 100; // 배지 보너스
+    }
+  });
+}
+
+// 사용자 챌린지 조회
+app.get('/api/challenge/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const users = await readUsers();
+    const user = users.find(u => u.id === userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    res.json({
+      success: true,
+      challenge: user.currentChallenge || null,
+      totalSaved: user.totalSaved || 0,
+      points: user.points || 0,
+      badges: user.badges || [],
+      energyTier: user.energyTier || 2 // 기본값 2구간
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '조회 실패' });
+  }
+});
+
+// 랭킹 조회
+app.get('/api/ranking', async (req, res) => {
+  try {
+    const { type, region, housingType, period } = req.query;
+    const users = await readUsers();
+
+    let filtered = users.filter(u => u.currentChallenge && u.currentChallenge.status === 'active');
+
+    // 지역 필터
+    if (region && region !== '전체') {
+      filtered = filtered.filter(u => {
+        const userRegion = u.region || '';
+        return userRegion.includes(region) || userRegion === '전국';
+      });
+    }
+
+    // 주택 유형 필터
+    if (housingType && housingType !== '전체') {
+      filtered = filtered.filter(u => {
+        const userHousing = u.housingType || '';
+        return userHousing.includes(housingType);
+      });
+    }
+
+    // 정렬 및 랭킹 계산
+    filtered = filtered.map((u, index) => ({
+      ...u,
+      rank: index + 1,
+      savedKwh: u.currentChallenge?.savedKwh || 0,
+      achievementRate: u.currentChallenge?.achievementRate || 0
+    })).sort((a, b) => {
+      // 절약량 우선
+      if (b.savedKwh !== a.savedKwh) {
+        return b.savedKwh - a.savedKwh;
+      }
+      // 동점시 달성률
+      return b.achievementRate - a.achievementRate;
+    });
+
+    // 랭킹 재계산
+    filtered = filtered.map((u, index) => ({
+      ...u,
+      rank: index + 1
+    }));
+
+    res.json({
+      success: true,
+      rankings: filtered.slice(0, 100), // 상위 100명
+      total: filtered.length
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '랭킹 조회 실패' });
+  }
+});
+
+// 배지 목록 조회
+app.get('/api/badges', async (req, res) => {
+  try {
+    const challengesData = await readChallenges();
+    res.json({ success: true, badges: challengesData.badges || [] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '배지 조회 실패' });
+  }
+});
+
+// 통계 데이터
+app.get('/api/challenge/stats', async (req, res) => {
+  try {
+    const users = await readUsers();
+    const activeUsers = users.filter(u => u.currentChallenge && u.currentChallenge.status === 'active');
+    
+    const totalSaved = activeUsers.reduce((sum, u) => sum + (u.currentChallenge?.savedKwh || 0), 0);
+    const avgSaved = activeUsers.length > 0 ? Math.round(totalSaved / activeUsers.length) : 0;
+    const topSaver = activeUsers.length > 0 
+      ? activeUsers.reduce((top, u) => {
+          const saved = u.currentChallenge?.savedKwh || 0;
+          return saved > (top.savedKwh || 0) ? { name: u.name, savedKwh: saved } : top;
+        }, { name: '', savedKwh: 0 })
+      : { name: '없음', savedKwh: 0 };
+
+    res.json({
+      success: true,
+      stats: {
+        totalParticipants: activeUsers.length,
+        totalSaved,
+        averageSaved: avgSaved,
+        topSaver
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '통계 조회 실패' });
   }
 });
 
