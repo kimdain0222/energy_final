@@ -17,18 +17,33 @@ const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
 // CORS 설정 - Netlify 프론트엔드 허용
-const allowedOrigins = process.env.FRONTEND_URL 
-    ? [process.env.FRONTEND_URL] 
-    : ['*'];
+const allowedOrigins = [];
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
+// 기본 허용 도메인 추가
+allowedOrigins.push('https://ecosync2025.netlify.app');
+allowedOrigins.push('http://localhost:3000'); // 로컬 개발용
+
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        // origin이 없으면 (같은 도메인 또는 직접 요청)
+        if (!origin) {
+            return callback(null, true);
         }
+        // 허용된 도메인 목록에 있으면 허용
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        // 모든 도메인 허용 (개발 환경)
+        if (process.env.NODE_ENV !== 'production' || allowedOrigins.length === 0) {
+            return callback(null, true);
+        }
+        callback(new Error('Not allowed by CORS'));
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 // 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
