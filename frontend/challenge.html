@@ -397,22 +397,44 @@
 
         // 배지 표시
         async function displayBadges(userBadgeIds) {
-            const badgesHtml = allBadges.map(badge => {
-                const hasBadge = userBadgeIds && userBadgeIds.includes(badge.id);
+            // allBadges가 아직 로드되지 않았으면 다시 시도
+            if (!allBadges || allBadges.length === 0) {
+                await loadBadges();
+            }
+            
+            if (!allBadges || allBadges.length === 0) {
+                document.getElementById('myBadges').innerHTML = '<p class="text-muted">뱃지를 불러오는 중...</p>';
+                return;
+            }
+
+            // 획득한 뱃지만 표시
+            const earnedBadges = allBadges.filter(badge => userBadgeIds && userBadgeIds.includes(badge.id));
+            
+            if (earnedBadges.length === 0) {
+                document.getElementById('myBadges').innerHTML = `
+                    <div class="col-12 text-center py-3">
+                        <p class="text-muted mb-3">아직 획득한 배지가 없습니다.</p>
+                        <a href="badges.html" class="btn btn-primary">뱃지 구경하기 ✨</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const badgesHtml = earnedBadges.map(badge => {
                 return `
                     <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm text-center ${hasBadge ? '' : 'opacity-50'}" style="min-height: 120px;">
+                        <div class="card border-0 shadow-sm text-center" style="min-height: 120px;">
                             <div class="card-body p-3">
                                 <div style="font-size: 3rem;">${badge.icon}</div>
                                 <h6 class="fw-bold mt-2">${badge.name}</h6>
-                                ${hasBadge ? '<span class="badge bg-success">획득</span>' : '<span class="badge bg-secondary">미획득</span>'}
+                                <span class="badge bg-success">획득</span>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            document.getElementById('myBadges').innerHTML = badgesHtml || '<p class="text-muted">배지가 없습니다.</p>';
+            document.getElementById('myBadges').innerHTML = badgesHtml;
         }
 
         // 통계 로드

@@ -437,10 +437,15 @@ async function generateDemoUsers() {
     if (savedKwh >= 100) points += 100;
 
     // 배지 획득 (절약량 기반)
-    const badges = ['badge001']; // 첫 절약은 모두
-    if (savedKwh >= 50) badges.push('badge006');
-    if (savedKwh >= 100) badges.push('badge002');
-    if (achievementRate >= 150) badges.push('badge007');
+    const badges = ['badge000', 'badge001']; // 회원가입 뱃지 + 첫 절약은 모두
+    if (savedKwh >= 10) badges.push('badge008'); // 새싹 절약
+    if (savedKwh >= 50) badges.push('badge006'); // 50kWh 클럽
+    if (savedKwh >= 100) badges.push('badge002'); // 에너지 마스터
+    if (savedKwh >= 200) badges.push('badge009'); // 200kWh 클럽
+    if (achievementRate >= 100 && achievementRate < 120) badges.push('badge012'); // 완벽 달성
+    if (achievementRate >= 120 && achievementRate < 150) badges.push('badge013'); // 우수 달성
+    if (achievementRate >= 150 && achievementRate < 200) badges.push('badge007'); // 목표 달성왕
+    if (achievementRate >= 200) badges.push('badge014'); // 초월 달성
 
     // 에너지 티어 (절약량에 따라 역산)
     let energyTier;
@@ -946,6 +951,13 @@ app.post('/api/analyze', async (req, res) => {
           user.analysisHistory = user.analysisHistory.slice(0, 10);
         }
         
+        // 분석 횟수 업데이트
+        user.analysisCount = user.analysisHistory.length;
+        
+        // 배지 체크 (분석 마스터 등)
+        const challengesData = await readChallenges();
+        checkAndAwardBadges(user, challengesData.badges);
+        
         await writeUsers(users);
       }
     }
@@ -1027,6 +1039,11 @@ app.post('/api/challenge/create', async (req, res) => {
       user.points = user.points || 0;
       user.badges = user.badges || [];
       
+      // 회원가입 뱃지 (badge000) 체크 - 없으면 추가
+      if (!user.badges.includes('badge000')) {
+        user.badges.push('badge000');
+      }
+      
       // 첫 절약 배지 체크
       if (!user.badges.includes('badge001')) {
         user.badges.push('badge001');
@@ -1068,10 +1085,24 @@ app.post('/api/challenge/update', async (req, res) => {
     const newPoints = (savedKwh || 0) * 10;
     user.points = (user.points || 0) + newPoints;
 
-    // 목표 달성 시 보너스
+    // 목표 달성 시 보너스 및 완료 처리
     if (challenge.achievementRate >= 100 && challenge.status === 'active') {
       user.points += 500;
       challenge.status = 'completed';
+      
+      // 완료된 챌린지를 completedChallenges에 추가
+      if (!user.completedChallenges) user.completedChallenges = [];
+      user.completedChallenges.push({
+        id: challenge.id,
+        type: challenge.type,
+        targetKwh: challenge.targetKwh,
+        savedKwh: challenge.savedKwh,
+        achievementRate: challenge.achievementRate,
+        completedAt: new Date().toISOString()
+      });
+      
+      // 현재 챌린지 초기화
+      user.currentChallenge = null;
     }
 
     // 배지 체크
@@ -1089,6 +1120,14 @@ app.post('/api/challenge/update', async (req, res) => {
 // 배지 체크 함수
 function checkAndAwardBadges(user, availableBadges) {
   if (!user.badges) user.badges = [];
+  
+  const totalSaved = user.totalSaved || 0;
+  const achievementRate = user.currentChallenge?.achievementRate || 0;
+  const challenge = user.currentChallenge || {};
+  const completedChallenges = user.completedChallenges || [];
+  const analysisCount = (user.analysisHistory || []).length;
+  const viewedProgramsCount = (user.viewedPrograms || []).length;
+  const rankingVisits = user.rankingVisits || 0;
 
   availableBadges.forEach(badge => {
     if (user.badges.includes(badge.id)) return;
@@ -1096,14 +1135,76 @@ function checkAndAwardBadges(user, availableBadges) {
     let shouldAward = false;
 
     switch (badge.id) {
-      case 'badge002': // 100kWh 절약
-        shouldAward = (user.totalSaved || 0) >= 100;
+      // 절약량 기반
+      case 'badge008': // 새싹 절약 - 10kWh
+        shouldAward = totalSaved >= 10;
         break;
-      case 'badge006': // 50kWh 절약
-        shouldAward = (user.totalSaved || 0) >= 50;
+      case 'badge006': // 50kWh 클럽
+        shouldAward = totalSaved >= 50;
         break;
-      case 'badge007': // 목표 150% 초과
-        shouldAward = user.currentChallenge?.achievementRate >= 150;
+      case 'badge002': // 에너지 마스터 - 100kWh
+        shouldAward = totalSaved >= 100;
+        break;
+      case 'badge009': // 200kWh 클럽
+        shouldAward = totalSaved >= 200;
+        break;
+      case 'badge010': // 탄소 제로 히어로 - 500kWh
+        shouldAward = totalSaved >= 500;
+        break;
+      case 'badge011': // 절약 레전드 - 1000kWh
+        shouldAward = totalSaved >= 1000;
+        break;
+      
+      // 달성률 기반
+      case 'badge012': // 완벽 달성 - 100%
+        shouldAward = achievementRate >= 100 && achievementRate < 120;
+        break;
+      case 'badge013': // 우수 달성 - 120%
+        shouldAward = achievementRate >= 120 && achievementRate < 150;
+        break;
+      case 'badge007': // 목표 달성왕 - 150%
+        shouldAward = achievementRate >= 150 && achievementRate < 200;
+        break;
+      case 'badge014': // 초월 달성 - 200%
+        shouldAward = achievementRate >= 200;
+        break;
+      
+      // 지속성 기반 (완료된 챌린지 수로 추정)
+      case 'badge015': // 주간 참여자 - 1주
+        shouldAward = completedChallenges.length >= 1;
+        break;
+      case 'badge004': // 지속의 달인 - 4주
+        shouldAward = completedChallenges.length >= 4;
+        break;
+      case 'badge016': // 장기 파이터 - 8주
+        shouldAward = completedChallenges.length >= 8;
+        break;
+      case 'badge017': // 연속 챔피언 - 12주
+        shouldAward = completedChallenges.length >= 12;
+        break;
+      
+      // 참여 활동 기반
+      case 'badge022': // 맞춤형 설문 완료
+        shouldAward = user.surveyAnswers && Object.keys(user.surveyAnswers).length > 0;
+        break;
+      case 'badge023': // 분석 마스터 - 5회 이상
+        shouldAward = analysisCount >= 5;
+        break;
+      case 'badge024': // 지원사업 탐험가 - 10개 이상
+        shouldAward = viewedProgramsCount >= 10;
+        break;
+      case 'badge025': // 커뮤니티 참여자 - 10회 이상
+        shouldAward = rankingVisits >= 10;
+        break;
+      
+      // 특별 이벤트 기반
+      case 'badge027': // 보너스 퀘스트 - 월간 챌린지 완료
+        shouldAward = challenge.type === 'monthly' && challenge.status === 'completed';
+        break;
+      case 'badge028': // 레인보우 - 모든 기본 배지 획득 (나중에 계산)
+        // 기본 배지: badge000, badge001, badge008, badge006, badge002, badge012, badge015, badge022
+        const basicBadges = ['badge000', 'badge001', 'badge008', 'badge006', 'badge002', 'badge012', 'badge015', 'badge022'];
+        shouldAward = basicBadges.every(id => user.badges.includes(id));
         break;
     }
 
@@ -1145,12 +1246,21 @@ app.get('/api/challenge/user/:userId', async (req, res) => {
       weeklyProgress = calculateWeeklyProjection(user.currentChallenge, userProfile, surveyAnswers);
     }
 
+    // 기존 사용자도 badge000 (시작의 발걸음)이 없으면 부여
+    if (!user.badges) {
+      user.badges = [];
+    }
+    if (!user.badges.includes('badge000')) {
+      user.badges.push('badge000');
+      await writeUsers(users); // 저장
+    }
+
     res.json({
       success: true,
       challenge: user.currentChallenge || null,
       totalSaved: user.totalSaved || 0,
       points: user.points || 0,
-      badges: user.badges || [],
+      badges: user.badges || ['badge000'],
       energyTier: user.energyTier || 2,
       weeklyProgress: weeklyProgress,
       prediction: prediction,
@@ -1164,8 +1274,20 @@ app.get('/api/challenge/user/:userId', async (req, res) => {
 // 랭킹 조회
 app.get('/api/ranking', async (req, res) => {
   try {
-    const { type, region, housingType, period } = req.query;
+    const { type, region, housingType, period, userId } = req.query;
     const users = await readUsers();
+    
+    // 랭킹 방문 추적 (userId가 있을 때만)
+    if (userId) {
+      const user = users.find(u => u.id === userId);
+      if (user) {
+        user.rankingVisits = (user.rankingVisits || 0) + 1;
+        // 배지 체크 (커뮤니티 참여자 등)
+        const challengesData = await readChallenges();
+        checkAndAwardBadges(user, challengesData.badges);
+        await writeUsers(users);
+      }
+    }
 
     let filtered = users.filter(u => u.currentChallenge && u.currentChallenge.status === 'active');
 
@@ -1266,6 +1388,12 @@ app.post('/api/user/survey', async (req, res) => {
     };
     const prediction = calculateEnergyPrediction(profile, surveyAnswers || {});
 
+    // 배지 체크 (맞춤형 설문 완료 등)
+    const challengesData = await readChallenges();
+    checkAndAwardBadges(user, challengesData.badges);
+    
+    await writeUsers(users);
+
     res.json({
       success: true,
       message: '설문이 저장되었습니다.',
@@ -1319,7 +1447,11 @@ app.post('/api/programs/view', async (req, res) => {
       if (user.viewedPrograms.length > 20) {
         user.viewedPrograms = user.viewedPrograms.slice(0, 20);
       }
-
+      
+      // 배지 체크 (지원사업 탐험가 등)
+      const challengesData = await readChallenges();
+      checkAndAwardBadges(user, challengesData.badges);
+      
       await writeUsers(users);
     }
 
@@ -1338,6 +1470,15 @@ app.get('/api/user/:userId', async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // badge000 (시작의 발걸음)이 없으면 부여
+    if (!user.badges) {
+      user.badges = [];
+    }
+    if (!user.badges.includes('badge000')) {
+      user.badges.push('badge000');
+      await writeUsers(users); // 저장
     }
 
     // 비밀번호 제외한 사용자 정보 반환

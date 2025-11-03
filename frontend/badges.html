@@ -203,14 +203,43 @@
 
         // 뱃지 난이도 순서 정의 (획득하기 쉬운 순서)
         const badgeOrder = [
+            // 기본
             'badge000', // 시작의 발걸음 (회원가입)
             'badge001', // 첫 절약
+            // 절약량 기반
+            'badge008', // 새싹 절약 (10kWh)
             'badge006', // 50kWh 클럽
-            'badge007', // 목표 달성왕
-            'badge002', // 에너지 마스터 100kWh
-            'badge004', // 지속의 달인
-            'badge003', // 주간 챔피언
-            'badge005'  // 지역 히어로
+            'badge002', // 에너지 마스터 (100kWh)
+            'badge009', // 200kWh 클럽
+            'badge010', // 탄소 제로 히어로 (500kWh)
+            'badge011', // 절약 레전드 (1000kWh)
+            // 달성률 기반
+            'badge012', // 완벽 달성 (100%)
+            'badge013', // 우수 달성 (120%)
+            'badge007', // 목표 달성왕 (150%)
+            'badge014', // 초월 달성 (200%)
+            // 지속성 기반
+            'badge015', // 주간 참여자 (1주)
+            'badge004', // 지속의 달인 (4주)
+            'badge016', // 장기 파이터 (8주)
+            'badge017', // 연속 챔피언 (12주)
+            // 랭킹 기반
+            'badge003', // 주간 챔피언 (주간 1위)
+            'badge005', // 지역 히어로 (지역별 1위)
+            'badge018', // 전국 챔피언 (전국 1위)
+            'badge019', // 2위 달성
+            'badge020', // 3위 달성
+            'badge021', // 상위 10%
+            // 참여 활동 기반
+            'badge022', // 맞춤형 설문 완료
+            'badge023', // 분석 마스터 (5회 이상)
+            'badge024', // 지원사업 탐험가 (10개 이상)
+            'badge025', // 커뮤니티 참여자 (10회 이상)
+            // 특별 이벤트 기반
+            'badge026', // 첫날 완벽
+            'badge027', // 보너스 퀘스트 (월간 챌린지 완료)
+            'badge028', // 레인보우 (모든 기본 배지)
+            'badge029'  // 데일리 챌린저 (7일 연속)
         ];
 
         // 페이지 초기화
@@ -257,6 +286,16 @@
 
         // 뱃지 표시
         function displayBadges() {
+            // 안전 체크
+            if (!allBadges || allBadges.length === 0) {
+                document.getElementById('allBadgesSection').innerHTML = '<p class="text-center text-muted">뱃지를 불러오는 중...</p>';
+                return;
+            }
+
+            if (!userBadgeIds || !Array.isArray(userBadgeIds)) {
+                userBadgeIds = [];
+            }
+
             const earnedBadges = allBadges.filter(badge => userBadgeIds.includes(badge.id));
             const lockedBadges = allBadges.filter(badge => !userBadgeIds.includes(badge.id));
 
@@ -286,26 +325,78 @@
                 `;
             }
 
-            // 전체 뱃지 섹션
-            document.getElementById('allBadges').innerHTML = allBadges.map(badge => {
-                const hasBadge = userBadgeIds.includes(badge.id);
-                return `
-                    <div class="col-md-4 col-6">
-                        <div class="badge-card ${hasBadge ? 'earned' : 'locked'} p-4 text-center h-100">
-                            ${hasBadge ? '<span class="sparkle">✨</span>' : ''}
-                            <div class="badge-icon" ${!hasBadge ? 'style="opacity: 0.5;"' : ''}>${badge.icon}</div>
-                            <div class="badge-name">${badge.name}</div>
-                            <div class="badge-description">${badge.description}</div>
-                            <div class="badge-condition">${badge.condition}</div>
-                            ${hasBadge ? '<div class="mt-3"><span class="badge bg-success" style="font-size: 0.9rem;">획득 완료! 🎉</span></div>' : '<div class="mt-3"><span class="badge bg-secondary" style="font-size: 0.9rem;">미획득</span></div>'}
+            // 카테고리별 뱃지 분류
+            const categories = {
+                '기본': ['badge000', 'badge001'],
+                '절약량 기반': ['badge008', 'badge006', 'badge002', 'badge009', 'badge010', 'badge011'],
+                '달성률 기반': ['badge012', 'badge013', 'badge007', 'badge014'],
+                '지속성 기반': ['badge015', 'badge004', 'badge016', 'badge017'],
+                '랭킹 기반': ['badge003', 'badge005', 'badge018', 'badge019', 'badge020', 'badge021'],
+                '참여 활동 기반': ['badge022', 'badge023', 'badge024', 'badge025'],
+                '특별 이벤트 기반': ['badge026', 'badge027', 'badge028', 'badge029']
+            };
+
+            const categoryNames = {
+                '기본': '🌟 기본',
+                '절약량 기반': '💚 절약량 기반',
+                '달성률 기반': '🎯 달성률 기반',
+                '지속성 기반': '🔥 지속성 기반',
+                '랭킹 기반': '🏆 랭킹 기반',
+                '참여 활동 기반': '📊 참여 활동 기반',
+                '특별 이벤트 기반': '✨ 특별 이벤트 기반'
+            };
+
+            // 카테고리별로 HTML 생성
+            let allBadgesHtml = '';
+            Object.keys(categories).forEach(categoryName => {
+                const categoryBadgeIds = categories[categoryName];
+                const categoryBadges = allBadges.filter(badge => categoryBadgeIds.includes(badge.id));
+                
+                if (categoryBadges.length > 0) {
+                    const categoryDisplayName = categoryNames[categoryName] || categoryName;
+                    allBadgesHtml += `
+                        <div class="mb-5">
+                            <h3 class="fw-bold mb-4" style="font-size: 1.5rem; color: #495057;">
+                                ${categoryDisplayName}
+                                <small class="text-muted" style="font-size: 0.9rem;">
+                                    (${categoryBadges.filter(b => userBadgeIds.includes(b.id)).length}/${categoryBadges.length} 획득)
+                                </small>
+                            </h3>
+                            <div class="row g-4">
+                                ${categoryBadges.map(badge => {
+                                    const hasBadge = userBadgeIds.includes(badge.id);
+                                    return `
+                                        <div class="col-md-4 col-6">
+                                            <div class="badge-card ${hasBadge ? 'earned' : 'locked'} p-4 text-center h-100">
+                                                ${hasBadge ? '<span class="sparkle">✨</span>' : ''}
+                                                <div class="badge-icon" ${!hasBadge ? 'style="opacity: 0.5;"' : ''}>${badge.icon}</div>
+                                                <div class="badge-name">${badge.name}</div>
+                                                <div class="badge-description">${badge.description}</div>
+                                                <div class="badge-condition">${badge.condition}</div>
+                                                ${hasBadge ? '<div class="mt-3"><span class="badge bg-success" style="font-size: 0.9rem;">획득 완료! 🎉</span></div>' : '<div class="mt-3"><span class="badge bg-secondary" style="font-size: 0.9rem;">미획득</span></div>'}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }
+            });
+
+            document.getElementById('allBadges').innerHTML = allBadgesHtml || '<p class="text-center text-muted">뱃지가 없습니다.</p>';
         }
 
         // 다음 도전 뱃지 찾기
         function findNextChallengeBadge() {
+            if (!userBadgeIds || !Array.isArray(userBadgeIds)) {
+                userBadgeIds = [];
+            }
+            
+            if (!allBadges || allBadges.length === 0) {
+                return;
+            }
+
             // 뱃지 순서대로 확인하여 획득하지 않은 첫 번째 뱃지 찾기
             for (const badgeId of badgeOrder) {
                 if (!userBadgeIds.includes(badgeId)) {
