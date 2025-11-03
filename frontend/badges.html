@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뱃지 구경하기 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .badge-card {
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .badge-card.earned {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .badge-card.next-challenge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: 3px solid #fff;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+        .badge-card.locked {
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            color: #757575;
+            filter: grayscale(0.8);
+        }
+        .badge-icon {
+            font-size: 5rem;
+            animation: bounce 2s infinite;
+        }
+        .badge-card.earned .badge-icon {
+            filter: drop-shadow(0 5px 15px rgba(255, 255, 255, 0.5));
+        }
+        .sparkle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            animation: sparkle 1.5s infinite;
+        }
+        .celebration-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(252, 182, 159, 0.3);
+        }
+        .challenge-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            color: white;
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s ease;
+        }
+        .challenge-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+            color: white;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .congrats-emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .badge-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 15px 0 10px;
+        }
+        .badge-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        .badge-condition {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .badge-card.locked .badge-condition {
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">대시보드</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="challenge.html">챌린지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ranking.html">랭킹</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="programs.html">지원사업</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="text-center fw-bold mb-5">🏆 뱃지 구경하기</h1>
+
+        <!-- 축하 섹션 - 획득한 뱃지가 있을 때 -->
+        <div id="celebrationSection" class="celebration-section" style="display: none;">
+            <span class="congrats-emoji">🎉</span>
+            <h3 class="fw-bold mb-3">축하해요! 멋진 뱃지를 획득하셨네요! 🎊</h3>
+            <p class="lead">아래에서 획득한 뱃지와 다음 도전 뱃지를 확인해보세요!</p>
+        </div>
+
+        <!-- 다음 도전 뱃지 섹션 -->
+        <div id="nextChallengeSection" class="mb-5" style="display: none;">
+            <h2 class="section-title">🌟 다음 뱃지에 도전해보세요!</h2>
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 mx-auto">
+                    <div id="nextBadgeCard" class="badge-card next-challenge p-5 text-center">
+                        <span class="sparkle">✨</span>
+                        <div id="nextBadgeIcon" class="badge-icon mb-3"></div>
+                        <div id="nextBadgeName" class="badge-name"></div>
+                        <div id="nextBadgeDescription" class="badge-description"></div>
+                        <div id="nextBadgeCondition" class="badge-condition"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <a href="challenge.html" class="challenge-button">이 뱃지 획득하러 가기! 🚀</a>
+            </div>
+        </div>
+
+        <!-- 획득한 뱃지 섹션 -->
+        <div id="earnedBadgesSection" class="mb-5">
+            <h2 class="section-title">🎖️ 획득한 뱃지</h2>
+            <div id="earnedBadges" class="row g-4">
+                <!-- 동적으로 생성 -->
+            </div>
+        </div>
+
+        <!-- 모든 뱃지 섹션 -->
+        <div id="allBadgesSection">
+            <h2 class="section-title">📚 전체 뱃지 목록</h2>
+            <div id="allBadges" class="row g-4">
+                <!-- 동적으로 생성 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!user.id) {
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.html';
+        }
+
+        let allBadges = [];
+        let userBadgeIds = [];
+
+        // 뱃지 난이도 순서 정의 (획득하기 쉬운 순서)
+        const badgeOrder = [
+            'badge001', // 첫 절약
+            'badge006', // 50kWh 클럽
+            'badge007', // 목표 달성왕
+            'badge002', // 에너지 마스터 100kWh
+            'badge004', // 지속의 달인
+            'badge003', // 주간 챔피언
+            'badge005'  // 지역 히어로
+        ];
+
+        // 페이지 초기화
+        async function init() {
+            await loadUserBadges();
+            await loadAllBadges();
+            displayBadges();
+            findNextChallengeBadge();
+        }
+
+        // 사용자 뱃지 로드
+        async function loadUserBadges() {
+            try {
+                const response = await fetch(`/api/challenge/user/${user.id}`);
+                const data = await response.json();
+                
+                if (data.success && data.badges) {
+                    userBadgeIds = data.badges || [];
+                }
+            } catch (error) {
+                console.error('사용자 뱃지 조회 실패:', error);
+            }
+        }
+
+        // 전체 뱃지 목록 로드
+        async function loadAllBadges() {
+            try {
+                const response = await fetch('/api/badges');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allBadges = data.badges || [];
+                    // 뱃지 순서 정렬
+                    allBadges.sort((a, b) => {
+                        const indexA = badgeOrder.indexOf(a.id);
+                        const indexB = badgeOrder.indexOf(b.id);
+                        return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+                    });
+                }
+            } catch (error) {
+                console.error('뱃지 목록 조회 실패:', error);
+            }
+        }
+
+        // 뱃지 표시
+        function displayBadges() {
+            const earnedBadges = allBadges.filter(badge => userBadgeIds.includes(badge.id));
+            const lockedBadges = allBadges.filter(badge => !userBadgeIds.includes(badge.id));
+
+            // 획득한 뱃지 섹션
+            if (earnedBadges.length > 0) {
+                document.getElementById('celebrationSection').style.display = 'block';
+                document.getElementById('earnedBadgesSection').style.display = 'block';
+                
+                document.getElementById('earnedBadges').innerHTML = earnedBadges.map(badge => `
+                    <div class="col-md-4 col-6">
+                        <div class="badge-card earned p-4 text-center h-100">
+                            <div class="badge-icon">${badge.icon}</div>
+                            <div class="badge-name">${badge.name}</div>
+                            <div class="badge-description">${badge.description}</div>
+                            <div class="badge-condition">${badge.condition}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('earnedBadgesSection').innerHTML = `
+                    <div class="text-center py-5">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🌱</div>
+                        <h4 class="text-muted">아직 획득한 뱃지가 없어요</h4>
+                        <p class="text-muted">챌린지를 시작하고 첫 뱃지를 획득해보세요!</p>
+                        <a href="challenge.html" class="btn btn-primary btn-lg mt-3">첫 챌린지 시작하기 🚀</a>
+                    </div>
+                `;
+            }
+
+            // 전체 뱃지 섹션
+            document.getElementById('allBadges').innerHTML = allBadges.map(badge => {
+                const hasBadge = userBadgeIds.includes(badge.id);
+                return `
+                    <div class="col-md-4 col-6">
+                        <div class="badge-card ${hasBadge ? 'earned' : 'locked'} p-4 text-center h-100">
+                            ${hasBadge ? '<span class="sparkle">✨</span>' : ''}
+                            <div class="badge-icon" ${!hasBadge ? 'style="opacity: 0.5;"' : ''}>${badge.icon}</div>
+                            <div class="badge-name">${badge.name}</div>
+                            <div class="badge-description">${badge.description}</div>
+                            <div class="badge-condition">${badge.condition}</div>
+                            ${hasBadge ? '<div class="mt-3"><span class="badge bg-success" style="font-size: 0.9rem;">획득 완료! 🎉</span></div>' : '<div class="mt-3"><span class="badge bg-secondary" style="font-size: 0.9rem;">미획득</span></div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 다음 도전 뱃지 찾기
+        function findNextChallengeBadge() {
+            // 뱃지 순서대로 확인하여 획득하지 않은 첫 번째 뱃지 찾기
+            for (const badgeId of badgeOrder) {
+                if (!userBadgeIds.includes(badgeId)) {
+                    const nextBadge = allBadges.find(b => b.id === badgeId);
+                    if (nextBadge) {
+                        displayNextChallengeBadge(nextBadge);
+                        return;
+                    }
+                }
+            }
+
+            // 모든 뱃지를 획득한 경우
+            if (userBadgeIds.length === allBadges.length) {
+                document.getElementById('nextChallengeSection').innerHTML = `
+                    <div class="text-center py-5">
+                        <div style="font-size: 5rem; margin-bottom: 20px;">🏆</div>
+                        <h3 class="fw-bold mb-3">축하합니다! 🎊</h3>
+                        <p class="lead">모든 뱃지를 획득하셨네요! 정말 대단해요!</p>
+                        <p class="text-muted">계속해서 에너지 절약에 도전해보세요! 🌱</p>
+                    </div>
+                `;
+                document.getElementById('nextChallengeSection').style.display = 'block';
+            }
+        }
+
+        // 다음 도전 뱃지 표시
+        function displayNextChallengeBadge(badge) {
+            document.getElementById('nextChallengeSection').style.display = 'block';
+            document.getElementById('nextBadgeIcon').textContent = badge.icon;
+            document.getElementById('nextBadgeName').textContent = badge.name;
+            document.getElementById('nextBadgeDescription').textContent = badge.description;
+            document.getElementById('nextBadgeCondition').textContent = badge.condition;
+        }
+
+        // 초기화
+        init();
+    </script>
+</body>
+</html>
+
