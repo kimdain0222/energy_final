@@ -792,7 +792,7 @@ app.post('/api/analyze', async (req, res) => {
     // 사용자 정보에 티어 저장 (향후 환산에 사용)
     const tier = monthlyUsage <= 200 ? 1 : monthlyUsage <= 400 ? 2 : 3;
     
-    // 사용자 정보 업데이트 (티어 저장)
+    // 사용자 정보 업데이트 (티어 저장 및 분석 기록 저장)
     if (req.body.userId) {
       const users = await readUsers();
       const user = users.find(u => u.id === req.body.userId);
@@ -800,6 +800,24 @@ app.post('/api/analyze', async (req, res) => {
         user.energyTier = tier;
         if (req.body.houseType) user.housingType = req.body.houseType;
         if (req.body.area) user.area = req.body.area;
+        
+        // 분석 기록 저장
+        if (!user.analysisHistory) user.analysisHistory = [];
+        user.analysisHistory.unshift({
+          date: new Date().toISOString(),
+          houseType: houseType,
+          area: area,
+          monthlyUsage: monthlyUsage,
+          monthlyBill: Math.round(totalBill),
+          tier: tier,
+          estimatedSavings: Math.round(totalBill * 0.2)
+        });
+        
+        // 최근 10개만 유지
+        if (user.analysisHistory.length > 10) {
+          user.analysisHistory = user.analysisHistory.slice(0, 10);
+        }
+        
         await writeUsers(users);
       }
     }
@@ -1127,6 +1145,59 @@ app.post('/api/user/survey', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: '설문 저장 실패' });
+  }
+});
+
+// 지원사업 조회 기록 저장
+app.post('/api/programs/view', async (req, res) => {
+  try {
+    const { userId, programId } = req.body;
+
+    if (!userId || !programId) {
+      return res.status(400).json({ success: false, message: '필수 정보가 없습니다.' });
+    }
+
+    const users = await readUsers();
+    const user = users.find(u => u.id === userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // 프로그램 정보 조회
+    const programs = await readProgramsCache();
+    const program = programs.find(p => p.id === programId);
+
+    if (program) {
+      // 조회 기록 저장
+      if (!user.viewedPrograms) user.viewedPrograms = [];
+      
+      // 중복 체크 (같은 프로그램이 이미 있으면 제거)
+      user.viewedPrograms = user.viewedPrograms.filter(p => p.id !== programId);
+      
+      // 최신순으로 앞에 추가
+      user.viewedPrograms.unshift({
+        id: program.id,
+        title: program.title,
+        description: program.description,
+        region: program.region,
+        target: program.target,
+        supportAmount: program.supportAmount,
+        applyUrl: program.applyUrl,
+        viewedAt: new Date().toISOString()
+      });
+
+      // 최근 20개만 유지
+      if (user.viewedPrograms.length > 20) {
+        user.viewedPrograms = user.viewedPrograms.slice(0, 20);
+      }
+
+      await writeUsers(users);
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '조회 기록 저장 실패' });
   }
 });
 

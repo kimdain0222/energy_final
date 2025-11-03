@@ -97,7 +97,7 @@
                                             <strong>지원금액:</strong> ${program.supportAmount || '-'}
                                         </small>
                                     </div>
-                                    <a href="${program.applyUrl || '#'}" target="_blank" class="btn btn-primary w-100">
+                                    <a href="${program.applyUrl || '#'}" target="_blank" class="btn btn-primary w-100" onclick="trackProgramView('${program.id || ''}')">
                                         지원받기 →
                                     </a>
                                 </div>
@@ -117,6 +117,27 @@
                 </a>
             </div>
         `;
+        }
+
+        // 프로그램 조회 기록 저장
+        async function trackProgramView(programId) {
+            if (!programId) return;
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id) return;
+
+            try {
+                await fetch('/api/programs/view', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        programId: programId
+                    })
+                });
+            } catch (error) {
+                console.error('조회 기록 저장 실패:', error);
+            }
         }
     </script>
 </body>
