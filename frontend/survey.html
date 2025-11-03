@@ -264,8 +264,21 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    alert('설문이 저장되었습니다! 이제 더 정확한 예측이 가능합니다.');
-                    window.location.href = 'challenge.html';
+                    // 사용자 정보 localStorage 업데이트
+                    if (user.id) {
+                        user.region = userProfile.region;
+                        user.housingType = userProfile.housingType;
+                        user.area = userProfile.area;
+                        user.householdSize = userProfile.householdSize;
+                        user.surveyAnswers = surveyAnswers;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                    
+                    if (confirm('설문이 저장되었습니다!\n\n마이페이지에서 확인하시겠습니까?')) {
+                        window.location.href = 'mypage.html';
+                    } else {
+                        window.location.href = 'challenge.html';
+                    }
                 } else {
                     alert(data.message || '설문 저장 실패');
                 }

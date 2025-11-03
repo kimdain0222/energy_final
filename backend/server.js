@@ -1130,6 +1130,29 @@ app.post('/api/user/survey', async (req, res) => {
   }
 });
 
+// 사용자 정보 조회 (마이페이지용)
+app.get('/api/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const users = await readUsers();
+    const user = users.find(u => u.id === userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // 비밀번호 제외한 사용자 정보 반환
+    const { password, ...userInfo } = user;
+    
+    res.json({
+      success: true,
+      user: userInfo
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: '사용자 정보 조회 실패' });
+  }
+});
+
 // 검증된 절약 시나리오 조회
 app.get('/api/saving-scenarios', async (req, res) => {
   try {

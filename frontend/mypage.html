@@ -86,17 +86,143 @@
             return;
         }
 
-        // 사용자 정보 표시
-        document.getElementById('userInfo').innerHTML = `
-            <div class="row mb-3">
-                <div class="col-4"><strong>이름:</strong></div>
-                <div class="col-8">${user.name || '-'}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-4"><strong>이메일:</strong></div>
-                <div class="col-8">${user.email || '-'}</div>
-            </div>
-        `;
+        // 사용자 정보 로드
+        async function loadUserInfo() {
+            try {
+                const response = await fetch(`/api/user/${user.id}`);
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    const userData = data.user;
+                    const hasSurvey = userData.region || userData.surveyAnswers;
+
+                    let userInfoHtml = `
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>이름:</strong></div>
+                            <div class="col-8">${userData.name || '-'}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>이메일:</strong></div>
+                            <div class="col-8">${userData.email || '-'}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>전화번호:</strong></div>
+                            <div class="col-8">${userData.phone || '-'}</div>
+                        </div>
+                    `;
+
+                    // 설문 정보가 있으면 표시
+                    if (hasSurvey) {
+                        userInfoHtml += `
+                            <hr>
+                            <h6 class="fw-bold mb-3">📊 설문 정보</h6>
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>거주 지역:</strong></div>
+                                <div class="col-8">${userData.region || '-'}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>주택 유형:</strong></div>
+                                <div class="col-8">${userData.housingType || '-'}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>면적:</strong></div>
+                                <div class="col-8">${userData.area ? userData.area + '평' : '-'}</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>가족 수:</strong></div>
+                                <div class="col-8">${userData.householdSize ? userData.householdSize + '명' : '-'}</div>
+                            </div>
+                        `;
+
+                        // 에너지 사용 습관
+                        if (userData.surveyAnswers) {
+                            const survey = userData.surveyAnswers;
+                            userInfoHtml += `
+                                <hr>
+                                <h6 class="fw-bold mb-3">⚡ 에너지 사용 습관</h6>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>에어컨 사용:</strong></div>
+                                    <div class="col-8">${survey.aircon || '-'}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>난방 방식:</strong></div>
+                                    <div class="col-8">${survey.heating || '-'}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>조명 사용:</strong></div>
+                                    <div class="col-8">${survey.lighting || '-'}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>가전 사용량:</strong></div>
+                                    <div class="col-8">${survey.appliances || '-'}</div>
+                                </div>
+                            `;
+                        }
+
+                        // 에너지 티어 정보
+                        if (userData.energyTier) {
+                            userInfoHtml += `
+                                <hr>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>전기 요금 구간:</strong></div>
+                                    <div class="col-8"><span class="badge bg-info">${userData.energyTier}구간</span></div>
+                                </div>
+                            `;
+                        }
+
+                        userInfoHtml += `
+                            <div class="mt-3">
+                                <a href="survey.html" class="btn btn-sm btn-outline-primary">설문 수정하기</a>
+                            </div>
+                        `;
+                    } else {
+                        // 설문 정보가 없으면 설문 안내
+                        userInfoHtml += `
+                            <hr>
+                            <div class="alert alert-info mb-0">
+                                <small>설문을 작성하면 더 정확한 예측 서비스를 이용할 수 있습니다.</small>
+                            </div>
+                            <div class="mt-3">
+                                <a href="survey.html" class="btn btn-sm btn-primary">설문 작성하기</a>
+                            </div>
+                        `;
+                    }
+
+                    document.getElementById('userInfo').innerHTML = userInfoHtml;
+                } else {
+                    // API 실패 시 기본 정보만 표시
+                    document.getElementById('userInfo').innerHTML = `
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>이름:</strong></div>
+                            <div class="col-8">${user.name || '-'}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>이메일:</strong></div>
+                            <div class="col-8">${user.email || '-'}</div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="survey.html" class="btn btn-sm btn-primary">설문 작성하기</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('사용자 정보 로드 실패:', error);
+                // 오류 시 기본 정보만 표시
+                document.getElementById('userInfo').innerHTML = `
+                    <div class="row mb-3">
+                        <div class="col-4"><strong>이름:</strong></div>
+                        <div class="col-8">${user.name || '-'}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4"><strong>이메일:</strong></div>
+                        <div class="col-8">${user.email || '-'}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 사용자 정보 로드 실행
+        loadUserInfo();
 
         // 분석 기록 표시
         const analysisResult = JSON.parse(localStorage.getItem('analysisResult') || '{}');
