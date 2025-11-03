@@ -30,16 +30,50 @@ if (process.env.FRONTEND_URL) {
     }
 }
 
+console.log('=== CORS 설정 초기화 ===');
 console.log('허용된 CORS 도메인:', allowedOrigins);
+console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+
+// OPTIONS 요청을 가장 먼저 처리 (preflight 요청)
+app.options('*', (req, res) => {
+    const origin = req.headers.origin;
+    console.log('=== OPTIONS 요청 수신 ===');
+    console.log('Origin:', origin);
+    console.log('Path:', req.path);
+    console.log('Method:', req.method);
+    
+    // 허용된 origin인지 확인
+    const isAllowed = !origin || 
+                     allowedOrigins.includes(origin) || 
+                     process.env.NODE_ENV !== 'production';
+    
+    if (isAllowed) {
+        if (origin) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+            console.log('CORS 헤더 설정:', origin);
+        } else {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+        }
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Access-Control-Max-Age', '86400');
+        console.log('OPTIONS 요청 허용');
+        return res.status(200).end();
+    }
+    
+    // 허용되지 않은 origin
+    console.log('OPTIONS 요청 차단:', origin);
+    res.status(403).end();
+});
 
 // CORS 설정
 const corsOptions = {
     origin: function (origin, callback) {
-        console.log('CORS 요청 origin:', origin);
+        console.log('CORS origin 체크:', origin);
         
         // origin이 없으면 (Postman, curl 등 직접 요청)
         if (!origin) {
-            console.log('Origin 없음 - 허용');
             return callback(null, true);
         }
         
@@ -60,12 +94,12 @@ const corsOptions = {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     exposedHeaders: ['Content-Type'],
-    maxAge: 86400 // 24시간
+    maxAge: 86400
 };
 
-// CORS 미들웨어를 먼저 적용
+// CORS 미들웨어 적용
 app.use(cors(corsOptions));
 
 // 모든 응답에 CORS 헤더 명시적 추가 (이중 안전장치)
@@ -75,37 +109,13 @@ app.use((req, res, next) => {
     // 허용된 origin인지 확인
     if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
         if (origin) {
-            res.header('Access-Control-Allow-Origin', origin);
+            res.setHeader('Access-Control-Allow-Origin', origin);
         }
-        res.header('Access-Control-Allow-Credentials', 'true');
-        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
     }
     next();
-});
-
-// OPTIONS 요청 명시적 처리 (preflight) - 모든 경로에 대해
-app.options('*', (req, res) => {
-    const origin = req.headers.origin;
-    console.log('OPTIONS 요청 수신:', origin, 'Path:', req.path);
-    
-    // 허용된 origin인지 확인
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
-        if (origin) {
-            res.header('Access-Control-Allow-Origin', origin);
-        } else {
-            res.header('Access-Control-Allow-Origin', '*');
-        }
-        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-        res.header('Access-Control-Allow-Credentials', 'true');
-        res.header('Access-Control-Max-Age', '86400');
-        return res.sendStatus(200);
-    }
-    
-    // 허용되지 않은 origin
-    console.log('OPTIONS 요청 차단:', origin);
-    res.sendStatus(403);
 });
 app.use(bodyParser.json());
 // 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
