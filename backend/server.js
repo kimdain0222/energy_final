@@ -23,16 +23,32 @@ const allowedOrigins = [
     'http://127.0.0.1:3000'
 ];
 
+// FRONTEND_URL 환경 변수 처리 (슬래시 제거 및 정규화)
 if (process.env.FRONTEND_URL) {
-    const frontendUrl = process.env.FRONTEND_URL.trim();
+    const frontendUrl = process.env.FRONTEND_URL.trim().replace(/\/$/, ''); // 끝의 슬래시 제거
     if (frontendUrl && !allowedOrigins.includes(frontendUrl)) {
         allowedOrigins.push(frontendUrl);
+        // Netlify 프리뷰 URL 패턴도 허용
+        if (frontendUrl.includes('netlify.app')) {
+            const baseUrl = frontendUrl.split('--')[1] || frontendUrl;
+            if (baseUrl && baseUrl !== frontendUrl && !allowedOrigins.includes(baseUrl)) {
+                allowedOrigins.push(baseUrl);
+            }
+        }
     }
 }
 
 console.log('=== CORS 설정 초기화 ===');
 console.log('허용된 CORS 도메인:', allowedOrigins);
 console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
+
+// 요청 로깅 미들웨어 (모든 요청 기록)
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    next();
+});
 
 // OPTIONS 요청을 가장 먼저 처리 (preflight 요청)
 app.options('*', (req, res) => {
@@ -41,16 +57,21 @@ app.options('*', (req, res) => {
     console.log('Origin:', origin);
     console.log('Path:', req.path);
     console.log('Method:', req.method);
+    console.log('허용된 도메인 목록:', allowedOrigins);
     
-    // 허용된 origin인지 확인
-    const isAllowed = !origin || 
-                     allowedOrigins.includes(origin) || 
-                     process.env.NODE_ENV !== 'production';
+    // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
+    const isNetlifyOrigin = origin && origin.includes('netlify.app');
+    const isExactMatch = origin && allowedOrigins.includes(origin);
+    const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
+    
+    console.log('isNetlifyOrigin:', isNetlifyOrigin);
+    console.log('isExactMatch:', isExactMatch);
+    console.log('isAllowed:', isAllowed);
     
     if (isAllowed) {
         if (origin) {
             res.setHeader('Access-Control-Allow-Origin', origin);
-            console.log('CORS 헤더 설정:', origin);
+            console.log('✅ CORS 헤더 설정:', origin);
         } else {
             res.setHeader('Access-Control-Allow-Origin', '*');
         }
@@ -58,38 +79,45 @@ app.options('*', (req, res) => {
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.setHeader('Access-Control-Max-Age', '86400');
-        console.log('OPTIONS 요청 허용');
+        console.log('✅ OPTIONS 요청 허용됨');
         return res.status(200).end();
     }
     
     // 허용되지 않은 origin
-    console.log('OPTIONS 요청 차단:', origin);
+    console.log('❌ OPTIONS 요청 차단:', origin);
     res.status(403).end();
 });
 
 // CORS 설정
 const corsOptions = {
     origin: function (origin, callback) {
-        console.log('CORS origin 체크:', origin);
+        console.log('🔍 CORS origin 체크:', origin);
         
         // origin이 없으면 (Postman, curl 등 직접 요청)
         if (!origin) {
+            console.log('✅ Origin 없음 - 허용');
             return callback(null, true);
         }
         
         // 허용된 도메인 목록에 있으면 허용
         if (allowedOrigins.includes(origin)) {
-            console.log('허용된 origin:', origin);
+            console.log('✅ 허용된 origin:', origin);
+            return callback(null, true);
+        }
+        
+        // netlify.app으로 끝나는 모든 도메인 허용 (프리뷰 URL 포함)
+        if (origin.includes('netlify.app')) {
+            console.log('✅ Netlify 도메인 허용:', origin);
             return callback(null, true);
         }
         
         // 개발 환경에서는 모든 도메인 허용
         if (process.env.NODE_ENV !== 'production') {
-            console.log('개발 환경 - 모든 origin 허용');
+            console.log('✅ 개발 환경 - 모든 origin 허용');
             return callback(null, true);
         }
         
-        console.log('CORS 차단된 origin:', origin);
+        console.log('❌ CORS 차단된 origin:', origin);
         callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     },
     credentials: true,
