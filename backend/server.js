@@ -17,34 +17,96 @@ const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
 // CORS 설정 - Netlify 프론트엔드 허용
-const allowedOrigins = [];
-if (process.env.FRONTEND_URL) {
-    allowedOrigins.push(process.env.FRONTEND_URL);
-}
-// 기본 허용 도메인 추가
-allowedOrigins.push('https://ecosync2025.netlify.app');
-allowedOrigins.push('http://localhost:3000'); // 로컬 개발용
+const allowedOrigins = [
+    'https://ecosync2025.netlify.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+];
 
-app.use(cors({
+if (process.env.FRONTEND_URL) {
+    const frontendUrl = process.env.FRONTEND_URL.trim();
+    if (frontendUrl && !allowedOrigins.includes(frontendUrl)) {
+        allowedOrigins.push(frontendUrl);
+    }
+}
+
+console.log('허용된 CORS 도메인:', allowedOrigins);
+
+// CORS 설정
+const corsOptions = {
     origin: function (origin, callback) {
-        // origin이 없으면 (같은 도메인 또는 직접 요청)
+        console.log('CORS 요청 origin:', origin);
+        
+        // origin이 없으면 (Postman, curl 등 직접 요청)
         if (!origin) {
+            console.log('Origin 없음 - 허용');
             return callback(null, true);
         }
+        
         // 허용된 도메인 목록에 있으면 허용
         if (allowedOrigins.includes(origin)) {
+            console.log('허용된 origin:', origin);
             return callback(null, true);
         }
-        // 모든 도메인 허용 (개발 환경)
-        if (process.env.NODE_ENV !== 'production' || allowedOrigins.length === 0) {
+        
+        // 개발 환경에서는 모든 도메인 허용
+        if (process.env.NODE_ENV !== 'production') {
+            console.log('개발 환경 - 모든 origin 허용');
             return callback(null, true);
         }
-        callback(new Error('Not allowed by CORS'));
+        
+        console.log('CORS 차단된 origin:', origin);
+        callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Content-Type'],
+    maxAge: 86400 // 24시간
+};
+
+// CORS 미들웨어를 먼저 적용
+app.use(cors(corsOptions));
+
+// 모든 응답에 CORS 헤더 명시적 추가 (이중 안전장치)
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    
+    // 허용된 origin인지 확인
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+        if (origin) {
+            res.header('Access-Control-Allow-Origin', origin);
+        }
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    }
+    next();
+});
+
+// OPTIONS 요청 명시적 처리 (preflight) - 모든 경로에 대해
+app.options('*', (req, res) => {
+    const origin = req.headers.origin;
+    console.log('OPTIONS 요청 수신:', origin, 'Path:', req.path);
+    
+    // 허용된 origin인지 확인
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+        if (origin) {
+            res.header('Access-Control-Allow-Origin', origin);
+        } else {
+            res.header('Access-Control-Allow-Origin', '*');
+        }
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Max-Age', '86400');
+        return res.sendStatus(200);
+    }
+    
+    // 허용되지 않은 origin
+    console.log('OPTIONS 요청 차단:', origin);
+    res.sendStatus(403);
+});
 app.use(bodyParser.json());
 // 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
 // 로컬 개발 시에만 사용
