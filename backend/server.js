@@ -56,6 +56,7 @@ async function initializeData() {
       activeChallenges: [],
       completedChallenges: [],
       badges: [
+        { id: 'badge000', name: '시작의 발걸음', description: '에너지 절약 플랫폼에 가입하셨습니다!', icon: '👋', condition: '회원가입 완료' },
         { id: 'badge001', name: '첫 절약', description: '첫 번째 목표 설정', icon: '🌱', condition: '첫 목표 설정' },
         { id: 'badge002', name: '에너지 마스터', description: '100kWh 절약 달성', icon: '⚡', condition: '100kWh 절약' },
         { id: 'badge003', name: '주간 챔피언', description: '주간 1위 달성', icon: '🥇', condition: '주간 1위' },
@@ -806,7 +807,9 @@ app.post('/api/register', async (req, res) => {
       password, // 실제로는 해시화 필요
       name,
       phone,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      badges: ['badge000'], // 회원가입 시 기본 뱃지 부여
+      points: 0
     };
 
     users.push(newUser);
