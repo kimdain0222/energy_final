@@ -1576,8 +1576,10 @@ app.get('/api/challenge/stats', async (req, res) => {
 // 서버 시작
 async function startServer() {
   await initializeData();
-  app.listen(PORT, () => {
-    console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
     console.log('에너지공단 API 연동 준비 완료');
   });
 }
