@@ -1,0 +1,116 @@
+/* 전역 스타일 */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --info-color: #0dcaf0;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+}
+
+/* 히어로 섹션 */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.hero-section .text-primary {
+    color: #ffd700 !important;
+}
+
+.hero-section h1 {
+    color: white;
+}
+
+.hero-image .card {
+    background: white;
+    border-radius: 15px;
+}
+
+/* 기능 아이콘 */
+.feature-icon {
+    font-size: 48px;
+}
+
+/* 카드 호버 효과 */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 데모 샘플 버튼 */
+.demo-sample {
+    height: 100%;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s;
+}
+
+.demo-sample:hover {
+    border-color: var(--primary-color);
+    background-color: #f8f9fa;
+}
+
+/* 최소 높이 유틸리티 */
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+/* 버튼 스타일 */
+.btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+/* 네비게이션 */
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+/* 반응형 이미지 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 폼 스타일 */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* 배지 스타일 */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+
+/* 로딩 스피너 */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+

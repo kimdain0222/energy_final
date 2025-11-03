@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분석 결과 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a href="dashboard.html" class="text-muted">← 대시보드로</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div id="resultsContent">
+            <!-- 결과가 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        // 결과 데이터 로드
+        const resultData = JSON.parse(localStorage.getItem('analysisResult') || '{}');
+
+        if (!resultData.monthlyBill) {
+            alert('분석 결과가 없습니다. 에너지 분석을 먼저 진행해주세요.');
+            window.location.href = 'analyze.html';
+        } else {
+            // 결과 표시
+            const content = document.getElementById('resultsContent');
+            
+            content.innerHTML = `
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-4">분석 결과</h2>
+                </div>
+            </div>
+
+            <!-- 요금 정보 -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <h3 class="text-primary mb-2">월 전기요금</h3>
+                            <h2 class="fw-bold">${resultData.monthlyBill ? resultData.monthlyBill.toLocaleString() : '0'}원</h2>
+                            <small class="text-muted">${resultData.houseType || ''} ${resultData.area || ''}㎡</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <h3 class="text-info mb-2">누진 단계</h3>
+                            <h2 class="fw-bold">${resultData.tier || '0'}단계</h2>
+                            <small class="text-muted">월 ${resultData.monthlyUsage || '0'}kWh 사용</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <h3 class="text-success mb-2">추정 절감액</h3>
+                            <h2 class="fw-bold">${resultData.estimatedSavings ? resultData.estimatedSavings.toLocaleString() : '0'}원</h2>
+                            <small class="text-muted">개선 시 예상 절감</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 추천 지원사업 -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="fw-bold mb-4">🎯 실제 지원사업 추천</h3>
+                    <p class="text-muted mb-4">에너지공단 API에서 불러온 사용자 조건에 맞는 지원사업입니다</p>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5" id="recommendedPrograms">
+                ${resultData.recommendedPrograms && Array.isArray(resultData.recommendedPrograms) && resultData.recommendedPrograms.length > 0 
+                    ? resultData.recommendedPrograms.map(program => `
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="fw-bold mb-0">${program.title || '제목 없음'}</h5>
+                                        <span class="badge bg-success">접수중</span>
+                                    </div>
+                                    <p class="text-muted mb-3">${program.description || ''}</p>
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <strong>대상:</strong> ${program.target || '-'} | 
+                                            <strong>지원금액:</strong> ${program.supportAmount || '-'}
+                                        </small>
+                                    </div>
+                                    <a href="${program.applyUrl || '#'}" target="_blank" class="btn btn-primary w-100">
+                                        지원받기 →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('') 
+                    : '<div class="col-12"><p class="text-muted text-center">추천 지원사업이 없습니다. <a href="programs.html">전체 목록</a>을 확인해보세요.</p></div>'}
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="text-center">
+                <a href="programs.html" class="btn btn-outline-primary btn-lg px-5 me-2">
+                    전체 지원사업 보기
+                </a>
+                <a href="analyze.html" class="btn btn-primary btn-lg px-5">
+                    다시 분석하기
+                </a>
+            </div>
+        `;
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 분석 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a href="dashboard.html" class="text-muted">← 대시보드로</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-4">에너지 분석</h2>
+                <p class="text-muted mb-5">데모 샘플을 선택하거나 직접 입력하여 분석하세요</p>
+
+                <!-- 데모 샘플 -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">🚀 빠른 체험: 데모 샘플</h5>
+                        <div class="row g-3" id="demoSamples">
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary w-100 p-3 demo-sample" 
+                                        data-type="아파트" data-area="84" data-usage="350">
+                                    <strong>아파트</strong><br>
+                                    <small class="text-muted">84㎡, 월 350kWh</small>
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary w-100 p-3 demo-sample"
+                                        data-type="주택" data-area="120" data-usage="450">
+                                    <strong>주택</strong><br>
+                                    <small class="text-muted">120㎡, 월 450kWh</small>
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary w-100 p-3 demo-sample"
+                                        data-type="오피스텔" data-area="60" data-usage="280">
+                                    <strong>오피스텔</strong><br>
+                                    <small class="text-muted">60㎡, 월 280kWh</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 직접 입력 폼 -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h5 class="fw-bold mb-4">또는 직접 입력</h5>
+                        <form id="analyzeForm">
+                            <div class="mb-4">
+                                <label for="houseType" class="form-label">주택 유형</label>
+                                <select class="form-select" id="houseType" required>
+                                    <option value="">선택하세요</option>
+                                    <option value="아파트">아파트</option>
+                                    <option value="주택">주택</option>
+                                    <option value="오피스텔">오피스텔</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="area" class="form-label">면적 (㎡)</label>
+                                <input type="number" class="form-control" id="area" placeholder="예: 84" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="monthlyUsage" class="form-label">월 전기 사용량 (kWh)</label>
+                                <input type="number" class="form-control" id="monthlyUsage" placeholder="예: 350" required>
+                                <small class="text-muted">전기 요금 고지서에서 확인하실 수 있습니다</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                실제 지원사업 찾기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        // 데모 샘플 클릭
+        document.querySelectorAll('.demo-sample').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('houseType').value = this.dataset.type;
+                document.getElementById('area').value = this.dataset.area;
+                document.getElementById('monthlyUsage').value = this.dataset.usage;
+            });
+        });
+
+        // 분석 폼 제출
+        document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const houseType = document.getElementById('houseType').value;
+            const area = parseInt(document.getElementById('area').value);
+            const monthlyUsage = parseInt(document.getElementById('monthlyUsage').value);
+
+            // 분석 결과를 로컬스토리지에 저장하고 결과 페이지로 이동
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ houseType, area, monthlyUsage })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem('analysisResult', JSON.stringify({
+                        houseType,
+                        area,
+                        monthlyUsage,
+                        ...data.analysis
+                    }));
+                    window.location.href = 'results.html';
+                } else {
+                    alert('분석 중 오류가 발생했습니다.');
+                }
+            } catch (error) {
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지원사업 전체 목록 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">대시보드</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-2">실제 지원사업 전체 목록</h2>
+                        <p class="text-muted">에너지공단 API로 실시간 조회한 지원사업</p>
+                    </div>
+                    <button class="btn btn-outline-primary" onclick="refreshPrograms()">
+                        🔄 새로고침
+                    </button>
+                </div>
+                <div class="alert alert-info">
+                    <strong>현재 접수중인 사업 <span id="totalCount">-</span>개</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- 필터 -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">🔍 필터</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">지역</label>
+                        <select class="form-select" id="filterRegion" onchange="filterPrograms()">
+                            <option value="">전체 지역</option>
+                            <option value="전국">전국</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                            <option value="부산">부산</option>
+                            <option value="대구">대구</option>
+                            <option value="대전">대전</option>
+                            <option value="광주">광주</option>
+                            <option value="울산">울산</option>
+                            <option value="세종">세종</option>
+                            <option value="경북">경북</option>
+                            <option value="경남">경남</option>
+                            <option value="충북">충북</option>
+                            <option value="충남">충남</option>
+                            <option value="전북">전북</option>
+                            <option value="전남">전남</option>
+                            <option value="강원">강원</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">주택 유형</label>
+                        <select class="form-select" id="filterHouseType" onchange="filterPrograms()">
+                            <option value="">전체</option>
+                            <option value="아파트">아파트</option>
+                            <option value="주택">주택</option>
+                            <option value="오피스텔">오피스텔</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-secondary w-100" onclick="resetFilters()">필터 초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 프로그램 목록 -->
+        <div id="programsList" class="row g-4">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">로딩 중...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        let allPrograms = [];
+
+        // 프로그램 로드
+        async function loadPrograms() {
+            try {
+                const response = await fetch('/api/programs');
+                const data = await response.json();
+
+                if (data.success) {
+                    allPrograms = data.programs;
+                    // 초기 로드 시 필터 적용
+                    filterPrograms();
+                } else {
+                    alert('프로그램을 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                alert('서버 오류가 발생했습니다.');
+            }
+        }
+
+        // 프로그램 표시
+        function displayPrograms(programs) {
+            const container = document.getElementById('programsList');
+
+            if (programs.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center p-5">
+                                <p class="text-muted">조건에 맞는 지원사업이 없습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = programs.map(program => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="fw-bold mb-0">${program.title}</h5>
+                                <span class="badge bg-success">접수중</span>
+                            </div>
+                            <p class="text-muted mb-3 small">${program.description}</p>
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="badge bg-info text-white">${program.region || '전국'}</span>
+                                </small>
+                                <small class="text-muted d-block">
+                                    <strong>대상:</strong> ${program.target}
+                                </small>
+                                <small class="text-muted d-block">
+                                    <strong>지원금액:</strong> ${program.supportAmount}
+                                </small>
+                                ${program.deadline ? `<small class="text-muted d-block"><strong>마감일:</strong> ${program.deadline}</small>` : ''}
+                            </div>
+                            <a href="${program.applyUrl}" target="_blank" class="btn btn-primary w-100">
+                                지원받기 →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 필터링
+        async function filterPrograms() {
+            const region = document.getElementById('filterRegion')?.value || '';
+            const houseType = document.getElementById('filterHouseType')?.value || '';
+            
+            // 서버에 필터링 요청
+            try {
+                let url = '/api/programs?';
+                if (region) url += `region=${encodeURIComponent(region)}&`;
+                if (houseType) url += `houseType=${encodeURIComponent(houseType)}&`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayPrograms(data.programs);
+                    document.getElementById('totalCount').textContent = data.programs.length;
+                } else {
+                    // 서버 필터링 실패 시 클라이언트 측 필터링
+                    applyClientSideFilter(region, houseType);
+                }
+            } catch (error) {
+                // 서버 필터링 실패 시 클라이언트 측 필터링
+                applyClientSideFilter(region, houseType);
+            }
+        }
+
+        // 클라이언트 측 필터링
+        function applyClientSideFilter(region, houseType) {
+            let filtered = allPrograms;
+
+            if (region) {
+                filtered = filtered.filter(p => 
+                    p.region === region || p.region === '전국'
+                );
+            }
+
+            if (houseType) {
+                filtered = filtered.filter(p => 
+                    p.target.includes(houseType) || p.target === '전체'
+                );
+            }
+
+            displayPrograms(filtered);
+            document.getElementById('totalCount').textContent = filtered.length;
+        }
+
+        // 필터 초기화
+        function resetFilters() {
+            document.getElementById('filterRegion').value = '';
+            document.getElementById('filterHouseType').value = '';
+            filterPrograms();
+        }
+
+        // 새로고침
+        async function refreshPrograms() {
+            try {
+                const response = await fetch('/api/programs/refresh', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    allPrograms = data.programs;
+                    // 필터 다시 적용
+                    filterPrograms();
+                    alert('지원사업 목록이 새로고침되었습니다.');
+                }
+            } catch (error) {
+                alert('새로고침 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 페이지 로드 시 프로그램 로드
+        loadPrograms();
+    </script>
+</body>
+</html>
+
