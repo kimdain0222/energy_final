@@ -1,0 +1,1148 @@
+[
+  {
+    "id": "1762161726554",
+    "email": "ing10068@naver.com",
+    "password": "Aa050821$$",
+    "name": "김다인",
+    "phone": "01062437067",
+    "createdAt": "2025-11-03T09:22:06.554Z",
+    "currentChallenge": {
+      "id": "challenge_1762163709404",
+      "userId": "1762161726554",
+      "type": "monthly",
+      "targetKwh": 20,
+      "targetAmount": 0,
+      "savedKwh": 15,
+      "savedAmount": 0,
+      "startDate": "2025-11-03",
+      "endDate": "2025-12-03",
+      "achievementRate": 75,
+      "status": "active",
+      "createdAt": "2025-11-03T09:55:09.404Z"
+    },
+    "totalSaved": 15,
+    "points": 200,
+    "badges": [
+      "badge001",
+      "badge000"
+    ],
+    "region": "인천",
+    "housingType": "아파트",
+    "area": 38,
+    "householdSize": 4,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "도시가스",
+      "lighting": "LED 대부분",
+      "appliances": "보통"
+    }
+  },
+  {
+    "id": "demo_user_1",
+    "email": "demo1@energy.com",
+    "password": "demo123",
+    "name": "김에너지",
+    "phone": "010-5967-3529",
+    "region": "부산",
+    "housingType": "아파트",
+    "area": 29,
+    "householdSize": 1,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "기름보일러",
+      "lighting": "LED 대부분",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_1",
+      "userId": "demo_user_1",
+      "type": "monthly",
+      "targetKwh": 122,
+      "savedKwh": 150,
+      "startDate": "2025-10-11",
+      "endDate": "2025-11-10",
+      "achievementRate": 123,
+      "status": "completed",
+      "createdAt": "2025-10-11T11:49:53.764Z"
+    },
+    "totalSaved": 178,
+    "points": 2200,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-11T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_2",
+    "email": "demo2@energy.com",
+    "password": "demo123",
+    "name": "이절약",
+    "phone": "010-9104-5938",
+    "region": "경기",
+    "housingType": "아파트",
+    "area": 42,
+    "householdSize": 6,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 사용안함",
+      "heating": "전기히터",
+      "lighting": "LED 전부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_2",
+      "userId": "demo_user_2",
+      "type": "monthly",
+      "targetKwh": 142,
+      "savedKwh": 134,
+      "startDate": "2025-10-25",
+      "endDate": "2025-11-24",
+      "achievementRate": 94,
+      "status": "active",
+      "createdAt": "2025-10-25T11:49:53.764Z"
+    },
+    "totalSaved": 160,
+    "points": 1540,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-25T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_3",
+    "email": "demo3@energy.com",
+    "password": "demo123",
+    "name": "박그린",
+    "phone": "010-2509-0604",
+    "region": "제주",
+    "housingType": "오피스텔",
+    "area": 20,
+    "householdSize": 2,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "도시가스",
+      "lighting": "LED 일부",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_3",
+      "userId": "demo_user_3",
+      "type": "monthly",
+      "targetKwh": 142,
+      "savedKwh": 160,
+      "startDate": "2025-10-17",
+      "endDate": "2025-11-16",
+      "achievementRate": 113,
+      "status": "completed",
+      "createdAt": "2025-10-17T11:49:53.764Z"
+    },
+    "totalSaved": 208,
+    "points": 2300,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-17T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_4",
+    "email": "demo4@energy.com",
+    "password": "demo123",
+    "name": "최환경",
+    "phone": "010-9463-8551",
+    "region": "인천",
+    "housingType": "오피스텔",
+    "area": 26,
+    "householdSize": 4,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 사용안함",
+      "heating": "지역난방",
+      "lighting": "LED 일부",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_4",
+      "userId": "demo_user_4",
+      "type": "monthly",
+      "targetKwh": 122,
+      "savedKwh": 159,
+      "startDate": "2025-10-13",
+      "endDate": "2025-11-12",
+      "achievementRate": 130,
+      "status": "completed",
+      "createdAt": "2025-10-13T11:49:53.764Z"
+    },
+    "totalSaved": 175,
+    "points": 2290,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-13T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_5",
+    "email": "demo5@energy.com",
+    "password": "demo123",
+    "name": "정지구",
+    "phone": "010-5783-8452",
+    "region": "충남",
+    "housingType": "오피스텔",
+    "area": 41,
+    "householdSize": 3,
+    "energyTier": 1,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "기름보일러",
+      "lighting": "형광등 위주",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_5",
+      "userId": "demo_user_5",
+      "type": "monthly",
+      "targetKwh": 148,
+      "savedKwh": 175,
+      "startDate": "2025-10-04",
+      "endDate": "2025-11-03",
+      "achievementRate": 118,
+      "status": "completed",
+      "createdAt": "2025-10-04T11:49:53.764Z"
+    },
+    "totalSaved": 194,
+    "points": 2450,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-04T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_6",
+    "email": "demo6@energy.com",
+    "password": "demo123",
+    "name": "강친환경",
+    "phone": "010-4357-5079",
+    "region": "서울",
+    "housingType": "단독주택",
+    "area": 47,
+    "householdSize": 5,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "지역난방",
+      "lighting": "LED 대부분",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_6",
+      "userId": "demo_user_6",
+      "type": "monthly",
+      "targetKwh": 84,
+      "savedKwh": 112,
+      "startDate": "2025-10-28",
+      "endDate": "2025-11-27",
+      "achievementRate": 133,
+      "status": "completed",
+      "createdAt": "2025-10-28T11:49:53.764Z"
+    },
+    "totalSaved": 133,
+    "points": 1820,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-28T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_7",
+    "email": "demo7@energy.com",
+    "password": "demo123",
+    "name": "조에코",
+    "phone": "010-2116-8286",
+    "region": "경북",
+    "housingType": "오피스텔",
+    "area": 47,
+    "householdSize": 5,
+    "energyTier": 1,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "도시가스",
+      "lighting": "LED 일부",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_7",
+      "userId": "demo_user_7",
+      "type": "monthly",
+      "targetKwh": 71,
+      "savedKwh": 93,
+      "startDate": "2025-10-16",
+      "endDate": "2025-11-15",
+      "achievementRate": 131,
+      "status": "completed",
+      "createdAt": "2025-10-16T11:49:53.764Z"
+    },
+    "totalSaved": 124,
+    "points": 1530,
+    "badges": [
+      "badge001",
+      "badge006"
+    ],
+    "createdAt": "2025-10-16T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_8",
+    "email": "demo8@energy.com",
+    "password": "demo123",
+    "name": "윤스마트",
+    "phone": "010-3464-0067",
+    "region": "충북",
+    "housingType": "오피스텔",
+    "area": 31,
+    "householdSize": 5,
+    "energyTier": 1,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "기름보일러",
+      "lighting": "LED 대부분",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_8",
+      "userId": "demo_user_8",
+      "type": "monthly",
+      "targetKwh": 89,
+      "savedKwh": 112,
+      "startDate": "2025-10-06",
+      "endDate": "2025-11-05",
+      "achievementRate": 126,
+      "status": "completed",
+      "createdAt": "2025-10-06T11:49:53.764Z"
+    },
+    "totalSaved": 144,
+    "points": 1820,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-06T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_9",
+    "email": "demo9@energy.com",
+    "password": "demo123",
+    "name": "장효율",
+    "phone": "010-8031-7358",
+    "region": "대구",
+    "housingType": "아파트",
+    "area": 36,
+    "householdSize": 3,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "전기히터",
+      "lighting": "LED 대부분",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_9",
+      "userId": "demo_user_9",
+      "type": "monthly",
+      "targetKwh": 63,
+      "savedKwh": 100,
+      "startDate": "2025-11-01",
+      "endDate": "2025-12-01",
+      "achievementRate": 150,
+      "status": "completed",
+      "createdAt": "2025-11-01T11:49:53.764Z"
+    },
+    "totalSaved": 121,
+    "points": 1700,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002",
+      "badge007"
+    ],
+    "createdAt": "2025-11-01T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_10",
+    "email": "demo10@energy.com",
+    "password": "demo123",
+    "name": "임태양",
+    "phone": "010-8672-2448",
+    "region": "울산",
+    "housingType": "단독주택",
+    "area": 32,
+    "householdSize": 4,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "기름보일러",
+      "lighting": "LED 일부",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_10",
+      "userId": "demo_user_10",
+      "type": "monthly",
+      "targetKwh": 68,
+      "savedKwh": 61,
+      "startDate": "2025-10-30",
+      "endDate": "2025-11-29",
+      "achievementRate": 90,
+      "status": "active",
+      "createdAt": "2025-10-30T11:49:53.764Z"
+    },
+    "totalSaved": 73,
+    "points": 710,
+    "badges": [
+      "badge001",
+      "badge006"
+    ],
+    "createdAt": "2025-10-30T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_11",
+    "email": "demo11@energy.com",
+    "password": "demo123",
+    "name": "한바람",
+    "phone": "010-3687-9242",
+    "region": "세종",
+    "housingType": "단독주택",
+    "area": 25,
+    "householdSize": 4,
+    "energyTier": 1,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "전기히터",
+      "lighting": "LED 일부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_11",
+      "userId": "demo_user_11",
+      "type": "monthly",
+      "targetKwh": 65,
+      "savedKwh": 114,
+      "startDate": "2025-10-15",
+      "endDate": "2025-11-14",
+      "achievementRate": 150,
+      "status": "completed",
+      "createdAt": "2025-10-15T11:49:53.764Z"
+    },
+    "totalSaved": 133,
+    "points": 1840,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002",
+      "badge007"
+    ],
+    "createdAt": "2025-10-15T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_12",
+    "email": "demo12@energy.com",
+    "password": "demo123",
+    "name": "오지열",
+    "phone": "010-6123-9654",
+    "region": "대전",
+    "housingType": "아파트",
+    "area": 44,
+    "householdSize": 1,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "전기히터",
+      "lighting": "LED 대부분",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_12",
+      "userId": "demo_user_12",
+      "type": "monthly",
+      "targetKwh": 95,
+      "savedKwh": 50,
+      "startDate": "2025-10-09",
+      "endDate": "2025-11-08",
+      "achievementRate": 53,
+      "status": "active",
+      "createdAt": "2025-10-09T11:49:53.764Z"
+    },
+    "totalSaved": 98,
+    "points": 600,
+    "badges": [
+      "badge001",
+      "badge006"
+    ],
+    "createdAt": "2025-10-09T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_13",
+    "email": "demo13@energy.com",
+    "password": "demo123",
+    "name": "서수력",
+    "phone": "010-8453-3454",
+    "region": "충남",
+    "housingType": "아파트",
+    "area": 48,
+    "householdSize": 5,
+    "energyTier": 1,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "도시가스",
+      "lighting": "LED 대부분",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_13",
+      "userId": "demo_user_13",
+      "type": "monthly",
+      "targetKwh": 95,
+      "savedKwh": 117,
+      "startDate": "2025-11-01",
+      "endDate": "2025-12-01",
+      "achievementRate": 123,
+      "status": "completed",
+      "createdAt": "2025-11-01T11:49:53.764Z"
+    },
+    "totalSaved": 151,
+    "points": 1870,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-11-01T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_14",
+    "email": "demo14@energy.com",
+    "password": "demo123",
+    "name": "신재생",
+    "phone": "010-2025-8473",
+    "region": "전북",
+    "housingType": "오피스텔",
+    "area": 23,
+    "householdSize": 5,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "전기히터",
+      "lighting": "LED 대부분",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_14",
+      "userId": "demo_user_14",
+      "type": "monthly",
+      "targetKwh": 62,
+      "savedKwh": 69,
+      "startDate": "2025-10-23",
+      "endDate": "2025-11-22",
+      "achievementRate": 111,
+      "status": "completed",
+      "createdAt": "2025-10-23T11:49:53.764Z"
+    },
+    "totalSaved": 109,
+    "points": 1290,
+    "badges": [
+      "badge001",
+      "badge006"
+    ],
+    "createdAt": "2025-10-23T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_15",
+    "email": "demo15@energy.com",
+    "password": "demo123",
+    "name": "유저원",
+    "phone": "010-4499-9759",
+    "region": "대구",
+    "housingType": "단독주택",
+    "area": 50,
+    "householdSize": 5,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "전기히터",
+      "lighting": "LED 일부",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_15",
+      "userId": "demo_user_15",
+      "type": "monthly",
+      "targetKwh": 99,
+      "savedKwh": 109,
+      "startDate": "2025-10-21",
+      "endDate": "2025-11-20",
+      "achievementRate": 110,
+      "status": "completed",
+      "createdAt": "2025-10-21T11:49:53.764Z"
+    },
+    "totalSaved": 148,
+    "points": 1790,
+    "badges": [
+      "badge001",
+      "badge006",
+      "badge002"
+    ],
+    "createdAt": "2025-10-21T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_16",
+    "email": "demo16@energy.com",
+    "password": "demo123",
+    "name": "류환경",
+    "phone": "010-5269-6397",
+    "region": "대전",
+    "housingType": "단독주택",
+    "area": 46,
+    "householdSize": 1,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "전기히터",
+      "lighting": "형광등 위주",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_16",
+      "userId": "demo_user_16",
+      "type": "monthly",
+      "targetKwh": 40,
+      "savedKwh": 23,
+      "startDate": "2025-10-14",
+      "endDate": "2025-11-13",
+      "achievementRate": 57,
+      "status": "active",
+      "createdAt": "2025-10-14T11:49:53.764Z"
+    },
+    "totalSaved": 72,
+    "points": 230,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-14T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_17",
+    "email": "demo17@energy.com",
+    "password": "demo123",
+    "name": "마절전",
+    "phone": "010-1474-1278",
+    "region": "경북",
+    "housingType": "오피스텔",
+    "area": 41,
+    "householdSize": 6,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "도시가스",
+      "lighting": "형광등 위주",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_17",
+      "userId": "demo_user_17",
+      "type": "monthly",
+      "targetKwh": 64,
+      "savedKwh": 47,
+      "startDate": "2025-10-22",
+      "endDate": "2025-11-21",
+      "achievementRate": 73,
+      "status": "active",
+      "createdAt": "2025-10-22T11:49:53.764Z"
+    },
+    "totalSaved": 66,
+    "points": 470,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-22T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_18",
+    "email": "demo18@energy.com",
+    "password": "demo123",
+    "name": "백효율",
+    "phone": "010-6814-3425",
+    "region": "충북",
+    "housingType": "아파트",
+    "area": 43,
+    "householdSize": 4,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "기름보일러",
+      "lighting": "LED 전부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_18",
+      "userId": "demo_user_18",
+      "type": "monthly",
+      "targetKwh": 40,
+      "savedKwh": 18,
+      "startDate": "2025-10-06",
+      "endDate": "2025-11-05",
+      "achievementRate": 45,
+      "status": "active",
+      "createdAt": "2025-10-06T11:49:53.764Z"
+    },
+    "totalSaved": 47,
+    "points": 180,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-06T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_19",
+    "email": "demo19@energy.com",
+    "password": "demo123",
+    "name": "송그린",
+    "phone": "010-2789-2860",
+    "region": "경북",
+    "housingType": "아파트",
+    "area": 33,
+    "householdSize": 6,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "도시가스",
+      "lighting": "LED 대부분",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_19",
+      "userId": "demo_user_19",
+      "type": "monthly",
+      "targetKwh": 56,
+      "savedKwh": 26,
+      "startDate": "2025-10-18",
+      "endDate": "2025-11-17",
+      "achievementRate": 46,
+      "status": "active",
+      "createdAt": "2025-10-18T11:49:53.764Z"
+    },
+    "totalSaved": 33,
+    "points": 260,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-18T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_20",
+    "email": "demo20@energy.com",
+    "password": "demo123",
+    "name": "양지구",
+    "phone": "010-6707-8846",
+    "region": "대전",
+    "housingType": "아파트",
+    "area": 40,
+    "householdSize": 4,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "도시가스",
+      "lighting": "형광등 위주",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_20",
+      "userId": "demo_user_20",
+      "type": "monthly",
+      "targetKwh": 50,
+      "savedKwh": 32,
+      "startDate": "2025-11-01",
+      "endDate": "2025-12-01",
+      "achievementRate": 64,
+      "status": "active",
+      "createdAt": "2025-11-01T11:49:53.764Z"
+    },
+    "totalSaved": 70,
+    "points": 320,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-11-01T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_21",
+    "email": "demo21@energy.com",
+    "password": "demo123",
+    "name": "배친환경",
+    "phone": "010-1036-9017",
+    "region": "인천",
+    "housingType": "아파트",
+    "area": 48,
+    "householdSize": 2,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "가끔 사용",
+      "heating": "지역난방",
+      "lighting": "LED 전부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_21",
+      "userId": "demo_user_21",
+      "type": "monthly",
+      "targetKwh": 42,
+      "savedKwh": 48,
+      "startDate": "2025-10-24",
+      "endDate": "2025-11-23",
+      "achievementRate": 114,
+      "status": "completed",
+      "createdAt": "2025-10-24T11:49:53.764Z"
+    },
+    "totalSaved": 87,
+    "points": 980,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-24T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_22",
+    "email": "demo22@energy.com",
+    "password": "demo123",
+    "name": "전에코",
+    "phone": "010-9774-9865",
+    "region": "대전",
+    "housingType": "단독주택",
+    "area": 36,
+    "householdSize": 3,
+    "energyTier": 3,
+    "surveyAnswers": {
+      "aircon": "거의 사용안함",
+      "heating": "전기히터",
+      "lighting": "LED 전부",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_22",
+      "userId": "demo_user_22",
+      "type": "monthly",
+      "targetKwh": 49,
+      "savedKwh": 11,
+      "startDate": "2025-10-29",
+      "endDate": "2025-11-28",
+      "achievementRate": 22,
+      "status": "active",
+      "createdAt": "2025-10-29T11:49:53.764Z"
+    },
+    "totalSaved": 60,
+    "points": 110,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-29T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_23",
+    "email": "demo23@energy.com",
+    "password": "demo123",
+    "name": "정스마트",
+    "phone": "010-4092-2675",
+    "region": "경남",
+    "housingType": "오피스텔",
+    "area": 20,
+    "householdSize": 1,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "지역난방",
+      "lighting": "LED 전부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_23",
+      "userId": "demo_user_23",
+      "type": "monthly",
+      "targetKwh": 69,
+      "savedKwh": 27,
+      "startDate": "2025-10-26",
+      "endDate": "2025-11-25",
+      "achievementRate": 39,
+      "status": "active",
+      "createdAt": "2025-10-26T11:49:53.764Z"
+    },
+    "totalSaved": 75,
+    "points": 270,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-26T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_24",
+    "email": "demo24@energy.com",
+    "password": "demo123",
+    "name": "최효율",
+    "phone": "010-6387-7935",
+    "region": "제주",
+    "housingType": "단독주택",
+    "area": 28,
+    "householdSize": 1,
+    "energyTier": 3,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "전기히터",
+      "lighting": "LED 대부분",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_24",
+      "userId": "demo_user_24",
+      "type": "monthly",
+      "targetKwh": 63,
+      "savedKwh": 11,
+      "startDate": "2025-10-15",
+      "endDate": "2025-11-14",
+      "achievementRate": 17,
+      "status": "active",
+      "createdAt": "2025-10-15T11:49:53.764Z"
+    },
+    "totalSaved": 42,
+    "points": 110,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-15T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_25",
+    "email": "demo25@energy.com",
+    "password": "demo123",
+    "name": "강태양",
+    "phone": "010-9835-5129",
+    "region": "부산",
+    "housingType": "오피스텔",
+    "area": 50,
+    "householdSize": 4,
+    "energyTier": 3,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "지역난방",
+      "lighting": "LED 전부",
+      "appliances": "적음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_25",
+      "userId": "demo_user_25",
+      "type": "monthly",
+      "targetKwh": 41,
+      "savedKwh": 10,
+      "startDate": "2025-10-05",
+      "endDate": "2025-11-04",
+      "achievementRate": 24,
+      "status": "active",
+      "createdAt": "2025-10-05T11:49:53.764Z"
+    },
+    "totalSaved": 36,
+    "points": 100,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-05T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_26",
+    "email": "demo26@energy.com",
+    "password": "demo123",
+    "name": "김바람",
+    "phone": "010-6866-8879",
+    "region": "대구",
+    "housingType": "오피스텔",
+    "area": 36,
+    "householdSize": 4,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "전기히터",
+      "lighting": "LED 대부분",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_26",
+      "userId": "demo_user_26",
+      "type": "monthly",
+      "targetKwh": 57,
+      "savedKwh": 31,
+      "startDate": "2025-10-18",
+      "endDate": "2025-11-17",
+      "achievementRate": 54,
+      "status": "active",
+      "createdAt": "2025-10-18T11:49:53.764Z"
+    },
+    "totalSaved": 52,
+    "points": 310,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-18T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_27",
+    "email": "demo27@energy.com",
+    "password": "demo123",
+    "name": "이지열",
+    "phone": "010-4568-5053",
+    "region": "인천",
+    "housingType": "아파트",
+    "area": 49,
+    "householdSize": 3,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "자주 사용",
+      "heating": "지역난방",
+      "lighting": "LED 전부",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_27",
+      "userId": "demo_user_27",
+      "type": "monthly",
+      "targetKwh": 47,
+      "savedKwh": 31,
+      "startDate": "2025-10-20",
+      "endDate": "2025-11-19",
+      "achievementRate": 66,
+      "status": "active",
+      "createdAt": "2025-10-20T11:49:53.764Z"
+    },
+    "totalSaved": 67,
+    "points": 310,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-20T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_28",
+    "email": "demo28@energy.com",
+    "password": "demo123",
+    "name": "박수력",
+    "phone": "010-3494-4481",
+    "region": "전남",
+    "housingType": "오피스텔",
+    "area": 20,
+    "householdSize": 1,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 항상",
+      "heating": "지역난방",
+      "lighting": "형광등 위주",
+      "appliances": "보통"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_28",
+      "userId": "demo_user_28",
+      "type": "monthly",
+      "targetKwh": 61,
+      "savedKwh": 41,
+      "startDate": "2025-10-09",
+      "endDate": "2025-11-08",
+      "achievementRate": 67,
+      "status": "active",
+      "createdAt": "2025-10-09T11:49:53.764Z"
+    },
+    "totalSaved": 78,
+    "points": 410,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-09T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_29",
+    "email": "demo29@energy.com",
+    "password": "demo123",
+    "name": "조재생",
+    "phone": "010-1014-3500",
+    "region": "대전",
+    "housingType": "오피스텔",
+    "area": 24,
+    "householdSize": 5,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 사용안함",
+      "heating": "기름보일러",
+      "lighting": "LED 대부분",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_29",
+      "userId": "demo_user_29",
+      "type": "monthly",
+      "targetKwh": 47,
+      "savedKwh": 48,
+      "startDate": "2025-10-08",
+      "endDate": "2025-11-07",
+      "achievementRate": 102,
+      "status": "completed",
+      "createdAt": "2025-10-08T11:49:53.764Z"
+    },
+    "totalSaved": 85,
+    "points": 980,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-08T11:49:53.764Z"
+  },
+  {
+    "id": "demo_user_30",
+    "email": "demo30@energy.com",
+    "password": "demo123",
+    "name": "윤저원",
+    "phone": "010-9582-3228",
+    "region": "인천",
+    "housingType": "아파트",
+    "area": 23,
+    "householdSize": 5,
+    "energyTier": 2,
+    "surveyAnswers": {
+      "aircon": "거의 사용안함",
+      "heating": "지역난방",
+      "lighting": "LED 일부",
+      "appliances": "많음"
+    },
+    "currentChallenge": {
+      "id": "challenge_demo_30",
+      "userId": "demo_user_30",
+      "type": "monthly",
+      "targetKwh": 45,
+      "savedKwh": 10,
+      "startDate": "2025-10-25",
+      "endDate": "2025-11-24",
+      "achievementRate": 22,
+      "status": "active",
+      "createdAt": "2025-10-25T11:49:53.764Z"
+    },
+    "totalSaved": 39,
+    "points": 100,
+    "badges": [
+      "badge001"
+    ],
+    "createdAt": "2025-10-25T11:49:53.764Z"
+  }
+]

@@ -13,12 +13,29 @@ const path = require('path');
 const axios = require('axios');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
-app.use(cors());
+// CORS 설정 - Netlify 프론트엔드 허용
+const allowedOrigins = process.env.FRONTEND_URL 
+    ? [process.env.FRONTEND_URL] 
+    : ['*'];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 app.use(bodyParser.json());
-app.use(express.static('frontend'));
+// 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
+// 로컬 개발 시에만 사용
+if (process.env.NODE_ENV !== 'production') {
+    app.use(express.static('frontend'));
+}
 
 // 데이터 파일 경로
 const DATA_DIR = path.join(__dirname, '..', 'data');
