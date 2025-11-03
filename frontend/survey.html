@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에너지 사용 습관 설문 - 에너지 절약 플랫폼</title>
+    <title>맞춤형 절약팁 받기 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -20,9 +20,9 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-5">
-                        <h2 class="fw-bold mb-4">에너지 사용 습관 설문</h2>
+                        <h2 class="fw-bold mb-4">맞춤형 절약팁 받기</h2>
                         <p class="text-muted mb-4">
-                            정확한 예측을 위해 에너지 사용 습관을 알려주세요.<br>
+                            나의 생활 패턴을 입력하면 더 정확한 예측과 효율적인 절약 방법을 제안해드립니다!<br>
                             <small>📊 모든 데이터는 한국전력공사 공개 통계를 기반으로 계산됩니다.</small>
                         </p>
 
@@ -83,12 +83,13 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">에어컨 사용 빈도</label>
+                                    <small class="text-muted d-block mb-2">여름 기준으로 주 몇 회 사용하시는지 선택해주세요</small>
                                     <select class="form-select" id="aircon" required>
                                         <option value="">선택하세요</option>
-                                        <option value="거의 사용안함">거의 사용안함</option>
-                                        <option value="가끔 사용">가끔 사용</option>
-                                        <option value="자주 사용">자주 사용</option>
-                                        <option value="거의 항상">거의 항상</option>
+                                        <option value="거의 사용안함">거의 사용안함 (여름 기준: 주 0-1회)</option>
+                                        <option value="가끔 사용">가끔 사용 (여름 기준: 주 2-3회)</option>
+                                        <option value="자주 사용">자주 사용 (여름 기준: 주 4-5회)</option>
+                                        <option value="거의 항상">거의 항상 (여름 기준: 주 6-7회)</option>
                                     </select>
                                 </div>
 
