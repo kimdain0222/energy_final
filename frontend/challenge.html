@@ -210,7 +210,7 @@
                 if (data.success) {
                     userChallenge = data.challenge;
                     userEnergyTier = data.energyTier || 2;
-                    displayChallengeStatus(data.challenge, data.totalSaved, data.points, data.badges, data.energyTier);
+                    displayChallengeStatus(data.challenge, data.totalSaved, data.points, data.badges, data.energyTier, data.weeklyProgress, data.prediction);
                 } else {
                     document.getElementById('challengeStatus').innerHTML = `
                         <div class="col-12">
@@ -226,7 +226,7 @@
         }
 
         // 챌린지 상태 표시
-        function displayChallengeStatus(challenge, totalSaved, points, badges, tier = 2) {
+        function displayChallengeStatus(challenge, totalSaved, points, badges, tier = 2, weeklyProgress = null, prediction = null) {
             if (!challenge) {
                 return;
             }
@@ -287,21 +287,52 @@
                                 </div>
                             </div>
 
+                            ${weeklyProgress && weeklyProgress.length > 0 ? `
+                            <div class="mb-3">
+                                <h6 class="fw-bold mb-2">📅 주간별 진행 현황</h6>
+                                <div class="row g-2">
+                                    ${weeklyProgress.slice(0, 4).map(week => `
+                                        <div class="col-6 col-md-3">
+                                            <div class="card bg-light border ${week.isCurrent ? 'border-warning' : week.isCompleted ? 'border-success' : 'border-secondary'}" style="font-size: 0.85rem;">
+                                                <div class="card-body p-2 text-center">
+                                                    <div class="fw-bold mb-1">${week.weekLabel}</div>
+                                                    <div class="progress mb-1" style="height: 15px;">
+                                                        <div class="progress-bar ${week.isCompleted ? 'bg-success' : week.isCurrent ? 'bg-warning' : 'bg-secondary'}" 
+                                                             style="width: ${Math.min(week.achievementRate, 100)}%">
+                                                            ${week.achievementRate}%
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted">${week.saved.toFixed(1)}/${week.target.toFixed(1)}kWh</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
                             <div class="alert alert-info mb-3">
                                 <small>
                                     <strong>💰 절약 예상 금액</strong><br>
                                     현재 ${tier}구간 기준: ${targetKwh}kWh 절약 시 <strong>월 ${formatMoney(targetMoney)}</strong> 절약 예상
+                                    ${prediction ? `<br>📊 예상 사용량: ${prediction.predictedUsage}kWh/월 (신뢰도: ${prediction.confidence})` : ''}
                                 </small>
                             </div>
 
                             <div class="text-muted small mb-3">
                                 <div>기간: ${challenge.startDate} ~ ${challenge.endDate}</div>
                                 <div>목표: ${targetKwh} kWh (월 ${formatMoney(targetMoney)} 절약)</div>
+                                ${prediction ? `<div class="text-info">💡 한전 통계 기반 예측 데이터 사용</div>` : ''}
                             </div>
 
-                            <a href="challenge-detail.html" class="btn btn-primary w-100">
-                                상세 보기 →
-                            </a>
+                            <div class="d-flex gap-2">
+                                <a href="challenge-detail.html" class="btn btn-primary flex-fill">
+                                    상세 보기 →
+                                </a>
+                                <a href="survey.html" class="btn btn-outline-info">
+                                    설문하기
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

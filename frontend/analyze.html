@@ -103,6 +103,7 @@
         document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
             const houseType = document.getElementById('houseType').value;
             const area = parseInt(document.getElementById('area').value);
             const monthlyUsage = parseInt(document.getElementById('monthlyUsage').value);
@@ -112,12 +113,23 @@
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ houseType, area, monthlyUsage })
+                    body: JSON.stringify({ 
+                        houseType, 
+                        area, 
+                        monthlyUsage,
+                        userId: user.id // 티어 저장을 위해 userId 전달
+                    })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
+                    // 사용자 정보 업데이트 (티어 정보)
+                    if (user.id && data.analysis.tier) {
+                        user.energyTier = data.analysis.tier;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                    
                     localStorage.setItem('analysisResult', JSON.stringify({
                         houseType,
                         area,

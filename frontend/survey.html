@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에너지 사용 습관 설문 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a href="challenge.html" class="text-muted">← 챌린지로</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bold mb-4">에너지 사용 습관 설문</h2>
+                        <p class="text-muted mb-4">
+                            정확한 예측을 위해 에너지 사용 습관을 알려주세요.<br>
+                            <small>📊 모든 데이터는 한국전력공사 공개 통계를 기반으로 계산됩니다.</small>
+                        </p>
+
+                        <form id="surveyForm">
+                            <!-- 기본 정보 -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3">기본 정보</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">거주 지역</label>
+                                    <select class="form-select" id="region" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="서울">서울</option>
+                                        <option value="경기">경기</option>
+                                        <option value="인천">인천</option>
+                                        <option value="부산">부산</option>
+                                        <option value="대구">대구</option>
+                                        <option value="대전">대전</option>
+                                        <option value="광주">광주</option>
+                                        <option value="울산">울산</option>
+                                        <option value="세종">세종</option>
+                                        <option value="경북">경북</option>
+                                        <option value="경남">경남</option>
+                                        <option value="충북">충북</option>
+                                        <option value="충남">충남</option>
+                                        <option value="전북">전북</option>
+                                        <option value="전남">전남</option>
+                                        <option value="강원">강원</option>
+                                        <option value="제주">제주</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">주택 유형</label>
+                                    <select class="form-select" id="housingType" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="아파트">아파트</option>
+                                        <option value="단독주택">단독주택</option>
+                                        <option value="오피스텔">오피스텔</option>
+                                    </select>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">면적 (평)</label>
+                                        <input type="number" class="form-control" id="area" placeholder="예: 30" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">가족 수</label>
+                                        <input type="number" class="form-control" id="householdSize" placeholder="예: 4" min="1" max="10" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 에너지 사용 습관 -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3">에너지 사용 습관</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label">에어컨 사용 빈도</label>
+                                    <select class="form-select" id="aircon" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="거의 사용안함">거의 사용안함</option>
+                                        <option value="가끔 사용">가끔 사용</option>
+                                        <option value="자주 사용">자주 사용</option>
+                                        <option value="거의 항상">거의 항상</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">주로 사용하는 난방 방식</label>
+                                    <select class="form-select" id="heating" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="도시가스">도시가스</option>
+                                        <option value="전기히터">전기히터</option>
+                                        <option value="지역난방">지역난방</option>
+                                        <option value="기름보일러">기름보일러</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">조명 사용 현황</label>
+                                    <select class="form-select" id="lighting" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="형광등 위주">형광등 위주</option>
+                                        <option value="LED 일부">LED 일부</option>
+                                        <option value="LED 대부분">LED 대부분</option>
+                                        <option value="LED 전부">LED 전부</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">가전제품 사용량</label>
+                                    <select class="form-select" id="appliances" required>
+                                        <option value="">선택하세요</option>
+                                        <option value="적음">적음</option>
+                                        <option value="보통">보통</option>
+                                        <option value="많음">많음</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 예측 결과 미리보기 -->
+                            <div class="alert alert-light border mb-4" id="predictionPreview" style="display: none;">
+                                <h6 class="fw-bold mb-2">📊 예측 결과 미리보기</h6>
+                                <div id="predictionContent"></div>
+                            </div>
+
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                                    설문 제출하기
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="previewPrediction()">
+                                    미리보기
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 데이터 출처 안내 -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3">📋 데이터 출처 및 신뢰도</h6>
+                        <ul class="mb-0 small text-muted">
+                            <li>기준 데이터: 한국전력공사 2023년 지역별 평균 전력 사용량 통계</li>
+                            <li>예측 신뢰도: 85% (지역별 평균 데이터 + 설문 응답 반영)</li>
+                            <li>계절별 변동: 한전 계절별 전력 수요 패턴 반영</li>
+                            <li>한계: 실제 생활패턴에 따라 차이가 있을 수 있습니다</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!user.id) {
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.html';
+        }
+
+        // 미리보기 함수
+        async function previewPrediction() {
+            const userProfile = {
+                region: document.getElementById('region').value,
+                housingType: document.getElementById('housingType').value,
+                area: parseFloat(document.getElementById('area').value) || 30,
+                householdSize: parseInt(document.getElementById('householdSize').value) || 4
+            };
+
+            const surveyAnswers = {
+                aircon: document.getElementById('aircon').value,
+                heating: document.getElementById('heating').value,
+                lighting: document.getElementById('lighting').value,
+                appliances: document.getElementById('appliances').value
+            };
+
+            if (!userProfile.region || !userProfile.housingType) {
+                alert('기본 정보를 먼저 입력해주세요.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user/survey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        userProfile,
+                        surveyAnswers
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.prediction) {
+                    const pred = data.prediction;
+                    document.getElementById('predictionContent').innerHTML = `
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <strong>예상 사용량:</strong><br>
+                                <span class="text-primary fw-bold">${pred.predictedUsage} kWh/월</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>예상 요금:</strong><br>
+                                <span class="text-success fw-bold">${pred.predictedCost.toLocaleString()}원/월</span>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted">
+                                    신뢰도: ${pred.confidence} | 
+                                    기준: ${pred.dataSource} | 
+                                    계절: ${pred.season}<br>
+                                    ${pred.disclaimer}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('predictionPreview').style.display = 'block';
+                }
+            } catch (error) {
+                alert('예측 계산 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 설문 제출
+        document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const userProfile = {
+                region: document.getElementById('region').value,
+                housingType: document.getElementById('housingType').value,
+                area: parseFloat(document.getElementById('area').value) || 30,
+                householdSize: parseInt(document.getElementById('householdSize').value) || 4
+            };
+
+            const surveyAnswers = {
+                aircon: document.getElementById('aircon').value,
+                heating: document.getElementById('heating').value,
+                lighting: document.getElementById('lighting').value,
+                appliances: document.getElementById('appliances').value
+            };
+
+            try {
+                const response = await fetch('/api/user/survey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        userProfile,
+                        surveyAnswers
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('설문이 저장되었습니다! 이제 더 정확한 예측이 가능합니다.');
+                    window.location.href = 'challenge.html';
+                } else {
+                    alert(data.message || '설문 저장 실패');
+                }
+            } catch (error) {
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    </script>
+</body>
+</html>
+

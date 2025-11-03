@@ -33,7 +33,9 @@
         }
 
         let chartInstance = null;
+        let weeklyChartInstance = null;
         let userEnergyTier = 2; // 기본값 2구간
+        let weeklyProgressData = null;
 
         // kWh → 금액 환산 함수
         function convertKwhToMoney(kwh, tier = null) {
@@ -60,7 +62,8 @@
 
                 if (data.success && data.challenge) {
                     userEnergyTier = data.energyTier || 2;
-                    displayChallengeDetail(data.challenge, data.energyTier || 2);
+                    weeklyProgressData = data.weeklyProgress;
+                    displayChallengeDetail(data.challenge, data.energyTier || 2, data.weeklyProgress, data.prediction);
                 } else {
                     document.getElementById('challengeDetail').innerHTML = `
                         <div class="alert alert-info">
@@ -73,7 +76,7 @@
             }
         }
 
-        function displayChallengeDetail(challenge, tier = 2) {
+        function displayChallengeDetail(challenge, tier = 2, weeklyProgress = null, prediction = null) {
             const achievementRate = challenge.achievementRate || 0;
             const remaining = Math.max(0, (challenge.targetKwh || 0) - (challenge.savedKwh || 0));
             const daysLeft = Math.ceil((new Date(challenge.endDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -90,9 +93,20 @@
                     <div class="col-12">
                         <h2 class="fw-bold mb-2">${challenge.type === 'weekly' ? '주간' : '월간'} 절약 챌린지</h2>
                         <p class="text-muted">${challenge.startDate} ~ ${challenge.endDate}</p>
-                        <div class="alert alert-info mb-0">
+                        <div class="alert alert-info mb-2">
                             <small><strong>현재 ${tier}구간 기준</strong>으로 금액을 계산합니다.</small>
                         </div>
+                        ${prediction ? `
+                        <div class="alert alert-light border mb-0">
+                            <small>
+                                <strong>📊 예측 정보</strong><br>
+                                예상 사용량: ${prediction.predictedUsage}kWh/월 | 
+                                신뢰도: ${prediction.confidence} | 
+                                기준: ${prediction.dataSource}<br>
+                                <span class="text-muted">${prediction.disclaimer}</span>
+                            </small>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
 
@@ -147,6 +161,22 @@
                                      style="width: ${Math.min(achievementRate, 100)}%">
                                     ${achievementRate}%
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 주간별 달성률 -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">주간별 목표 달성률</h5>
+                            <small class="text-muted">한전 통계 기반 예측</small>
+                        </div>
+                        <canvas id="weeklyChart" height="80"></canvas>
+                        <div class="mt-3">
+                            <div class="row g-2" id="weeklyProgressCards">
+                                <!-- 주간별 카드가 동적으로 생성됨 -->
                             </div>
                         </div>
                     </div>
@@ -249,6 +279,11 @@
                 }
             });
 
+            // 주간별 달성률 차트 및 카드
+            if (weeklyProgress && weeklyProgress.length > 0) {
+                displayWeeklyProgress(weeklyProgress, tier);
+            }
+
             // 절약량 입력 시 금액 미리보기
             window.updateSavedMoneyPreview = function() {
                 const inputKwh = parseFloat(document.getElementById('savedKwh')?.value || 0);
@@ -302,6 +337,129 @@
                     alert('서버 오류가 발생했습니다.');
                 }
             });
+        }
+
+        // 주간별 진행률 표시
+        function displayWeeklyProgress(weeklyData, tier) {
+            // 주간별 막대 그래프
+            const weeklyCtx = document.getElementById('weeklyChart');
+            
+            if (weeklyChartInstance) {
+                weeklyChartInstance.destroy();
+            }
+
+            const labels = weeklyData.map(w => w.weekLabel);
+            const achievementRates = weeklyData.map(w => w.achievementRate);
+            const savedData = weeklyData.map(w => w.saved);
+            const targetData = weeklyData.map(w => w.target);
+
+            weeklyChartInstance = new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '목표 (kWh)',
+                            data: targetData,
+                            backgroundColor: 'rgba(13, 110, 253, 0.3)',
+                            borderColor: '#0d6efd',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '절약량 (kWh)',
+                            data: savedData,
+                            backgroundColor: weeklyData.map(w => {
+                                if (w.isCurrent) return 'rgba(255, 193, 7, 0.7)';
+                                if (w.isCompleted) return 'rgba(25, 135, 84, 0.7)';
+                                return 'rgba(233, 236, 239, 0.7)';
+                            }),
+                            borderColor: weeklyData.map(w => {
+                                if (w.isCurrent) return '#ffc107';
+                                if (w.isCompleted) return '#198754';
+                                return '#e9ecef';
+                            }),
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const index = context.dataIndex;
+                                    const week = weeklyData[index];
+                                    return `달성률: ${week.achievementRate}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '절약량 (kWh)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 주간별 카드 생성
+            const cardsContainer = document.getElementById('weeklyProgressCards');
+            cardsContainer.innerHTML = weeklyData.map(week => {
+                const statusClass = week.isCurrent ? 'border-warning border-3' : 
+                                  week.isCompleted ? 'border-success' : 'border-secondary';
+                const statusBadge = week.isCurrent ? '<span class="badge bg-warning text-dark">진행중</span>' :
+                                   week.isCompleted ? '<span class="badge bg-success">완료</span>' :
+                                   '<span class="badge bg-secondary">예정</span>';
+                
+                const weekMoney = convertKwhToMoney(week.saved, tier);
+                const targetMoney = convertKwhToMoney(week.target, tier);
+
+                return `
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card ${statusClass} h-100">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold mb-0">${week.weekLabel}</h6>
+                                    ${statusBadge}
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted d-block">${week.weekStart} ~ ${week.weekEnd}</small>
+                                </div>
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar ${week.isCompleted ? 'bg-success' : week.isCurrent ? 'bg-warning' : 'bg-secondary'}" 
+                                         role="progressbar" 
+                                         style="width: ${Math.min(week.achievementRate, 100)}%">
+                                        ${week.achievementRate}%
+                                    </div>
+                                </div>
+                                <div class="small">
+                                    <div class="d-flex justify-content-between">
+                                        <span>절약:</span>
+                                        <strong class="text-success">${week.saved.toFixed(1)}kWh</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>목표:</span>
+                                        <span>${week.target.toFixed(1)}kWh</span>
+                                    </div>
+                                    <div class="mt-1 text-muted" style="font-size: 0.7rem;">
+                                        약 ${formatMoney(weekMoney)} 절약
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         loadChallengeDetail();
