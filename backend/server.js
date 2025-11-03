@@ -808,6 +808,24 @@ async function writeChallenges(challenges) {
 
 // ============ API 라우트 ============
 
+// 루트 경로 (Railway 헬스 체크용)
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: '에너지 절약 플랫폼 API 서버',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// 헬스 체크 엔드포인트
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 // 회원가입
 app.post('/api/register', async (req, res) => {
   try {
