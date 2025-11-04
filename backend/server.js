@@ -15,32 +15,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
-// CORS 설정 - Netlify 프론트엔드 허용
-const allowedOrigins = [
-    'https://ecosync2025.netlify.app',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000'
-];
-
-// FRONTEND_URL 환경 변수 처리 (슬래시 제거 및 정규화)
-if (process.env.FRONTEND_URL) {
-    const frontendUrl = process.env.FRONTEND_URL.trim().replace(/\/$/, ''); // 끝의 슬래시 제거
-    if (frontendUrl && !allowedOrigins.includes(frontendUrl)) {
-        allowedOrigins.push(frontendUrl);
-        // Netlify 프리뷰 URL 패턴도 허용
-        if (frontendUrl.includes('netlify.app')) {
-            const baseUrl = frontendUrl.split('--')[1] || frontendUrl;
-            if (baseUrl && baseUrl !== frontendUrl && !allowedOrigins.includes(baseUrl)) {
-                allowedOrigins.push(baseUrl);
-            }
-        }
-    }
-}
-
-console.log('=== CORS 설정 초기화 ===');
-console.log('허용된 CORS 도메인:', allowedOrigins);
-console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
-console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
 
 // 요청 로깅 미들웨어 (가장 먼저 실행 - 모든 요청 기록)
 app.use((req, res, next) => {
@@ -55,78 +29,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 모든 경로에 대해
-app.use((req, res, next) => {
-    if (req.method === 'OPTIONS') {
-        try {
-            const origin = req.headers.origin;
-            console.log('=== OPTIONS 요청 처리 시작 ===');
-            console.log('Origin:', origin);
-            console.log('Path:', req.path);
-            console.log('허용된 도메인 목록:', allowedOrigins);
-            
-            // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
-            const isNetlifyOrigin = origin && origin.includes('netlify.app');
-            const isExactMatch = origin && allowedOrigins.includes(origin);
-            const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
-            
-            console.log('isNetlifyOrigin:', isNetlifyOrigin);
-            console.log('isExactMatch:', isExactMatch);
-            console.log('isAllowed:', isAllowed);
-            
-            if (isAllowed) {
-                const allowOrigin = origin || '*';
-                res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-                res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-                res.setHeader('Access-Control-Allow-Credentials', 'true');
-                res.setHeader('Access-Control-Max-Age', '86400');
-                console.log('✅ OPTIONS 요청 허용됨, Origin:', allowOrigin);
-                return res.status(200).end();
-            }
-            
-            // 허용되지 않은 origin
-            console.log('❌ OPTIONS 요청 차단:', origin);
-            res.status(403).end();
-            return;
-        } catch (error) {
-            console.error('❌ OPTIONS 처리 중 오류:', error);
-            console.error('스택:', error.stack);
-            res.status(500).end();
-            return;
-        }
-    }
-    next();
-});
-
-// CORS 헤더를 모든 응답에 추가하는 미들웨어
-function setCorsHeaders(req, res, next) {
-    const origin = req.headers.origin;
-    
-    // 허용된 origin인지 확인
-    const isNetlifyOrigin = origin && origin.includes('netlify.app');
-    const isExactMatch = origin && allowedOrigins.includes(origin);
-    const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
-    
-    if (isAllowed) {
-        const allowOrigin = origin || '*';
-        res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-    }
-    
-    next();
-}
-
-// CORS 헤더 미들웨어 적용 (OPTIONS 제외 - 이미 처리됨)
-app.use((req, res, next) => {
-    if (req.method !== 'OPTIONS') {
-        setCorsHeaders(req, res, next);
-    } else {
-        next();
-    }
-});
+// CORS 미들웨어 (기존 CORS 로직을 모듈로 분리)
+require('./middleware/cors')(app);
 app.use(bodyParser.json());
 // 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
 // 로컬 개발 시에만 사용
