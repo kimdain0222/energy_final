@@ -42,12 +42,25 @@ console.log('허용된 CORS 도메인:', allowedOrigins);
 console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
 
+// 요청 로깅 미들웨어 (가장 먼저 실행 - 모든 요청 기록)
+app.use((req, res, next) => {
+    console.log('='.repeat(50));
+    console.log(`[${new Date().toISOString()}] 요청 도달!`);
+    console.log(`Method: ${req.method}`);
+    console.log(`Path: ${req.path}`);
+    console.log(`URL: ${req.url}`);
+    console.log(`Origin: ${req.headers.origin || '없음'}`);
+    console.log(`IP: ${req.ip || req.connection.remoteAddress || '없음'}`);
+    console.log('='.repeat(50));
+    next();
+});
+
 // OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 모든 경로에 대해
 app.use((req, res, next) => {
     if (req.method === 'OPTIONS') {
         try {
             const origin = req.headers.origin;
-            console.log('=== OPTIONS 요청 수신 ===');
+            console.log('=== OPTIONS 요청 처리 시작 ===');
             console.log('Origin:', origin);
             console.log('Path:', req.path);
             console.log('허용된 도메인 목록:', allowedOrigins);
@@ -78,19 +91,10 @@ app.use((req, res, next) => {
             return;
         } catch (error) {
             console.error('❌ OPTIONS 처리 중 오류:', error);
+            console.error('스택:', error.stack);
             res.status(500).end();
             return;
         }
-    }
-    next();
-});
-
-// 요청 로깅 미들웨어 (모든 요청 기록)
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-    console.log('Origin:', req.headers.origin || '없음');
-    if (req.method !== 'OPTIONS') {
-        console.log('Headers:', JSON.stringify(req.headers, null, 2));
     }
     next();
 });
