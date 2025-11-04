@@ -43,41 +43,52 @@ console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
 
 // OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 모든 경로에 대해
-app.options('*', (req, res) => {
-    const origin = req.headers.origin;
-    console.log('=== OPTIONS 요청 수신 ===');
-    console.log('Origin:', origin);
-    console.log('Path:', req.path);
-    console.log('허용된 도메인 목록:', allowedOrigins);
-    
-    // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
-    const isNetlifyOrigin = origin && origin.includes('netlify.app');
-    const isExactMatch = origin && allowedOrigins.includes(origin);
-    const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
-    
-    console.log('isNetlifyOrigin:', isNetlifyOrigin);
-    console.log('isExactMatch:', isExactMatch);
-    console.log('isAllowed:', isAllowed);
-    
-    if (isAllowed) {
-        const allowOrigin = origin || '*';
-        res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Access-Control-Max-Age', '86400');
-        console.log('✅ OPTIONS 요청 허용됨, Origin:', allowOrigin);
-        return res.status(200).send('');
+app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        try {
+            const origin = req.headers.origin;
+            console.log('=== OPTIONS 요청 수신 ===');
+            console.log('Origin:', origin);
+            console.log('Path:', req.path);
+            console.log('허용된 도메인 목록:', allowedOrigins);
+            
+            // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
+            const isNetlifyOrigin = origin && origin.includes('netlify.app');
+            const isExactMatch = origin && allowedOrigins.includes(origin);
+            const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
+            
+            console.log('isNetlifyOrigin:', isNetlifyOrigin);
+            console.log('isExactMatch:', isExactMatch);
+            console.log('isAllowed:', isAllowed);
+            
+            if (isAllowed) {
+                const allowOrigin = origin || '*';
+                res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+                res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.setHeader('Access-Control-Max-Age', '86400');
+                console.log('✅ OPTIONS 요청 허용됨, Origin:', allowOrigin);
+                return res.status(200).end();
+            }
+            
+            // 허용되지 않은 origin
+            console.log('❌ OPTIONS 요청 차단:', origin);
+            res.status(403).end();
+            return;
+        } catch (error) {
+            console.error('❌ OPTIONS 처리 중 오류:', error);
+            res.status(500).end();
+            return;
+        }
     }
-    
-    // 허용되지 않은 origin
-    console.log('❌ OPTIONS 요청 차단:', origin);
-    res.status(403).send('');
+    next();
 });
 
-// 요청 로깅 미들웨어 (OPTIONS 제외하고 모든 요청 기록)
+// 요청 로깅 미들웨어 (모든 요청 기록)
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    console.log('Origin:', req.headers.origin || '없음');
     if (req.method !== 'OPTIONS') {
         console.log('Headers:', JSON.stringify(req.headers, null, 2));
     }
@@ -894,19 +905,23 @@ async function writeChallenges(challenges) {
 
 // 루트 경로 (Railway 헬스 체크용)
 app.get('/', (req, res) => {
+  console.log('✅ 루트 경로(/) 요청 수신');
   res.json({
     status: 'ok',
     message: '에너지 절약 플랫폼 API 서버',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    server: 'running'
   });
 });
 
 // 헬스 체크 엔드포인트
 app.get('/health', (req, res) => {
+  console.log('✅ 헬스 체크(/health) 요청 수신');
   res.json({
     status: 'healthy',
     uptime: process.uptime(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    server: 'listening'
   });
 });
 
@@ -1692,17 +1707,29 @@ app.get('/api/challenge/stats', async (req, res) => {
 });
 
 // 서버 시작 (최대한 단순하게)
-console.log('=== 서버 시작 ===');
+console.log('='.repeat(50));
+console.log('=== 서버 시작 시도 ===');
 console.log('PORT:', process.env.PORT || '설정되지 않음 (기본값 3000)');
 console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('HOST: 0.0.0.0 (모든 인터페이스에서 리스닝)');
+console.log('='.repeat(50));
 
 // 서버를 즉시 시작 (초기화 전에)
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log('=== 서버 시작 완료 ===');
-  console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
-  console.log(`바인딩 주소: 0.0.0.0:${PORT}`);
+const HOST = '0.0.0.0';
+// PORT는 이미 위에서 선언됨
+
+const server = app.listen(PORT, HOST, () => {
+  const address = server.address();
+  console.log('='.repeat(50));
+  console.log('✅ 서버 리스닝 성공!');
+  console.log(`포트: ${PORT}`);
+  console.log(`호스트: ${HOST}`);
+  console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`서버 주소: ${address ? `${address.address}:${address.port}` : '없음'}`);
+  console.log(`리스닝 상태: ${server.listening ? '✅ 리스닝 중' : '❌ 리스닝 안 함'}`);
   console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
   console.log('에너지공단 API 연동 준비 완료');
+  console.log('='.repeat(50));
   
   // 서버가 시작된 후 데이터 초기화 (비동기, 에러가 나도 서버는 계속 실행)
   setTimeout(() => {
@@ -1717,6 +1744,16 @@ const server = app.listen(PORT, '0.0.0.0', () => {
         }
       });
   }, 1000); // 1초 후 초기화 시작
+});
+
+// 서버가 실제로 리스닝하는지 확인
+server.on('listening', () => {
+  const address = server.address();
+  console.log('='.repeat(50));
+  console.log('✅ 서버 리스닝 이벤트 발생!');
+  console.log(`실제 바인딩 주소: ${address ? `${address.address}:${address.port}` : '없음'}`);
+  console.log(`서버 리스닝 상태: ${server.listening ? '✅ 리스닝 중' : '❌ 리스닝 안 함'}`);
+  console.log('='.repeat(50));
 });
 
 // 서버 에러 처리
