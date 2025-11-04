@@ -59,62 +59,67 @@ function setCorsHeaders(req, res, next) {
 module.exports = (app) => {
     console.log('✅ CORS 미들웨어 등록 완료');
     
-    // OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 모든 경로에 대해
-    // app.options('*', ...) 대신 app.use로 처리하여 모든 경로에 적용
-    app.use((req, res, next) => {
-        // OPTIONS 요청인 경우 즉시 처리
-        if (req.method === 'OPTIONS') {
-            console.log('='.repeat(50));
-            console.log('🔍 OPTIONS 요청 감지됨!');
-            console.log('Path:', req.path);
-            console.log('URL:', req.url);
-            console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    // OPTIONS 요청 처리 함수
+    const handleOptions = (req, res) => {
+        console.log('='.repeat(50));
+        console.log('🔍 OPTIONS 요청 감지됨!');
+        console.log('Path:', req.path);
+        console.log('URL:', req.url);
+        console.log('Headers:', JSON.stringify(req.headers, null, 2));
+        
+        try {
+            const origin = req.headers.origin;
+            console.log('=== OPTIONS 요청 처리 시작 ===');
+            console.log('Origin:', origin);
+            console.log('허용된 도메인 목록:', allowedOrigins);
             
-            try {
-                const origin = req.headers.origin;
-                console.log('=== OPTIONS 요청 처리 시작 ===');
-                console.log('Origin:', origin);
-                console.log('허용된 도메인 목록:', allowedOrigins);
+            // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
+            const isNetlifyOrigin = origin && origin.includes('netlify.app');
+            const isExactMatch = origin && allowedOrigins.includes(origin);
+            const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
+            
+            console.log('isNetlifyOrigin:', isNetlifyOrigin);
+            console.log('isExactMatch:', isExactMatch);
+            console.log('isAllowed:', isAllowed);
+            
+            if (isAllowed) {
+                const allowOrigin = origin || '*';
                 
-                // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
-                const isNetlifyOrigin = origin && origin.includes('netlify.app');
-                const isExactMatch = origin && allowedOrigins.includes(origin);
-                const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
+                // CORS 헤더 설정
+                res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+                res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.setHeader('Access-Control-Max-Age', '86400');
                 
-                console.log('isNetlifyOrigin:', isNetlifyOrigin);
-                console.log('isExactMatch:', isExactMatch);
-                console.log('isAllowed:', isAllowed);
-                
-                if (isAllowed) {
-                    const allowOrigin = origin || '*';
-                    
-                    // CORS 헤더 설정
-                    res.setHeader('Access-Control-Allow-Origin', allowOrigin);
-                    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-                    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-                    res.setHeader('Access-Control-Allow-Credentials', 'true');
-                    res.setHeader('Access-Control-Max-Age', '86400');
-                    
-                    console.log('✅ OPTIONS 요청 허용됨, Origin:', allowOrigin);
-                    console.log('✅ CORS 헤더 설정 완료');
-                    console.log('='.repeat(50));
-                    
-                    // 응답 전송
-                    return res.status(200).send('');
-                }
-                
-                // 허용되지 않은 origin
-                console.log('❌ OPTIONS 요청 차단:', origin);
+                console.log('✅ OPTIONS 요청 허용됨, Origin:', allowOrigin);
+                console.log('✅ CORS 헤더 설정 완료');
                 console.log('='.repeat(50));
-                return res.status(403).send('CORS policy: Origin not allowed');
-            } catch (error) {
-                console.error('❌ OPTIONS 처리 중 오류:', error);
-                console.error('스택:', error.stack);
-                console.log('='.repeat(50));
-                return res.status(500).send('Internal server error');
+                
+                // 응답 전송
+                return res.status(200).send('');
             }
+            
+            // 허용되지 않은 origin
+            console.log('❌ OPTIONS 요청 차단:', origin);
+            console.log('='.repeat(50));
+            return res.status(403).send('CORS policy: Origin not allowed');
+        } catch (error) {
+            console.error('❌ OPTIONS 처리 중 오류:', error);
+            console.error('스택:', error.stack);
+            console.log('='.repeat(50));
+            return res.status(500).send('Internal server error');
         }
-        // OPTIONS가 아니면 다음 미들웨어로
+    };
+    
+    // 모든 경로에 대해 OPTIONS 요청 처리 (app.options 사용)
+    app.options('*', handleOptions);
+    
+    // app.use로도 처리 (이중 안전장치)
+    app.use((req, res, next) => {
+        if (req.method === 'OPTIONS') {
+            return handleOptions(req, res);
+        }
         next();
     });
     

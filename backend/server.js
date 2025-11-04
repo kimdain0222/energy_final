@@ -16,7 +16,11 @@ const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
 
-// 요청 로깅 미들웨어 (가장 먼저 실행 - 모든 요청 기록)
+// CORS 미들웨어를 가장 먼저 등록 (요청 로깅보다 먼저)
+// OPTIONS 요청이 가장 빠르게 처리되도록
+require('./middleware/cors')(app);
+
+// 요청 로깅 미들웨어 (CORS 다음에 실행 - 모든 요청 기록)
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
     console.log('='.repeat(50));
@@ -30,9 +34,6 @@ app.use((req, res, next) => {
     console.log('='.repeat(50));
     next();
 });
-
-// CORS 미들웨어 (기존 CORS 로직을 모듈로 분리)
-require('./middleware/cors')(app);
 
 // Body Parser - 모든 요청에 대해 JSON 파싱
 app.use(bodyParser.json());
