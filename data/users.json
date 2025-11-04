@@ -21,21 +21,48 @@
       "createdAt": "2025-11-03T09:55:09.404Z"
     },
     "totalSaved": 15,
-    "points": 200,
+    "points": 400,
     "badges": [
       "badge001",
-      "badge000"
+      "badge000",
+      "badge008",
+      "badge022"
     ],
     "region": "인천",
     "housingType": "아파트",
-    "area": 38,
+    "area": 84,
     "householdSize": 4,
     "surveyAnswers": {
       "aircon": "자주 사용",
       "heating": "도시가스",
       "lighting": "LED 대부분",
       "appliances": "보통"
-    }
+    },
+    "viewedPrograms": [
+      {
+        "id": "prog001",
+        "title": "주택용 태양광 보급사업",
+        "description": "주택에 태양광 패널 설치 시 설치비용의 50% 지원",
+        "region": "전국",
+        "target": "주택",
+        "supportAmount": "설치비용의 50%",
+        "applyUrl": "https://www.kemco.or.kr/apply/solar",
+        "viewedAt": "2025-11-04T12:49:58.702Z"
+      }
+    ],
+    "energyTier": 2,
+    "analysisHistory": [
+      {
+        "date": "2025-11-04T12:51:07.808Z",
+        "houseType": "아파트",
+        "area": 84,
+        "monthlyUsage": 350,
+        "monthlyBill": 48445,
+        "tier": 2,
+        "estimatedSavings": 9689
+      }
+    ],
+    "analysisCount": 1
   },
   {
     "id": "demo_user_1",

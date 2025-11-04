@@ -57,9 +57,13 @@ function setCorsHeaders(req, res, next) {
  * @param {Express} app - Express 앱 인스턴스
  */
 module.exports = (app) => {
+    console.log('✅ CORS 미들웨어 등록 완료');
+    
     // OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 기존 코드 그대로
     app.use((req, res, next) => {
+        // 모든 요청에 대해 로깅 (디버깅용)
         if (req.method === 'OPTIONS') {
+            console.log('🔍 OPTIONS 요청 감지됨:', req.path);
             try {
                 const origin = req.headers.origin;
                 console.log('=== OPTIONS 요청 처리 시작 ===');
@@ -109,5 +113,7 @@ module.exports = (app) => {
             next();
         }
     });
+    
+    console.log('✅ CORS 미들웨어 설정 완료 - OPTIONS 및 일반 요청 처리 준비됨');
 };
 
