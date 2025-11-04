@@ -43,49 +43,57 @@ console.log('허용된 CORS 도메인:', allowedOrigins);
 console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
 
-// 요청 로깅 미들웨어 (모든 요청 기록)
+// OPTIONS 요청을 가장 먼저 처리 (preflight 요청) - 모든 경로에 대해
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-    console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    // OPTIONS 요청인 경우 즉시 처리
+    if (req.method === 'OPTIONS') {
+        const origin = req.headers.origin;
+        console.log('=== OPTIONS 요청 수신 ===');
+        console.log('Origin:', origin);
+        console.log('Path:', req.path);
+        console.log('허용된 도메인 목록:', allowedOrigins);
+        
+        // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
+        const isNetlifyOrigin = origin && origin.includes('netlify.app');
+        const isExactMatch = origin && allowedOrigins.includes(origin);
+        const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
+        
+        console.log('isNetlifyOrigin:', isNetlifyOrigin);
+        console.log('isExactMatch:', isExactMatch);
+        console.log('isAllowed:', isAllowed);
+        
+        if (isAllowed) {
+            if (origin) {
+                res.setHeader('Access-Control-Allow-Origin', origin);
+                console.log('✅ CORS 헤더 설정:', origin);
+            } else {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+            }
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            res.setHeader('Access-Control-Max-Age', '86400');
+            console.log('✅ OPTIONS 요청 허용됨');
+            return res.status(200).end();
+        }
+        
+        // 허용되지 않은 origin
+        console.log('❌ OPTIONS 요청 차단:', origin);
+        res.status(403).end();
+        return;
+    }
+    
+    // OPTIONS가 아닌 요청은 다음 미들웨어로
     next();
 });
 
-// OPTIONS 요청을 가장 먼저 처리 (preflight 요청)
-app.options('*', (req, res) => {
-    const origin = req.headers.origin;
-    console.log('=== OPTIONS 요청 수신 ===');
-    console.log('Origin:', origin);
-    console.log('Path:', req.path);
-    console.log('Method:', req.method);
-    console.log('허용된 도메인 목록:', allowedOrigins);
-    
-    // origin이 netlify.app으로 끝나는지 확인 (유연한 매칭)
-    const isNetlifyOrigin = origin && origin.includes('netlify.app');
-    const isExactMatch = origin && allowedOrigins.includes(origin);
-    const isAllowed = !origin || isExactMatch || isNetlifyOrigin || process.env.NODE_ENV !== 'production';
-    
-    console.log('isNetlifyOrigin:', isNetlifyOrigin);
-    console.log('isExactMatch:', isExactMatch);
-    console.log('isAllowed:', isAllowed);
-    
-    if (isAllowed) {
-        if (origin) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-            console.log('✅ CORS 헤더 설정:', origin);
-        } else {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-        }
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Access-Control-Max-Age', '86400');
-        console.log('✅ OPTIONS 요청 허용됨');
-        return res.status(200).end();
+// 요청 로깅 미들웨어 (OPTIONS 제외하고 모든 요청 기록)
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    if (req.method !== 'OPTIONS') {
+        console.log('Headers:', JSON.stringify(req.headers, null, 2));
     }
-    
-    // 허용되지 않은 origin
-    console.log('❌ OPTIONS 요청 차단:', origin);
-    res.status(403).end();
+    next();
 });
 
 // CORS 설정
@@ -134,8 +142,14 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     
-    // 허용된 origin인지 확인
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    // 허용된 origin인지 확인 (Netlify 도메인 포함)
+    const isNetlifyOrigin = origin && origin.includes('netlify.app');
+    const isAllowed = !origin || 
+                     allowedOrigins.includes(origin) || 
+                     isNetlifyOrigin || 
+                     process.env.NODE_ENV !== 'production';
+    
+    if (isAllowed) {
         if (origin) {
             res.setHeader('Access-Control-Allow-Origin', origin);
         }
