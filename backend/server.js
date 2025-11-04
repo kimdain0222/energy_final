@@ -1738,79 +1738,71 @@ app.get('/api/challenge/stats', async (req, res) => {
   }
 });
 
-// 서버 시작
-async function startServer() {
-  try {
-    console.log('=== 서버 초기화 시작 ===');
-    console.log('PORT:', process.env.PORT || '설정되지 않음 (기본값 3000)');
-    
-    // 서버를 먼저 시작 (Railway 헬스 체크가 빠르게 응답 받을 수 있도록)
-    const server = app.listen(PORT, '0.0.0.0', () => {
-      console.log('=== 서버 시작 완료 ===');
-      console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
-      console.log(`바인딩 주소: 0.0.0.0:${PORT}`);
-      console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
-      console.log('에너지공단 API 연동 준비 완료');
-      console.log(`헬스 체크: http://0.0.0.0:${PORT}/health`);
-      
-      // 서버가 시작된 후 데이터 초기화 (백그라운드에서 진행)
-      initializeData()
-        .then(() => {
-          console.log('✅ 데이터 초기화 완료');
-        })
-        .catch((initError) => {
-          console.error('⚠️ 데이터 초기화 실패:', initError.message);
-          console.error('스택:', initError.stack);
-        });
-    });
-    
-    // 서버 에러 처리
-    server.on('error', (error) => {
-      console.error('❌ 서버 에러:', error);
-      if (error.code === 'EADDRINUSE') {
-        console.error(`포트 ${PORT}가 이미 사용 중입니다.`);
-      }
-      process.exit(1);
-    });
-    
-    // 프로세스 시그널 처리
-    process.on('SIGTERM', () => {
-      console.log('SIGTERM 신호 수신, 서버 종료 중...');
-      server.close(() => {
-        console.log('서버가 종료되었습니다.');
-        process.exit(0);
-      });
-    });
-    
-    process.on('SIGINT', () => {
-      console.log('SIGINT 신호 수신, 서버 종료 중...');
-      server.close(() => {
-        console.log('서버가 종료되었습니다.');
-        process.exit(0);
-      });
-    });
-    
-    // 처리되지 않은 예외 처리
-    process.on('uncaughtException', (error) => {
-      console.error('❌ 처리되지 않은 예외:', error);
-      console.error('스택 트레이스:', error.stack);
-      server.close(() => {
-        process.exit(1);
-      });
-    });
-    
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('❌ 처리되지 않은 Promise 거부:', reason);
-      console.error('Promise:', promise);
-    });
-    
-  } catch (error) {
-    console.error('❌ 서버 시작 실패:', error);
-    console.error('스택 트레이스:', error.stack);
-    process.exit(1);
-  }
-}
+// 서버 시작 (최대한 단순하게)
+console.log('=== 서버 시작 ===');
+console.log('PORT:', process.env.PORT || '설정되지 않음 (기본값 3000)');
+console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
 
-startServer();
+// 서버를 즉시 시작 (초기화 전에)
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log('=== 서버 시작 완료 ===');
+  console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+  console.log(`바인딩 주소: 0.0.0.0:${PORT}`);
+  console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
+  console.log('에너지공단 API 연동 준비 완료');
+  
+  // 서버가 시작된 후 데이터 초기화 (비동기, 에러가 나도 서버는 계속 실행)
+  setTimeout(() => {
+    initializeData()
+      .then(() => {
+        console.log('✅ 데이터 초기화 완료');
+      })
+      .catch((initError) => {
+        console.error('⚠️ 데이터 초기화 실패 (서버는 계속 실행):', initError.message);
+        if (initError.stack) {
+          console.error('스택:', initError.stack);
+        }
+      });
+  }, 1000); // 1초 후 초기화 시작
+});
+
+// 서버 에러 처리
+server.on('error', (error) => {
+  console.error('❌ 서버 에러:', error);
+  if (error.code === 'EADDRINUSE') {
+    console.error(`포트 ${PORT}가 이미 사용 중입니다.`);
+  }
+  process.exit(1);
+});
+
+// 프로세스 시그널 처리
+process.on('SIGTERM', () => {
+  console.log('SIGTERM 신호 수신, 서버 종료 중...');
+  server.close(() => {
+    console.log('서버가 종료되었습니다.');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT 신호 수신, 서버 종료 중...');
+  server.close(() => {
+    console.log('서버가 종료되었습니다.');
+    process.exit(0);
+  });
+});
+
+// 처리되지 않은 예외 처리 (로그만 남기고 서버는 계속 실행)
+process.on('uncaughtException', (error) => {
+  console.error('❌ 처리되지 않은 예외:', error.message);
+  if (error.stack) {
+    console.error('스택 트레이스:', error.stack);
+  }
+  // 치명적이지 않은 에러는 서버를 계속 실행
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ 처리되지 않은 Promise 거부:', reason);
+  // 서버는 계속 실행
+});
 
