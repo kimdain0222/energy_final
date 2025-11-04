@@ -516,7 +516,9 @@ async function readUsers() {
   try {
     const data = await fs.readFile(USERS_FILE, 'utf8');
     return JSON.parse(data);
-  } catch {
+  } catch (error) {
+    console.error('readUsers 오류:', error.message);
+    console.error('파일 경로:', USERS_FILE);
     return [];
   }
 }
@@ -993,22 +995,38 @@ app.post('/api/register', async (req, res) => {
 // 로그인
 app.post('/api/login', async (req, res) => {
   try {
+    console.log('=== 로그인 요청 수신 ===');
+    console.log('Body:', JSON.stringify(req.body));
+    console.log('Origin:', req.headers.origin);
+    
     const { email, password } = req.body;
     
+    if (!email || !password) {
+      console.log('❌ 이메일 또는 비밀번호 누락');
+      return res.status(400).json({ success: false, message: '이메일과 비밀번호를 입력해주세요.' });
+    }
+    
+    console.log('사용자 목록 읽기 시도...');
     const users = await readUsers();
+    console.log(`사용자 ${users.length}명 발견`);
+    
     const user = users.find(u => u.email === email && u.password === password);
 
     if (!user) {
+      console.log('❌ 사용자 인증 실패:', email);
       return res.status(401).json({ success: false, message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
     }
 
+    console.log('✅ 로그인 성공:', user.id, user.email);
     res.json({ 
       success: true, 
       user: { id: user.id, email: user.email, name: user.name },
       message: '로그인 성공'
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: '서버 오류' });
+    console.error('❌ 로그인 API 오류:', error);
+    console.error('스택 트레이스:', error.stack);
+    res.status(500).json({ success: false, message: '서버 오류', error: process.env.NODE_ENV !== 'production' ? error.message : undefined });
   }
 });
 
@@ -1722,13 +1740,50 @@ app.get('/api/challenge/stats', async (req, res) => {
 
 // 서버 시작
 async function startServer() {
-  await initializeData();
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
-    console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
-    console.log('에너지공단 API 연동 준비 완료');
-  });
+  try {
+    console.log('=== 서버 초기화 시작 ===');
+    console.log('PORT:', process.env.PORT || '설정되지 않음 (기본값 3000)');
+    
+    // 데이터 초기화 (실패해도 서버는 시작)
+    try {
+      await initializeData();
+      console.log('✅ 데이터 초기화 완료');
+    } catch (initError) {
+      console.error('⚠️ 데이터 초기화 실패 (서버는 계속 시작됨):', initError.message);
+    }
+    
+    // 서버 시작
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log('=== 서버 시작 완료 ===');
+      console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+      console.log(`바인딩 주소: 0.0.0.0:${PORT}`);
+      console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`프론트엔드 URL: ${process.env.FRONTEND_URL || '설정되지 않음'}`);
+      console.log('에너지공단 API 연동 준비 완료');
+      console.log(`헬스 체크: http://0.0.0.0:${PORT}/health`);
+    });
+    
+    // 에러 처리
+    app.on('error', (error) => {
+      console.error('❌ 서버 에러:', error);
+      process.exit(1);
+    });
+    
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM 신호 수신, 서버 종료 중...');
+      process.exit(0);
+    });
+    
+    process.on('SIGINT', () => {
+      console.log('SIGINT 신호 수신, 서버 종료 중...');
+      process.exit(0);
+    });
+    
+  } catch (error) {
+    console.error('❌ 서버 시작 실패:', error);
+    console.error('스택 트레이스:', error.stack);
+    process.exit(1);
+  }
 }
 
 startServer();
