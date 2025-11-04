@@ -18,19 +18,23 @@ const PORT = process.env.PORT || 3000;
 
 // 요청 로깅 미들웨어 (가장 먼저 실행 - 모든 요청 기록)
 app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
     console.log('='.repeat(50));
-    console.log(`[${new Date().toISOString()}] 요청 도달!`);
+    console.log(`[${timestamp}] 요청 도달!`);
     console.log(`Method: ${req.method}`);
     console.log(`Path: ${req.path}`);
     console.log(`URL: ${req.url}`);
     console.log(`Origin: ${req.headers.origin || '없음'}`);
     console.log(`IP: ${req.ip || req.connection.remoteAddress || '없음'}`);
+    console.log(`Headers: ${JSON.stringify(req.headers, null, 2)}`);
     console.log('='.repeat(50));
     next();
 });
 
 // CORS 미들웨어 (기존 CORS 로직을 모듈로 분리)
 require('./middleware/cors')(app);
+
+// Body Parser - 모든 요청에 대해 JSON 파싱
 app.use(bodyParser.json());
 // 배포 환경에서는 프론트엔드가 Netlify에 있으므로 정적 파일 제공은 선택사항
 // 로컬 개발 시에만 사용
@@ -814,11 +818,13 @@ async function writeChallenges(challenges) {
 // 루트 경로 (Railway 헬스 체크용)
 app.get('/', (req, res) => {
   console.log('✅ 루트 경로(/) 요청 수신');
+  console.log('요청 헤더:', JSON.stringify(req.headers, null, 2));
   res.json({
     status: 'ok',
     message: '에너지 절약 플랫폼 API 서버',
     timestamp: new Date().toISOString(),
-    server: 'running'
+    server: 'running',
+    cors: 'configured'
   });
 });
 
