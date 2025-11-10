@@ -19,33 +19,48 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h2 class="fw-bold mb-4">에너지 분석</h2>
-                <p class="text-muted mb-5">데모 샘플을 선택하거나 직접 입력하여 분석하세요</p>
+                <p class="text-muted mb-5">1분 진단으로 우리집 전기사용량을 간편하게 비교해보세요</p>
 
-                <!-- 데모 샘플 -->
+                <!-- 빠른 진단 -->
                 <div class="card mb-4 border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">🚀 빠른 체험: 데모 샘플</h5>
-                        <div class="row g-3" id="demoSamples">
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-primary w-100 p-3 demo-sample" 
-                                        data-type="아파트" data-area="84" data-usage="350">
-                                    <strong>아파트</strong><br>
-                                    <small class="text-muted">84㎡, 월 350kWh</small>
-                                </button>
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-primary w-100 p-3 demo-sample"
-                                        data-type="주택" data-area="120" data-usage="450">
-                                    <strong>주택</strong><br>
-                                    <small class="text-muted">120㎡, 월 450kWh</small>
-                                </button>
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-primary w-100 p-3 demo-sample"
-                                        data-type="오피스텔" data-area="60" data-usage="280">
-                                    <strong>오피스텔</strong><br>
-                                    <small class="text-muted">60㎡, 월 280kWh</small>
-                                </button>
+                        <div class="quick-analysis-section">
+                            <h3 class="fw-bold mb-2">🔍 1분 진단: 우리집 전기사용량 체크</h3>
+                            <p class="text-muted mb-4">아래 유형 중 하나를 선택하면 평균 가구와 비교해드려요</p>
+
+                            <div class="row g-3 housing-type-cards" id="demoSamples">
+                                <div class="col-md-4">
+                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                         role="button" tabindex="0"
+                                         data-type="아파트" data-area="84" data-usage="350">
+                                        <div class="icon fs-1 mb-2">🏢</div>
+                                        <h4 class="fw-bold mb-2">아파트</h4>
+                                        <p class="avg-info text-muted mb-1">평균 84㎡ · 월 350kWh</p>
+                                        <p class="comparison text-primary mb-0">평균 가구와 비교하기</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                         role="button" tabindex="0"
+                                         data-type="단독주택" data-area="99" data-usage="480">
+                                        <div class="icon fs-1 mb-2">🏠</div>
+                                        <h4 class="fw-bold mb-2">단독주택</h4>
+                                        <p class="avg-info text-muted mb-1">평균 99㎡ · 월 480kWh</p>
+                                        <p class="comparison text-primary mb-0">평균 가구와 비교하기</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                         role="button" tabindex="0"
+                                         data-type="오피스텔" data-area="33" data-usage="200">
+                                        <div class="icon fs-1 mb-2">🏙️</div>
+                                        <h4 class="fw-bold mb-2">오피스텔</h4>
+                                        <p class="avg-info text-muted mb-1">평균 33㎡ · 월 200kWh</p>
+                                        <p class="comparison text-primary mb-0">평균 가구와 비교하기</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -61,7 +76,7 @@
                                 <select class="form-select" id="houseType" required>
                                     <option value="">선택하세요</option>
                                     <option value="아파트">아파트</option>
-                                    <option value="주택">주택</option>
+                                    <option value="단독주택">단독주택</option>
                                     <option value="오피스텔">오피스텔</option>
                                 </select>
                             </div>
@@ -94,11 +109,20 @@
     <script src="js/common.js"></script>
     <script>
         // 데모 샘플 클릭
-        document.querySelectorAll('.demo-sample').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('houseType').value = this.dataset.type;
-                document.getElementById('area').value = this.dataset.area;
-                document.getElementById('monthlyUsage').value = this.dataset.usage;
+        document.querySelectorAll('.demo-sample').forEach(card => {
+            const selectSample = () => {
+                document.getElementById('houseType').value = card.dataset.type || '';
+                document.getElementById('area').value = card.dataset.area || '';
+                document.getElementById('monthlyUsage').value = card.dataset.usage || '';
+            };
+
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', selectSample);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    selectSample();
+                }
             });
         });
 
