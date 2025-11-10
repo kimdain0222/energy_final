@@ -151,9 +151,13 @@
         <!-- 진행중인 챌린지 목록 -->
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <h5 class="fw-bold mb-4">🔥 진행중인 챌린지</h5>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                    <h5 class="fw-bold mb-0">🔥 진행중인 챌린지</h5>
+                    <a href="challenge-list.html" class="btn btn-outline-primary mt-3 mt-md-0">더 많은 챌린지 보기</a>
+                </div>
                 <div id="activeChallenges">
-                    <p class="text-muted text-center py-4">진행중인 챌린지가 없습니다. 새로운 챌린지를 시작해보세요!</p>
+                    <p id="activeChallengesEmpty" class="text-muted text-center py-4 mb-0">참여중인 챌린지가 없어요. 같이 해요에서 새로운 활동을 찾아보세요!</p>
+                    <div id="activeChallengesList" class="row g-4 d-none"></div>
                 </div>
             </div>
         </div>
@@ -175,6 +179,82 @@
         let userChallenge = null;
         let allBadges = [];
         let userEnergyTier = 2; // 기본값 2구간
+
+        function calculateDDay(endDate) {
+            if (!endDate) return '진행중';
+            const end = new Date(endDate);
+            const today = new Date();
+            end.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+            if (Number.isNaN(diff)) return '진행중';
+            if (diff > 0) return `D-${diff}`;
+            if (diff === 0) return 'D-DAY';
+            return '종료';
+        }
+
+        function renderActiveChallengeCard(challenge, tier = 2) {
+            const activeList = document.getElementById('activeChallengesList');
+            const emptyMessage = document.getElementById('activeChallengesEmpty');
+            if (!activeList) {
+                return;
+            }
+
+            const targetKwh = challenge.targetKwh || 0;
+            const savedKwh = challenge.savedKwh || 0;
+            const achievementRate = challenge.achievementRate || Math.round(targetKwh ? (savedKwh / targetKwh) * 100 : 0);
+            const typeLabel = challenge.type === 'weekly' ? '주간 챌린지' : '월간 챌린지';
+            const expectedPoints = challenge.expectedPoints || Math.round(targetKwh * 10);
+            const dDayLabel = calculateDDay(challenge.endDate);
+            const targetMoney = convertKwhToMoney(targetKwh, tier);
+            const savedMoney = convertKwhToMoney(savedKwh, tier);
+
+            if (emptyMessage) {
+                emptyMessage.classList.add('d-none');
+            }
+
+            activeList.classList.remove('d-none');
+            activeList.innerHTML = `
+                <div class="col-12 col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="rounded-top d-flex align-items-center justify-content-center" style="height: 130px; background:linear-gradient(135deg, #5ee7df 0%, #b490ca 100%); font-size: 3rem;">
+                            ⚡
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-primary">${typeLabel}</span>
+                                <span class="fw-bold text-primary">${dDayLabel}</span>
+                            </div>
+                            <h6 class="fw-bold mb-1">${challenge.title || '우리집 절약 챌린지'}</h6>
+                            <p class="text-muted small mb-3">${challenge.startDate || '시작일 미정'} ~ ${challenge.endDate || '진행중'}</p>
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: ${Math.min(achievementRate, 100)}%;" aria-valuenow="${achievementRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <div class="bg-light border rounded-3 p-3 text-center h-100">
+                                        <div class="text-muted small">절약량</div>
+                                        <div class="fw-bold text-success fs-5">${savedKwh}kWh</div>
+                                        <div class="text-success small">월 ${formatMoney(savedMoney)}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-light border rounded-3 p-3 text-center h-100">
+                                        <div class="text-muted small">목표</div>
+                                        <div class="fw-bold text-primary fs-5">${targetKwh}kWh</div>
+                                        <div class="text-primary small">월 ${formatMoney(targetMoney)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center text-muted small">
+                                <span>🏅 예상 포인트</span>
+                                <span class="fw-bold text-success">${expectedPoints.toLocaleString()} P</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         // kWh → 금액 환산 함수
         function convertKwhToMoney(kwh, tier = null) {
@@ -213,21 +293,16 @@
                 const response = await fetch(getApiUrl(`/api/challenge/user/${user.id}`));
                 const data = await response.json();
 
-                if (data.success) {
+                if (data.success && data.challenge) {
                     userChallenge = data.challenge;
                     userEnergyTier = data.energyTier || 2;
                     displayChallengeStatus(data.challenge, data.totalSaved, data.points, data.badges, data.energyTier, data.weeklyProgress, data.prediction);
                 } else {
-                    document.getElementById('challengeStatus').innerHTML = `
-                        <div class="col-12">
-                            <div class="alert alert-info">
-                                <p class="mb-0">진행 중인 챌린지가 없습니다. 새 챌린지를 시작해보세요!</p>
-                            </div>
-                        </div>
-                    `;
+                    showNoChallengeState();
                 }
             } catch (error) {
                 console.error('챌린지 조회 실패:', error);
+                showNoChallengeState();
             }
         }
 
@@ -356,6 +431,7 @@
 
             document.getElementById('userPoints').textContent = (points || 0).toLocaleString();
             document.getElementById('totalSaved').textContent = formatKwhWithMoney(totalSaved || 0, tier);
+            renderActiveChallengeCard(challenge, tier);
 
             // 랭킹 조회
             loadMyRank();
@@ -365,6 +441,33 @@
 
             // 챌린지가 있으면 새 챌린지 카드 숨기기
             document.getElementById('newChallengeCard').style.display = 'none';
+        }
+
+        function showNoChallengeState() {
+            document.getElementById('challengeStatus').innerHTML = `
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm bg-light">
+                        <div class="card-body p-4 p-lg-5 text-center">
+                            <h5 class="fw-bold mb-2">아직 참여 중인 챌린지가 없어요</h5>
+                            <p class="text-muted mb-3">우리 동네에서 진행 중인 환경보호 활동을 찾아 참여하고 포인트도 받아보세요.</p>
+                            <button type="button" class="btn btn-primary px-4" onclick="document.getElementById('newChallengeCard').scrollIntoView({ behavior: 'smooth' });">
+                                직접 목표 설정하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('newChallengeCard').style.display = '';
+            
+            const emptyMessage = document.getElementById('activeChallengesEmpty');
+            const activeList = document.getElementById('activeChallengesList');
+            if (emptyMessage) {
+                emptyMessage.classList.remove('d-none');
+            }
+            if (activeList) {
+                activeList.classList.add('d-none');
+                activeList.innerHTML = '';
+            }
         }
 
         // 랭킹 조회

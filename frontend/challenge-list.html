@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>같이 해요 - 에너지 절약 플랫폼</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .toolbar-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 18px;
+            background: #f8fafc;
+        }
+        .toolbar-card .region-pill {
+            border-radius: 999px;
+            border: 1px solid #d0d5dd;
+            padding: 9px 18px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .toolbar-card .region-pill:hover {
+            border-color: #62a5ff;
+            background-color: #ebf3ff;
+        }
+        .toolbar-card select {
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 500;
+        }
+        .toolbar-card .search-input {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid #d0d5dd;
+            font-size: 0.95rem;
+        }
+        .activity-card {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #eef2f8;
+            background: #ffffff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .activity-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+        .activity-card .card-header-img {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #1f2937;
+        }
+        .activity-card .badge-chip {
+            background-color: #f1f5f9;
+            color: #334155;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .activity-card .meta-info {
+            font-size: 0.85rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            align-items: center;
+        }
+        .activity-card .meta-info .points {
+            color: #16a34a;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">대시보드</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="challenge.html">챌린지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ranking.html">랭킹</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="programs.html">지원사업</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">같이 해요</h2>
+                <p class="text-muted mb-0">실시간으로 모집 중인 환경보호 활동을 확인하고 포인트도 함께 모아보세요.</p>
+            </div>
+        </div>
+
+        <div class="toolbar-card mb-4">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <button class="region-pill" type="button" id="regionButton">
+                        <span>📍</span>
+                        <span id="regionLabel">서울 관악구 남현동</span>
+                    </button>
+                    <select id="distanceSelect" class="form-select form-select-sm" style="max-width: 160px;">
+                        <option value="all">정렬 선택</option>
+                        <option value="nearest">가까운 순</option>
+                        <option value="soon">마감 임박</option>
+                        <option value="recent">최신 등록</option>
+                    </select>
+                    <select id="typeSelect" class="form-select form-select-sm" style="max-width: 160px;">
+                        <option value="all">활동 유형</option>
+                        <option value="offline">오프라인</option>
+                        <option value="online">온라인</option>
+                    </select>
+                </div>
+                <div class="flex-grow-1 position-relative">
+                    <input type="search" id="searchInput" class="form-control search-input" placeholder="관심있는 환경보호 활동을 검색해보세요 :)">
+                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">🔍</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" id="challengeList">
+            <!-- 동적으로 생성 -->
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="button" class="btn btn-outline-secondary px-4" id="loadMoreButton">더보기</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.API_BASE_URL = window.API_BASE_URL || '';
+    </script>
+    <script src="js/common.js"></script>
+    <script>
+        const challenges = [
+            {
+                id: 'cleanup-1',
+                title: '쓰담런 EP.6 거북섬동',
+                tags: ['#서울', '#플로깅', '#추천'],
+                location: '경기 시흥시 정왕동',
+                dday: 4,
+                reward: 1000,
+                participants: 6,
+                mode: 'offline',
+                distanceKm: 2.4,
+                deadlineDate: '2025-11-15',
+                registeredAt: '2025-11-01',
+                imageEmoji: '🌿',
+                summary: '도시 쓰레기 줍기 캠페인으로 11월 15일에 진행됩니다.'
+            },
+            {
+                id: 'green-supporter-2025',
+                title: '2025년 그린서포터즈 환경 행동단',
+                tags: ['#서울', '#청소년', '#지원활동'],
+                location: '서울 서초구 방배동',
+                dday: 1,
+                reward: 1000,
+                participants: 0,
+                mode: 'offline',
+                distanceKm: 4.1,
+                deadlineDate: '2025-11-12',
+                registeredAt: '2025-10-28',
+                imageEmoji: '🌱',
+                summary: '청소년 환경 행동단을 모집합니다.'
+            },
+            {
+                id: 'eco-jump-11',
+                title: '한빛 친환경 줍깅캠페인 11월 참여자 모집',
+                tags: ['#양천구', '#친환경캠페인', '#깔끔한동네'],
+                location: '서울 양천구 신월동',
+                dday: 1,
+                reward: 1000,
+                participants: 0,
+                mode: 'offline',
+                distanceKm: 5.8,
+                deadlineDate: '2025-11-12',
+                registeredAt: '2025-10-30',
+                imageEmoji: '🌎',
+                summary: '줍깅으로 우리 동네를 깨끗하게 가꿔보세요.'
+            },
+            {
+                id: 'school-recycle',
+                title: '장난감재활용 자원봉사',
+                tags: ['#경기도', '#교육봉사', '#재활용'],
+                location: '경기 고양시 일산동구 성석동',
+                dday: 11,
+                reward: 1000,
+                participants: 2,
+                mode: 'offline',
+                distanceKm: 12.5,
+                deadlineDate: '2025-11-21',
+                registeredAt: '2025-11-03',
+                imageEmoji: '🧸',
+                summary: '재활용 장난감을 정리하고 나눔하는 봉사활동입니다.'
+            },
+            {
+                id: 'district-clean',
+                title: '경안천 주변 정화활동',
+                tags: ['#용인시', '#하천정화', '#주말활동'],
+                location: '경기 용인시 처인구 김량장동',
+                dday: 2,
+                reward: 1000,
+                participants: 0,
+                mode: 'offline',
+                distanceKm: 9.3,
+                deadlineDate: '2025-11-13',
+                registeredAt: '2025-10-25',
+                imageEmoji: '💧',
+                summary: '하천 주변 쓰레기를 함께 치우는 정화활동입니다.'
+            },
+            {
+                id: 'online-energy-class',
+                title: '2025 아너스, 그린미추홀 자원순환 플랜',
+                tags: ['#온라인', '#자원순환', '#교육'],
+                location: '온라인 라이브',
+                dday: 0,
+                reward: 1000,
+                participants: 0,
+                mode: 'online',
+                distanceKm: 0.5,
+                deadlineDate: '2025-11-11',
+                registeredAt: '2025-11-05',
+                imageEmoji: '💻',
+                summary: '온라인으로 참여하는 자원순환 교육 프로그램입니다.'
+            },
+            {
+                id: 'battery-recycle',
+                title: '11월 위기를 기회로 - 리싸이클링 캠페인',
+                tags: ['#인천', '#리싸이클링', '#생활환경'],
+                location: '인천 서구 마전동',
+                dday: 2,
+                reward: 1000,
+                participants: 0,
+                mode: 'offline',
+                distanceKm: 18.2,
+                deadlineDate: '2025-11-13',
+                registeredAt: '2025-10-20',
+                imageEmoji: '🔋',
+                summary: '폐건전지 모아 재활용하는 시민 참여 캠페인입니다.'
+            },
+            {
+                id: 'community-garden',
+                title: '공원 정원사와 함께하는 도시 텃밭 가꾸기',
+                tags: ['#도시농업', '#가족활동', '#체험'],
+                location: '서울 동작구 상도동',
+                dday: 7,
+                reward: 1000,
+                participants: 5,
+                mode: 'offline',
+                distanceKm: 3.6,
+                deadlineDate: '2025-11-18',
+                registeredAt: '2025-11-04',
+                imageEmoji: '🌼',
+                summary: '도시 공원을 함께 가꾸는 체험형 봉사활동입니다.'
+            }
+        ];
+
+        let visibleCount = 8;
+
+        function calculateDDay(endDate) {
+            if (!endDate) return '진행중';
+            const end = new Date(endDate);
+            const today = new Date();
+            end.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+            if (Number.isNaN(diff)) return '진행중';
+            if (diff > 0) return `D-${diff}`;
+            if (diff === 0) return 'D-DAY';
+            return '종료';
+        }
+
+        function getSortedList(list) {
+            const distanceSelect = document.getElementById('distanceSelect');
+            if (!distanceSelect) return list;
+
+            const value = distanceSelect.value;
+            if (value === 'nearest') {
+                return [...list].sort((a, b) => (a.distanceKm || 999) - (b.distanceKm || 999));
+            }
+            if (value === 'soon') {
+                return [...list].sort((a, b) => {
+                    const aDiff = a.deadlineDate ? new Date(a.deadlineDate) - new Date() : Infinity;
+                    const bDiff = b.deadlineDate ? new Date(b.deadlineDate) - new Date() : Infinity;
+                    return aDiff - bDiff;
+                });
+            }
+            if (value === 'recent') {
+                return [...list].sort((a, b) => {
+                    const aRegistered = a.registeredAt ? new Date(a.registeredAt) : new Date(0);
+                    const bRegistered = b.registeredAt ? new Date(b.registeredAt) : new Date(0);
+                    return bRegistered - aRegistered;
+                });
+            }
+            return list;
+        }
+
+        function filterChallenges() {
+            const typeSelect = document.getElementById('typeSelect');
+            const searchInput = document.getElementById('searchInput');
+
+            let filtered = [...challenges];
+
+            if (typeSelect && typeSelect.value !== 'all') {
+                filtered = filtered.filter(item => item.mode === typeSelect.value);
+            }
+
+            if (searchInput && searchInput.value.trim()) {
+                const keyword = searchInput.value.trim().toLowerCase();
+                filtered = filtered.filter(item => {
+                    const haystack = [
+                        item.title,
+                        item.location,
+                        item.summary,
+                        ...(item.tags || [])
+                    ].join(' ').toLowerCase();
+                    return haystack.includes(keyword);
+                });
+            }
+
+            return getSortedList(filtered);
+        }
+
+        function renderChallenges(list) {
+            const container = document.getElementById('challengeList');
+            if (!container) return;
+
+            if (!list || list.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center text-muted py-5">
+                        조건에 맞는 활동이 없어요. 다른 키워드를 검색해보세요.
+                    </div>
+                `;
+                document.getElementById('loadMoreButton').classList.add('d-none');
+                return;
+            }
+
+            const limited = list.slice(0, visibleCount);
+            container.innerHTML = limited.map(item => {
+                const badgeLabel = item.dday <= 3 ? '마감임박' : item.dday <= 7 ? '추천' : '모집중';
+                const cardGradient = item.mode === 'online'
+                    ? 'linear-gradient(135deg, #bbf0ff 0%, #80d0c7 100%)'
+                    : 'linear-gradient(135deg, #9face6 0%, #74ebd5 100%)';
+
+                return `
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="activity-card">
+                            <div class="card-header-img" style="background:${cardGradient};">
+                                ${item.imageEmoji || '🌿'}
+                            </div>
+                            <div class="p-3 p-lg-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-warning text-dark fw-semibold">${badgeLabel}</span>
+                                    <span class="text-primary fw-bold">${calculateDDay(item.deadlineDate)}</span>
+                                </div>
+                                <div class="mb-3">
+                                    ${(item.tags || []).map(tag => `<span class="badge-chip">${tag}</span>`).join('')}
+                                </div>
+                                <h6 class="fw-bold mb-2">${item.title}</h6>
+                                <p class="text-muted small mb-0">${item.location}</p>
+                                <p class="text-muted small mt-2 mb-3">${item.summary}</p>
+                                <div class="meta-info">
+                                    <span class="points">💎 ${(item.reward || 0).toLocaleString()} P</span>
+                                    <span>신청자 ${item.participants || 0}명</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            if (limited.length >= list.length) {
+                loadMoreButton.classList.add('d-none');
+            } else {
+                loadMoreButton.classList.remove('d-none');
+            }
+        }
+
+        function refreshList() {
+            const filtered = filterChallenges();
+            renderChallenges(filtered);
+        }
+
+        document.getElementById('distanceSelect').addEventListener('change', refreshList);
+        document.getElementById('typeSelect').addEventListener('change', refreshList);
+        document.getElementById('searchInput').addEventListener('input', () => {
+            visibleCount = 8;
+            refreshList();
+        });
+        document.getElementById('loadMoreButton').addEventListener('click', () => {
+            visibleCount += 8;
+            refreshList();
+        });
+        document.getElementById('regionButton').addEventListener('click', () => {
+            alert('지역 선택 기능은 곧 제공될 예정입니다.');
+        });
+
+        refreshList();
+    </script>
+</body>
+</html>
+
+
