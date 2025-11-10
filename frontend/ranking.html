@@ -6,6 +6,7 @@
     <title>랭킹 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         body {
@@ -16,16 +17,16 @@
             max-height: 300px !important;
         }
         .ranking-table tbody tr:hover {
-            background-color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.65);
         }
         .top-rank {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #000;
+            background: linear-gradient(135deg, #fef9d5 0%, #fbeab4 100%);
+            color: #2f3135;
             font-weight: bold;
         }
         .my-rank {
-            background-color: #e7f3ff;
-            border-left: 4px solid #0d6efd;
+            background-color: rgba(86, 176, 245, 0.12);
+            border-left: 4px solid var(--theme-strong);
         }
         .rank-badge {
             display: inline-block;
@@ -36,15 +37,15 @@
             line-height: 30px;
             font-weight: bold;
         }
-        .rank-1 { background: #ffd700; color: #000; }
-        .rank-2 { background: #c0c0c0; color: #000; }
-        .rank-3 { background: #cd7f32; color: #fff; }
+        .rank-1 { background: linear-gradient(135deg, #fdd835, #ffe57f); color: #4b3d00; }
+        .rank-2 { background: linear-gradient(135deg, #cfd8dc, #eceff1); color: #2e3a3f; }
+        .rank-3 { background: linear-gradient(135deg, #ffb74d, #ffcc80); color: #4a2d04; }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<body class="theme-sky">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-theme shadow-sm py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a class="navbar-brand fw-bold" href="index.html">🍃 ecosync</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -70,17 +71,47 @@
         </div>
     </nav>
 
-    <div class="container py-5">
+    <div class="container">
+        <section class="themed-hero mt-4">
+            <div class="floating-bubbles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="themed-hero-inner">
+                <div>
+                    <div class="themed-badge">
+                        <span>🌬️ Bree와 함께</span>
+                        <span>시원한 랭킹 여행</span>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">절약 실력을 비교하고 더 멀리 나아가기</h1>
+                    <p class="mb-4">바람 여우 Bree가 연하늘 테마에서 우리의 절약 데이터를 부드럽게 정리해줘요. 지역과 유형별로 필터링하고, 나의 위치를 확인하며 새로운 목표를 세워보세요.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#filterSection" class="btn btn-theme-primary">필터 맞추기</a>
+                        <a href="#leaderboard" class="btn btn-theme-secondary">리더보드 보기</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <img src="characters/bree.png" alt="Bree 캐릭터" class="theme-character">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="container pb-5">
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold mb-2">🏆 에너지 절약 랭킹</h2>
-                <p class="text-muted">다른 사용자와 절약량을 비교해보세요</p>
+                <div class="soft-section text-center">
+                    <h2 class="fw-bold mb-2">🏆 에너지 절약 랭킹</h2>
+                    <p class="text-muted mb-0">다른 사용자와 절약량을 비교해보며 나만의 목표를 세워보세요.</p>
+                </div>
             </div>
         </div>
 
         <!-- 필터 -->
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-body p-4">
+        <div class="themed-card mb-4" id="filterSection">
+            <div class="card-body p-4 p-md-5">
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">지역</label>
@@ -116,33 +147,33 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">&nbsp;</label>
-                        <button class="btn btn-secondary w-100" onclick="resetFilters()">필터 초기화</button>
+                        <button class="btn btn-theme-secondary w-100" onclick="resetFilters()">필터 초기화</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- 내 순위 카드 -->
-        <div class="card border-0 shadow-lg mb-4 bg-primary text-white" id="myRankCard" style="display: none;">
-            <div class="card-body p-4">
+        <div class="themed-card mb-4" id="myRankCard" style="display: none;">
+            <div class="card-body p-4 p-md-5">
                 <div class="row align-items-center">
                     <div class="col-md-3 text-center">
-                        <h2 class="fw-bold mb-0" id="myRankNumber">-</h2>
-                        <small>위</small>
+                        <h2 class="fw-bold mb-0" id="myRankNumber" style="color: var(--theme-strong);">-</h2>
+                        <small class="text-muted">위</small>
                     </div>
                     <div class="col-md-6">
                         <h5 class="fw-bold mb-1" id="myRankName">-</h5>
                         <p class="mb-0">절약량: <span id="myRankSaved">0</span> kWh | 달성률: <span id="myRankAchievement">0</span>%</p>
                     </div>
                     <div class="col-md-3 text-end">
-                        <a href="challenge.html" class="btn btn-light">챌린지 보기</a>
+                        <a href="challenge.html" class="btn btn-theme-secondary">챌린지 보기</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- 리더보드 -->
-        <div class="card border-0 shadow-sm">
+        <div class="themed-card" id="leaderboard">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table ranking-table mb-0">
@@ -158,7 +189,7 @@
                         <tbody id="rankingTable">
                             <tr>
                                 <td colspan="5" class="text-center py-5">
-                                    <div class="spinner-border text-primary" role="status">
+                                    <div class="spinner-border theme-spinner" role="status">
                                         <span class="visually-hidden">로딩 중...</span>
                                     </div>
                                 </td>
@@ -170,7 +201,7 @@
         </div>
 
         <!-- 비교 차트 -->
-        <div class="card border-0 shadow-sm mt-4">
+        <div class="themed-card mt-4">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-4">내 vs 평균 vs 상위권</h5>
                 <div style="height: 300px; position: relative;">
@@ -194,6 +225,10 @@
         }
 
         let comparisonChart = null;
+
+        function getThemeColor(variable) {
+            return getComputedStyle(document.body).getPropertyValue(variable)?.trim() || '';
+        }
 
         async function loadRankings() {
             const region = document.getElementById('filterRegion').value;
@@ -233,6 +268,9 @@
             tbody.innerHTML = rankings.slice(0, 50).map((r, index) => {
                 const rankClass = r.rank === 1 ? 'rank-1' : r.rank === 2 ? 'rank-2' : r.rank === 3 ? 'rank-3' : '';
                 const rowClass = r.id === user.id ? 'my-rank' : (r.rank <= 3 ? 'top-rank' : '');
+                const achievementBadge = r.achievementRate >= 100
+                    ? `<span class="tag-pill" style="background: rgba(86, 176, 245, 0.2); color: var(--theme-strong);">${r.achievementRate || 0}%</span>`
+                    : `<span class="tag-pill" style="background: rgba(255, 198, 109, 0.25); color: #b06b00;">${r.achievementRate || 0}%</span>`;
                 
                 return `
                     <tr class="${rowClass}">
@@ -245,12 +283,10 @@
                         </td>
                         <td>${r.region || '-'}</td>
                         <td class="text-end">
-                            <strong class="text-success">${(r.savedKwh || 0).toLocaleString()}</strong> kWh
+                            <strong style="color: var(--theme-strong);">${(r.savedKwh || 0).toLocaleString()}</strong> kWh
                         </td>
                         <td class="text-end">
-                            <span class="badge ${r.achievementRate >= 100 ? 'bg-success' : 'bg-warning'}">
-                                ${r.achievementRate || 0}%
-                            </span>
+                            ${achievementBadge}
                         </td>
                     </tr>
                 `;
@@ -272,6 +308,10 @@
                 comparisonChart.destroy();
             }
 
+            const themeStrong = getThemeColor('--theme-strong') || '#56b0f5';
+            const themeSoft = getThemeColor('--theme-soft') || '#d6efff';
+            const themeAccent = getThemeColor('--theme-accent') || '#90cdfd';
+
             comparisonChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -283,7 +323,9 @@
                             avgSaved,
                             topSaved
                         ],
-                        backgroundColor: ['#0d6efd', '#6c757d', '#ffc107']
+                        backgroundColor: [themeStrong, themeAccent, '#ffe0a3'],
+                        borderRadius: 12,
+                        borderSkipped: false
                     }]
                 },
                 options: {

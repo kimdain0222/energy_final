@@ -6,23 +6,54 @@
     <title>에너지 분석 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
 </head>
-<body>
-    <nav class="navbar navbar-light bg-white shadow-sm">
+<body class="theme-melon">
+    <nav class="navbar navbar-light navbar-theme shadow-sm py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a class="navbar-brand fw-bold" href="index.html">🍃 ecosync</a>
             <a href="dashboard.html" class="text-muted">← 대시보드로</a>
         </div>
     </nav>
 
+    <div class="container">
+        <section class="themed-hero mt-4">
+            <div class="floating-bubbles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="themed-hero-inner">
+                <div>
+                    <div class="themed-badge">
+                        <span>🌱 Leafy와 함께</span>
+                        <span>우리집 에너지 탐험</span>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">1분 만에 끝내는 맞춤형 에너지 진단</h1>
+                    <p class="mb-4">Leafy가 안내하는 상큼한 멜론 테마에서 우리집 전기 사용량을 쉽고 귀엽게 비교해보세요. 추천 버튼으로 빠르게 진단하고, 직접 입력으로 세밀하게 확인할 수 있어요.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#quick-analysis" class="btn btn-theme-primary">빠른 1분 진단하기</a>
+                        <a href="#detail-form" class="btn btn-theme-secondary">직접 입력하러 가기</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <img src="characters/leafy.png" alt="Leafy 캐릭터" class="theme-character">
+                </div>
+            </div>
+        </section>
+    </div>
+
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <h2 class="fw-bold mb-4">에너지 분석</h2>
-                <p class="text-muted mb-5">1분 진단으로 우리집 전기사용량을 간편하게 비교해보세요</p>
+                <div class="soft-section mb-5 text-center">
+                    <h2 class="fw-bold mb-3">에너지 분석</h2>
+                    <p class="text-muted mb-0">1분 진단으로 우리집 전기사용량을 간편하게 비교해보세요</p>
+                </div>
 
                 <!-- 빠른 진단 -->
-                <div class="card mb-4 border-0 shadow-sm">
+                <div class="themed-card mb-4" id="quick-analysis">
                     <div class="card-body p-4">
                         <div class="quick-analysis-section">
                             <h3 class="fw-bold mb-2">🔍 1분 진단: 우리집 전기사용량 체크</h3>
@@ -30,7 +61,7 @@
 
                             <div class="row g-3 housing-type-cards" id="demoSamples">
                                 <div class="col-md-4">
-                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                    <div class="housing-card demo-sample themed-border p-4 h-100 text-center"
                                          role="button" tabindex="0"
                                          data-type="아파트" data-area="84" data-usage="350">
                                         <div class="icon fs-1 mb-2">🏢</div>
@@ -41,7 +72,7 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                    <div class="housing-card demo-sample themed-border p-4 h-100 text-center"
                                          role="button" tabindex="0"
                                          data-type="단독주택" data-area="99" data-usage="480">
                                         <div class="icon fs-1 mb-2">🏠</div>
@@ -52,7 +83,7 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <div class="housing-card demo-sample p-4 border rounded h-100 text-center"
+                                    <div class="housing-card demo-sample themed-border p-4 h-100 text-center"
                                          role="button" tabindex="0"
                                          data-type="오피스텔" data-area="33" data-usage="200">
                                         <div class="icon fs-1 mb-2">🏙️</div>
@@ -67,7 +98,7 @@
                 </div>
 
                 <!-- 직접 입력 폼 -->
-                <div class="card border-0 shadow-sm">
+                <div class="themed-card" id="detail-form">
                     <div class="card-body p-5">
                         <h5 class="fw-bold mb-4">또는 직접 입력</h5>
                         <form id="analyzeForm">
@@ -92,7 +123,7 @@
                                 <small class="text-muted">전기 요금 고지서에서 확인하실 수 있습니다</small>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <button type="submit" class="btn btn-theme-primary btn-lg w-100">
                                 실제 지원사업 찾기
                             </button>
                         </form>

@@ -6,10 +6,11 @@
     <title>에너지 절약 챌린지 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         .badge-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #d9c7ff 0%, #bba0ff 100%);
             color: white;
             border-radius: 15px;
             padding: 20px;
@@ -29,10 +30,10 @@
         }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<body class="theme-lilac">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-theme shadow-sm py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">⚡ 에너지절약</a>
+            <a class="navbar-brand fw-bold" href="index.html">🍃 ecosync</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -58,11 +59,42 @@
         </div>
     </nav>
 
+    <div class="container">
+        <section class="themed-hero mt-4">
+            <div class="floating-bubbles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="themed-hero-inner">
+                <div>
+                    <div class="themed-badge">
+                        <span>🔥 Flamy와 함께</span>
+                        <span>열정 가득 챌린지</span>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">에너지 절약을 게임처럼, 즐겁게!</h1>
+                    <p class="mb-4">열정 리더 Flamy가 연보라 테마로 꾸며진 공간에서 챌린지 여행을 안내합니다. 귀여운 캐릭터와 함께 목표를 세우고, 포인트와 배지를 수집해보세요.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#newChallengeCard" class="btn btn-theme-primary">새 챌린지 시작하기</a>
+                        <a href="#challengeStatus" class="btn btn-theme-secondary">내 현황 살펴보기</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <img src="characters/flamy.png" alt="Flamy 캐릭터" class="theme-character">
+                </div>
+            </div>
+        </section>
+    </div>
+
     <div class="container py-5">
         <!-- 내 챌린지 현황 -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold mb-4">🏆 에너지 절약 챌린지</h2>
+                <div class="soft-section text-center">
+                    <h2 class="fw-bold mb-3">🏆 에너지 절약 챌린지</h2>
+                    <p class="text-muted mb-0">목표를 세우고, 절약을 실천하고, 귀여운 캐릭터와 함께 보상을 받아보세요.</p>
+                </div>
             </div>
         </div>
 
@@ -71,7 +103,7 @@
         </div>
 
         <!-- 새 챌린지 시작 -->
-        <div class="card border-0 shadow-sm mb-5" id="newChallengeCard">
+        <div class="themed-card mb-5" id="newChallengeCard">
             <div class="card-body p-5">
                 <h4 class="fw-bold mb-4">새 챌린지 시작하기</h4>
                 <form id="challengeForm">
@@ -80,10 +112,10 @@
                             <label class="form-label">목표 유형</label>
                             <div class="btn-group w-100" role="group">
                                 <input type="radio" class="btn-check" name="type" id="weekly" value="weekly" checked>
-                                <label class="btn btn-outline-primary" for="weekly">주간 목표 (7일)</label>
+                                <label class="btn btn-theme-secondary" for="weekly">주간 목표 (7일)</label>
                                 
                                 <input type="radio" class="btn-check" name="type" id="monthly" value="monthly">
-                                <label class="btn btn-outline-primary" for="monthly">월간 목표 (30일)</label>
+                                <label class="btn btn-theme-secondary" for="monthly">월간 목표 (30일)</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -98,18 +130,18 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg px-5">챌린지 시작하기 🚀</button>
+                        <button type="submit" class="btn btn-theme-primary btn-lg px-5">챌린지 시작하기 🚀</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- 내 배지 -->
-        <div class="card border-0 shadow-sm mb-5">
+        <div class="themed-card mb-5">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold mb-0">🏅 획득한 배지</h5>
-                    <a href="badges.html" class="btn btn-primary px-4 py-2" style="font-size: 1rem; font-weight: 600;">뱃지 구경하기 ✨</a>
+                    <a href="badges.html" class="btn btn-theme-secondary px-4 py-2" style="font-size: 1rem; font-weight: 600;">뱃지 구경하기 ✨</a>
                 </div>
                 <div id="myBadges" class="row g-3">
                     <!-- 동적으로 생성 -->
@@ -120,27 +152,27 @@
         <!-- 포인트 & 통계 -->
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center">
+                <div class="themed-card text-center h-100">
                     <div class="card-body p-4">
-                        <h3 class="text-primary mb-2">💎 포인트</h3>
+                        <h3 class="mb-2">💎 포인트</h3>
                         <h2 class="fw-bold" id="userPoints">0</h2>
                         <small class="text-muted">1kWh당 10포인트</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center">
+                <div class="themed-card text-center h-100">
                     <div class="card-body p-4">
-                        <h3 class="text-success mb-2">⚡ 총 절약량</h3>
+                        <h3 class="mb-2">⚡ 총 절약량</h3>
                         <h2 class="fw-bold" id="totalSaved">0</h2>
                         <small class="text-muted">kWh</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center">
+                <div class="themed-card text-center h-100">
                     <div class="card-body p-4">
-                        <h3 class="text-info mb-2">🎯 참여자 수</h3>
+                        <h3 class="mb-2">🎯 참여자 수</h3>
                         <h2 class="fw-bold" id="totalParticipants">-</h2>
                         <small class="text-muted">명</small>
                     </div>
@@ -149,11 +181,11 @@
         </div>
 
         <!-- 진행중인 챌린지 목록 -->
-        <div class="card border-0 shadow-sm">
+        <div class="themed-card">
             <div class="card-body p-4">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
                     <h5 class="fw-bold mb-0">🔥 진행중인 챌린지</h5>
-                    <a href="challenge-list.html" class="btn btn-outline-primary mt-3 mt-md-0">더 많은 챌린지 보기</a>
+                    <a href="challenge-list.html" class="btn btn-theme-secondary mt-3 mt-md-0">더 많은 챌린지 보기</a>
                 </div>
                 <div id="activeChallenges">
                     <p id="activeChallengesEmpty" class="text-muted text-center py-4 mb-0">참여중인 챌린지가 없어요. 같이 해요에서 새로운 활동을 찾아보세요!</p>
@@ -216,39 +248,39 @@
             activeList.classList.remove('d-none');
             activeList.innerHTML = `
                 <div class="col-12 col-lg-6">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="rounded-top d-flex align-items-center justify-content-center" style="height: 130px; background:linear-gradient(135deg, #5ee7df 0%, #b490ca 100%); font-size: 3rem;">
+                    <div class="themed-card h-100 p-0 overflow-hidden">
+                        <div class="d-flex align-items-center justify-content-center" style="height: 140px; background: linear-gradient(135deg, var(--theme-hero-start), var(--theme-hero-end)); font-size: 3rem;">
                             ⚡
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-primary">${typeLabel}</span>
-                                <span class="fw-bold text-primary">${dDayLabel}</span>
+                                <span class="tag-pill">${typeLabel}</span>
+                                <span class="fw-bold" style="color: var(--theme-strong);">${dDayLabel}</span>
                             </div>
                             <h6 class="fw-bold mb-1">${challenge.title || '우리집 절약 챌린지'}</h6>
                             <p class="text-muted small mb-3">${challenge.startDate || '시작일 미정'} ~ ${challenge.endDate || '진행중'}</p>
-                            <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: ${Math.min(achievementRate, 100)}%;" aria-valuenow="${achievementRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress mb-3" style="height: 12px; background: rgba(255, 255, 255, 0.6);">
+                                <div class="progress-bar" style="background: var(--theme-strong); width: ${Math.min(achievementRate, 100)}%;" aria-valuenow="${achievementRate}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="row g-3 mb-3">
                                 <div class="col-6">
-                                    <div class="bg-light border rounded-3 p-3 text-center h-100">
+                                    <div class="themed-border p-3 text-center h-100">
                                         <div class="text-muted small">절약량</div>
-                                        <div class="fw-bold text-success fs-5">${savedKwh}kWh</div>
-                                        <div class="text-success small">월 ${formatMoney(savedMoney)}</div>
+                                        <div class="fw-bold fs-5" style="color: var(--theme-strong);">${savedKwh}kWh</div>
+                                        <div class="small" style="color: var(--theme-strong);">월 ${formatMoney(savedMoney)}</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="bg-light border rounded-3 p-3 text-center h-100">
+                                    <div class="themed-border p-3 text-center h-100">
                                         <div class="text-muted small">목표</div>
-                                        <div class="fw-bold text-primary fs-5">${targetKwh}kWh</div>
-                                        <div class="text-primary small">월 ${formatMoney(targetMoney)}</div>
+                                        <div class="fw-bold fs-5">${targetKwh}kWh</div>
+                                        <div class="small text-muted">월 ${formatMoney(targetMoney)}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center text-muted small">
                                 <span>🏅 예상 포인트</span>
-                                <span class="fw-bold text-success">${expectedPoints.toLocaleString()} P</span>
+                                <span class="fw-bold" style="color: var(--theme-strong);">${expectedPoints.toLocaleString()} P</span>
                             </div>
                         </div>
                     </div>
@@ -324,107 +356,97 @@
 
             document.getElementById('challengeStatus').innerHTML = `
                 <div class="col-md-8">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold mb-4">내 챌린지 현황</h5>
-                            
-                            <div class="mb-4">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>목표 달성률</span>
-                                    <span class="fw-bold">${achievementRate}%</span>
-                                </div>
-                                <div class="progress" style="height: 30px;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                         role="progressbar" 
-                                         style="width: ${Math.min(achievementRate, 100)}%" 
-                                         aria-valuenow="${achievementRate}" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="100">
-                                        ${achievementRate}%
-                                    </div>
+                    <div class="themed-card h-100">
+                        <h5 class="fw-bold mb-4">내 챌린지 현황</h5>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>목표 달성률</span>
+                                <span class="fw-bold" style="color: var(--theme-strong);">${achievementRate}%</span>
+                            </div>
+                            <div class="progress" style="height: 28px; background: rgba(255, 255, 255, 0.6);">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" 
+                                     style="background: var(--theme-strong); width: ${Math.min(achievementRate, 100)}%" 
+                                     aria-valuenow="${achievementRate}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    ${achievementRate}%
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <div class="card bg-light">
-                                        <div class="card-body text-center">
-                                            <h6 class="text-muted mb-1">절약량</h6>
-                                            <h4 class="fw-bold text-success">${savedKwh}</h4>
-                                            <small class="text-muted d-block">kWh</small>
-                                            <small class="text-success fw-bold">월 ${formatMoney(savedMoney)}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card bg-light">
-                                        <div class="card-body text-center">
-                                            <h6 class="text-muted mb-1">목표까지</h6>
-                                            <h4 class="fw-bold text-primary">${remaining}</h4>
-                                            <small class="text-muted d-block">kWh 남음</small>
-                                            <small class="text-primary fw-bold">약 ${formatMoney(remainingMoney)}</small>
-                                        </div>
-                                    </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="themed-border p-3 text-center h-100">
+                                    <h6 class="text-muted mb-1">절약량</h6>
+                                    <h4 class="fw-bold" style="color: var(--theme-strong);">${savedKwh}</h4>
+                                    <small class="text-muted d-block">kWh</small>
+                                    <small class="fw-bold" style="color: var(--theme-strong);">월 ${formatMoney(savedMoney)}</small>
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <div class="themed-border p-3 text-center h-100">
+                                    <h6 class="text-muted mb-1">목표까지</h6>
+                                    <h4 class="fw-bold">${remaining}</h4>
+                                    <small class="text-muted d-block">kWh 남음</small>
+                                    <small class="fw-bold text-muted">약 ${formatMoney(remainingMoney)}</small>
+                                </div>
+                            </div>
+                        </div>
 
-                            ${weeklyProgress && weeklyProgress.length > 0 ? `
-                            <div class="mb-3">
-                                <h6 class="fw-bold mb-2">📅 주간별 진행 현황</h6>
-                                <div class="row g-2">
-                                    ${weeklyProgress.slice(0, 4).map(week => `
-                                        <div class="col-6 col-md-3">
-                                            <div class="card bg-light border ${week.isCurrent ? 'border-warning' : week.isCompleted ? 'border-success' : 'border-secondary'}" style="font-size: 0.85rem;">
-                                                <div class="card-body p-2 text-center">
-                                                    <div class="fw-bold mb-1">${week.weekLabel}</div>
-                                                    <div class="progress mb-1" style="height: 15px;">
-                                                        <div class="progress-bar ${week.isCompleted ? 'bg-success' : week.isCurrent ? 'bg-warning' : 'bg-secondary'}" 
-                                                             style="width: ${Math.min(week.achievementRate, 100)}%">
-                                                            ${week.achievementRate}%
-                                                        </div>
-                                                    </div>
-                                                    <small class="text-muted">${week.saved.toFixed(1)}/${week.target.toFixed(1)}kWh</small>
+                        ${weeklyProgress && weeklyProgress.length > 0 ? `
+                        <div class="mb-3">
+                            <h6 class="fw-bold mb-2">📅 주간별 진행 현황</h6>
+                            <div class="row g-2">
+                                ${weeklyProgress.slice(0, 4).map(week => `
+                                    <div class="col-6 col-md-3">
+                                        <div class="themed-border p-2 text-center" style="font-size: 0.85rem; border-color: ${week.isCurrent ? 'var(--theme-strong)' : 'var(--theme-border)'};">
+                                            <div class="fw-bold mb-1">${week.weekLabel}</div>
+                                            <div class="progress mb-1" style="height: 12px;">
+                                                <div class="progress-bar" 
+                                                     style="background: ${week.isCompleted ? 'var(--theme-strong)' : week.isCurrent ? 'var(--theme-accent)' : 'rgba(0,0,0,0.2)'}; width: ${Math.min(week.achievementRate, 100)}%">
+                                                    ${week.achievementRate}%
                                                 </div>
                                             </div>
+                                            <small class="text-muted">${week.saved.toFixed(1)}/${week.target.toFixed(1)}kWh</small>
                                         </div>
-                                    `).join('')}
-                                </div>
+                                    </div>
+                                `).join('')}
                             </div>
-                            ` : ''}
-                            
-                            <div class="alert alert-info mb-3">
-                                <small>
-                                    <strong>💰 절약 예상 금액</strong><br>
-                                    현재 ${tier}구간 기준: ${targetKwh}kWh 절약 시 <strong>월 ${formatMoney(targetMoney)}</strong> 절약 예상
-                                    ${prediction ? `<br>📊 예상 사용량: ${prediction.predictedUsage}kWh/월 (신뢰도: ${prediction.confidence})` : ''}
-                                </small>
-                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="themed-border p-3 mb-3">
+                            <small>
+                                <strong>💰 절약 예상 금액</strong><br>
+                                현재 ${tier}구간 기준: ${targetKwh}kWh 절약 시 <strong>월 ${formatMoney(targetMoney)}</strong> 절약 예상
+                                ${prediction ? `<br>📊 예상 사용량: ${prediction.predictedUsage}kWh/월 (신뢰도: ${prediction.confidence})` : ''}
+                            </small>
+                        </div>
 
-                            <div class="text-muted small mb-3">
-                                <div>기간: ${challenge.startDate} ~ ${challenge.endDate}</div>
-                                <div>목표: ${targetKwh} kWh (월 ${formatMoney(targetMoney)} 절약)</div>
-                                ${prediction ? `<div class="text-info">💡 한전 통계 기반 예측 데이터 사용</div>` : ''}
-                            </div>
+                        <div class="text-muted small mb-3">
+                            <div>기간: ${challenge.startDate} ~ ${challenge.endDate}</div>
+                            <div>목표: ${targetKwh} kWh (월 ${formatMoney(targetMoney)} 절약)</div>
+                            ${prediction ? `<div style="color: var(--theme-strong);">💡 한전 통계 기반 예측 데이터 사용</div>` : ''}
+                        </div>
 
-                            <div class="d-flex gap-2">
-                                <a href="challenge-detail.html" class="btn btn-primary flex-fill">
-                                    상세 보기 →
-                                </a>
-                                <a href="survey.html" class="btn btn-outline-info">
-                                    맞춤형 절약팁 받기
-                                </a>
-                            </div>
+                        <div class="d-flex gap-2">
+                            <a href="challenge-detail.html" class="btn btn-theme-primary flex-fill">
+                                상세 보기 →
+                            </a>
+                            <a href="survey.html" class="btn btn-theme-secondary">
+                                맞춤형 절약팁 받기
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4 text-center">
-                            <h5 class="fw-bold mb-3">내 순위</h5>
-                            <h2 class="display-4 fw-bold text-primary mb-2" id="myRank">-</h2>
-                            <p class="text-muted mb-4">위</p>
-                            <a href="ranking.html" class="btn btn-outline-primary">전체 랭킹 보기</a>
-                        </div>
+                    <div class="themed-card h-100 text-center">
+                        <h5 class="fw-bold mb-3">내 순위</h5>
+                        <h2 class="display-4 fw-bold mb-2" id="myRank" style="color: var(--theme-strong);">-</h2>
+                        <p class="text-muted mb-4">위</p>
+                        <a href="ranking.html" class="btn btn-theme-secondary w-100">전체 랭킹 보기</a>
                     </div>
                 </div>
             `;
@@ -446,14 +468,12 @@
         function showNoChallengeState() {
             document.getElementById('challengeStatus').innerHTML = `
                 <div class="col-12">
-                    <div class="card border-0 shadow-sm bg-light">
-                        <div class="card-body p-4 p-lg-5 text-center">
-                            <h5 class="fw-bold mb-2">아직 참여 중인 챌린지가 없어요</h5>
-                            <p class="text-muted mb-3">우리 동네에서 진행 중인 환경보호 활동을 찾아 참여하고 포인트도 받아보세요.</p>
-                            <button type="button" class="btn btn-primary px-4" onclick="document.getElementById('newChallengeCard').scrollIntoView({ behavior: 'smooth' });">
-                                직접 목표 설정하기
-                            </button>
-                        </div>
+                    <div class="themed-card text-center">
+                        <h5 class="fw-bold mb-2">아직 참여 중인 챌린지가 없어요</h5>
+                        <p class="text-muted mb-3">우리 동네에서 진행 중인 환경보호 활동을 찾아 참여하고 포인트도 받아보세요.</p>
+                        <button type="button" class="btn btn-theme-primary px-4" onclick="document.getElementById('newChallengeCard').scrollIntoView({ behavior: 'smooth' });">
+                            직접 목표 설정하기
+                        </button>
                     </div>
                 </div>
             `;
@@ -520,7 +540,7 @@
                 document.getElementById('myBadges').innerHTML = `
                     <div class="col-12 text-center py-3">
                         <p class="text-muted mb-3">아직 획득한 배지가 없습니다.</p>
-                        <a href="badges.html" class="btn btn-primary">뱃지 구경하기 ✨</a>
+                        <a href="badges.html" class="btn btn-theme-secondary">뱃지 구경하기 ✨</a>
                     </div>
                 `;
                 return;
@@ -529,11 +549,11 @@
             const badgesHtml = earnedBadges.map(badge => {
                 return `
                     <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm text-center" style="min-height: 120px;">
+                        <div class="themed-border text-center" style="min-height: 120px;">
                             <div class="card-body p-3">
                                 <div style="font-size: 3rem;">${badge.icon}</div>
                                 <h6 class="fw-bold mt-2">${badge.name}</h6>
-                                <span class="badge bg-success">획득</span>
+                                <span class="tag-pill">획득</span>
                             </div>
                         </div>
                     </div>
