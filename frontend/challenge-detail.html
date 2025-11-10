@@ -21,10 +21,37 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="index.html">🍃 ecosync</a>
-            <a href="challenge.html" class="text-muted">← 챌린지로</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">로비</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="programs.html">지원사업</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="challenge.html">챌린지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ranking.html">랭킹</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="challenge-list.html">같이해요</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 

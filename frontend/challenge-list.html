@@ -6,99 +6,57 @@
     <title>같이 해요 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
     <style>
-        .toolbar-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 18px;
-            background: #f8fafc;
+        .challenge-card-grid .card {
+            border-radius: 16px;
+            border: 1px solid var(--theme-border);
+            box-shadow: 0 15px 40px rgba(255, 138, 61, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .toolbar-card .region-pill {
-            border-radius: 999px;
-            border: 1px solid #d0d5dd;
-            padding: 9px 18px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .toolbar-card .region-pill:hover {
-            border-color: #62a5ff;
-            background-color: #ebf3ff;
-        }
-        .toolbar-card select {
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-weight: 500;
-        }
-        .toolbar-card .search-input {
-            border-radius: 12px;
-            padding: 12px 16px;
-            border: 1px solid #d0d5dd;
-            font-size: 0.95rem;
-        }
-        .activity-card {
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid #eef2f8;
-            background: #ffffff;
-            transition: transform 0.2s, box-shadow 0.2s;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .activity-card:hover {
+        .challenge-card-grid .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 22px 55px rgba(255, 138, 61, 0.22);
         }
-        .activity-card .card-header-img {
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #1f2937;
-        }
-        .activity-card .badge-chip {
-            background-color: #f1f5f9;
-            color: #334155;
-            border-radius: 999px;
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-right: 6px;
-            margin-bottom: 6px;
+        .tag-chip {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-        }
-        .activity-card .meta-info {
+            gap: 6px;
+            background: rgba(255, 138, 61, 0.14);
+            color: var(--theme-strong);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-weight: 600;
             font-size: 0.85rem;
-            color: #64748b;
-            display: flex;
-            justify-content: space-between;
-            margin-top: auto;
-            align-items: center;
+            margin-right: 8px;
+            margin-bottom: 8px;
         }
-        .activity-card .meta-info .points {
-            color: #16a34a;
-            font-weight: 700;
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 138, 61, 0.1);
+            color: var(--theme-strong);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 600;
         }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<body class="theme-orange">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-theme shadow-sm py-3">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="index.html">🍃 ecosync</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">대시보드</a>
+                        <a class="nav-link" href="dashboard.html">로비</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="programs.html">지원사업</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="challenge.html">챌린지</a>
@@ -107,28 +65,57 @@
                         <a class="nav-link" href="ranking.html">랭킹</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="programs.html">지원사업</a>
+                        <a class="nav-link active" href="challenge-list.html">같이해요</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="mypage.html">마이페이지</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">로그아웃</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container py-5">
-        <div class="row mb-4">
-            <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">같이 해요</h2>
-                <p class="text-muted mb-0">실시간으로 모집 중인 환경보호 활동을 확인하고 포인트도 함께 모아보세요.</p>
+    <div class="container">
+        <section class="themed-hero mt-4">
+            <div class="floating-bubbles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <div class="themed-hero-inner">
+                <div>
+                    <div class="themed-badge">
+                        <span>🔎 Watti와 함께</span>
+                        <span>탐구하는 같이 해요</span>
+                    </div>
+                    <h1 class="display-6 fw-bold mb-3">우리 동네 환경 챌린지를 찾아볼까요?</h1>
+                    <p class="mb-4">호기심 많은 Watti가 활기찬 오렌지 테마 속에서 새로운 활동을 탐험해요. 가까운 장소부터 온라인 활동까지 한눈에 살피고, 나만의 에너지 미션을 선택하세요.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <button class="btn btn-theme-primary" type="button" id="focusRegion">내 주변 활동 보기</button>
+                        <a href="challenge.html" class="btn btn-theme-secondary">내 챌린지 관리</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <img src="characters/watti.png" alt="Watti 캐릭터" class="theme-character">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="container pb-5">
+        <div class="soft-section text-center mb-4">
+            <h2 class="fw-bold mb-2">같이 해요</h2>
+            <p class="text-muted mb-0">실시간 모집 중인 환경 활동을 찾아 참여하고, 이웃과 함께 에너지 절약 문화를 넓혀보세요.</p>
         </div>
 
-        <div class="toolbar-card mb-4">
-            <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
-                <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <button class="region-pill" type="button" id="regionButton">
+        <div class="themed-card mb-5">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-4 d-flex flex-wrap gap-2 align-items-center">
+                    <button class="region-pill btn btn-theme-secondary" type="button" id="regionButton">
                         <span>📍</span>
                         <span id="regionLabel">서울 관악구 남현동</span>
                     </button>
@@ -144,19 +131,24 @@
                         <option value="online">온라인</option>
                     </select>
                 </div>
-                <div class="flex-grow-1 position-relative">
-                    <input type="search" id="searchInput" class="form-control search-input" placeholder="관심있는 환경보호 활동을 검색해보세요 :)">
-                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">🔍</span>
+                <div class="col-lg-5">
+                    <div class="position-relative">
+                        <input type="search" id="searchInput" class="form-control search-input" placeholder="관심있는 환경보호 활동을 검색해보세요 :)">
+                        <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">🔍</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 text-lg-end text-center">
+                    <a href="challenge.html" class="btn btn-theme-primary w-100">내 챌린지 현황 보기</a>
                 </div>
             </div>
         </div>
 
-        <div class="row g-4" id="challengeList">
+        <div class="row g-4 challenge-card-grid" id="challengeList">
             <!-- 동적으로 생성 -->
         </div>
 
         <div class="text-center mt-4">
-            <button type="button" class="btn btn-outline-secondary px-4" id="loadMoreButton">더보기</button>
+            <button type="button" class="btn btn-theme-secondary px-4" id="loadMoreButton">더보기</button>
         </div>
     </div>
 
