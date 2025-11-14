@@ -7,42 +7,115 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-light bg-white shadow-sm">
+<body class="auth-body">
+    <nav class="navbar navbar-expand-lg auth-navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">🍃 ecosync</a>
+            <a class="navbar-brand fw-bold" href="index.html">
+                <span role="img" aria-label="leaf">🍃</span> ecosync
+            </a>
+            <div class="d-none d-lg-flex align-items-center gap-3 ms-auto">
+                <span class="text-muted fw-semibold">처음이신가요?</span>
+                <a href="register.html" class="btn btn-sm navbar-btn shadow-sm">무료로 시작하기</a>
+            </div>
         </div>
     </nav>
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow border-0">
-                    <div class="card-body p-5">
-                        <h2 class="fw-bold mb-4 text-center">로그인</h2>
-
-                        <form id="loginForm">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="email" required>
+    <main class="auth-main">
+        <div class="container auth-container">
+            <div class="row align-items-center justify-content-between g-5">
+                <div class="col-lg-6">
+                    <div class="auth-visual">
+                        <span class="auth-pill"><span role="img" aria-label="sparkles">✨</span> 에너지 절약 메이트</span>
+                        <h1>ecosync와 함께<br>절약 습관을 귀엽게 시작하세요</h1>
+                        <p>당신의 생활 패턴을 분석해 꼭 맞는 지원금과 챌린지를 안내해 드릴게요. 귀여운 캐릭터와 함께라면 절약도 즐거워져요!</p>
+                        <div class="auth-trust-badges" aria-label="서비스 하이라이트">
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="spark">⚡</span>
+                                <div>
+                                    <strong>실시간 연동</strong>
+                                    <small>에너지공단 OPEN API</small>
+                                </div>
                             </div>
-
-                            <div class="mb-4">
-                                <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" class="form-control" id="password" required>
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="medal">🏅</span>
+                                <div>
+                                    <strong>캐릭터 뱃지</strong>
+                                    <small>절약 습관 미션</small>
+                                </div>
                             </div>
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="heart">💚</span>
+                                <div>
+                                    <strong>맞춤 추천</strong>
+                                    <small>지원금·챌린지 바로 연결</small>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="auth-benefits">
+                            <li><span role="img" aria-label="bolt">⚡</span>절약량 자동 기록</li>
+                            <li><span role="img" aria-label="gift">🎁</span>맞춤 지원금 추천</li>
+                            <li><span role="img" aria-label="medal">🏅</span>캐릭터 뱃지 수집</li>
+                            <li><span role="img" aria-label="hands">🤝</span>커뮤니티 순위 공유</li>
+                        </ul>
+                        <div class="auth-image-frame">
+                            <img src="characters/단체샷.png" alt="ecosync 캐릭터 단체샷" loading="lazy">
+                        </div>
+                        <div class="auth-floating-cards" aria-label="서비스 미리 보기">
+                            <div class="auth-floating-card">
+                                <b>🌿 하루 절약 리포트</b>
+                                <span>내 사용량을 캐릭터가 요약해 드려요.</span>
+                                <small>대시보드에서 바로 확인</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>🎯 맞춤 챌린지</b>
+                                <span>오늘 추천 미션으로 절약 루틴 만들기.</span>
+                                <small>랭킹과 연동되는 미션</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>🎁 지원금 매칭</b>
+                                <span>조건에 맞는 사업을 자동으로 추천!</span>
+                                <small>신청 링크까지 원스톱</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>🤗 커뮤니티</b>
+                                <span>친구와 순위를 비교하고 응원 받아요.</span>
+                                <small>함께 절약하면 더 즐거워요</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4 ms-auto">
+                    <div class="card auth-card border-0 shadow">
+                        <div class="card-body p-5">
+                            <div class="auth-microcopy">
+                                <span role="img" aria-label="sparkles">🌱</span> 로그인 없이도 <a href="index.html" class="fw-bold text-decoration-none text-success">데모 체험</a>으로 미리 살펴볼 수 있어요.
+                            </div>
+                            <h2 class="fw-bold mb-3 text-center">다시 오셨군요!</h2>
+                            <p class="lead text-center mb-4">오늘도 ecosync와 함께 절약 미션을 이어가 봐요.</p>
 
-                            <button type="submit" class="btn btn-primary w-100 btn-lg">로그인</button>
-                        </form>
+                            <form id="loginForm" class="needs-validation" novalidate>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">이메일</label>
+                                    <input type="email" class="form-control" id="email" placeholder="example@ecosync.com" required>
+                                </div>
 
-                        <div class="mt-4 text-center">
-                            <p class="text-muted">계정이 없으신가요? <a href="register.html">회원가입</a></p>
+                                <div class="mb-4">
+                                    <label for="password" class="form-label">비밀번호</label>
+                                    <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 btn-lg">로그인하기</button>
+                            </form>
+
+                            <div class="mt-4 text-center auth-switch">
+                                처음 방문하셨나요? <a href="register.html">3분 만에 회원가입</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

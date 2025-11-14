@@ -53,6 +53,24 @@
     "energyTier": 2,
     "analysisHistory": [
       {
+        "date": "2025-11-14T04:47:17.723Z",
+        "houseType": "아파트",
+        "area": 84,
+        "monthlyUsage": 350,
+        "monthlyBill": 48445,
+        "tier": 2,
+        "estimatedSavings": 9689
+      },
+      {
+        "date": "2025-11-14T04:46:56.782Z",
+        "houseType": "아파트",
+        "area": 84,
+        "monthlyUsage": 350,
+        "monthlyBill": 48445,
+        "tier": 2,
+        "estimatedSavings": 9689
+      },
+      {
         "date": "2025-11-04T12:51:07.808Z",
         "houseType": "아파트",
         "area": 84,
@@ -62,7 +80,7 @@
         "estimatedSavings": 9689
       }
     ],
-    "analysisCount": 1
+    "analysisCount": 3
   },
   {
     "id": "demo_user_1",

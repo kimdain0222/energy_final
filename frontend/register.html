@@ -7,69 +7,142 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-light bg-white shadow-sm">
+<body class="auth-body">
+    <nav class="navbar navbar-expand-lg auth-navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">🍃 ecosync</a>
-            <a href="login.html" class="text-muted">이미 계정이 있으신가요? 로그인</a>
+            <a class="navbar-brand fw-bold" href="index.html">
+                <span role="img" aria-label="leaf">🍃</span> ecosync
+            </a>
+            <div class="d-none d-lg-flex align-items-center gap-3 ms-auto">
+                <span class="text-muted fw-semibold">이미 가입하셨나요?</span>
+                <a href="login.html" class="btn btn-sm navbar-btn shadow-sm">로그인하기</a>
+            </div>
         </div>
     </nav>
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow border-0">
-                    <div class="card-body p-5">
-                        <h2 class="fw-bold mb-4 text-center">회원가입</h2>
-                        <p class="text-muted text-center mb-4">4가지 정보만으로 1분 안에 가입 완료</p>
-
-                        <form id="registerForm">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" class="form-control" id="password" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="name" required>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="phone" class="form-label">휴대전화</label>
-                                <input type="tel" class="form-control" id="phone" placeholder="010-1234-5678" required>
-                            </div>
-
-                            <div class="mb-4">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="terms1" required>
-                                    <label class="form-check-label" for="terms1">
-                                        이용약관 동의 (필수)
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="terms2" required>
-                                    <label class="form-check-label" for="terms2">
-                                        개인정보 처리방침 동의 (필수)
-                                    </label>
+    <main class="auth-main">
+        <div class="container auth-container">
+            <div class="row align-items-center justify-content-between g-5">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="auth-visual">
+                        <span class="auth-pill"><span role="img" aria-label="sparkles">💡</span> 맞춤형 에너지 플래너</span>
+                        <h1>ecosync 가입하고<br>지원금과 절약 미션을 한번에</h1>
+                        <p>간편한 가입 후 에너지 절약 미션, 실시간 지원사업, 귀여운 캐릭터 보상까지 모두 만나보세요.</p>
+                        <div class="auth-trust-badges" aria-label="서비스 특징">
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="rocket">🚀</span>
+                                <div>
+                                    <strong>1분 가입</strong>
+                                    <small>필수 정보만 간단히</small>
                                 </div>
                             </div>
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="sparkling-star">✨</span>
+                                <div>
+                                    <strong>성장형 캐릭터</strong>
+                                    <small>절약 습관이 뱃지로</small>
+                                </div>
+                            </div>
+                            <div class="auth-trust-badge">
+                                <span role="img" aria-label="calendar">📅</span>
+                                <div>
+                                    <strong>주간 미션</strong>
+                                    <small>맞춤 일정 알림 제공</small>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="auth-benefits">
+                            <li><span role="img" aria-label="rocket">🚀</span>1분 가입 프로세스</li>
+                            <li><span role="img" aria-label="calendar">📅</span>주간 절약 미션</li>
+                            <li><span role="img" aria-label="chart">📊</span>쉽게 보는 분석 리포트</li>
+                            <li><span role="img" aria-label="sparkling-heart">💖</span>캐릭터와 성장하기</li>
+                        </ul>
+                        <div class="auth-image-frame">
+                            <img src="characters/단체샷.png" alt="ecosync 단체 캐릭터 일러스트" loading="lazy">
+                        </div>
+                        <div class="auth-floating-cards" aria-label="가입 혜택 요약">
+                            <div class="auth-floating-card">
+                                <b>🌱 개인 맞춤 온보딩</b>
+                                <span>관심사에 맞춘 절약 플랜을 바로 추천.</span>
+                                <small>가입 직후 시작되는 플로우</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>📈 절감효과 예측</b>
+                                <span>우리 집 전기요금 절감액을 시뮬레이션.</span>
+                                <small>분석 리포트에서 확인</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>🎉 뱃지 컬렉션</b>
+                                <span>미션 완료시 단체샷 속 친구들이 축하해요.</span>
+                                <small>캐릭터 테마 굿즈 선착순</small>
+                            </div>
+                            <div class="auth-floating-card">
+                                <b>🔔 지원 알림</b>
+                                <span>접수 마감 전 알림으로 놓치지 않아요.</span>
+                                <small>실시간 푸시 & 메일</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card auth-card border-0 shadow">
+                        <div class="card-body p-5">
+                            <div class="auth-progress mb-4">
+                                <div class="auth-progress-step is-active">기본 정보 입력</div>
+                                <div class="auth-progress-step">관심사 선택</div>
+                                <div class="auth-progress-step">지원금 추천</div>
+                            </div>
+                            <h2 class="fw-bold mb-3 text-center">회원가입</h2>
+                            <p class="lead text-center mb-4">4가지 정보만 입력하면 맞춤 절약 가이드가 준비돼요.</p>
 
-                            <button type="submit" class="btn btn-primary w-100 btn-lg">회원가입</button>
-                        </form>
+                            <form id="registerForm" class="needs-validation" novalidate>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">이메일</label>
+                                    <input type="email" class="form-control" id="email" placeholder="example@ecosync.com" required>
+                                </div>
 
-                        <div class="mt-4 text-center">
-                            <p class="text-muted">이미 계정이 있으신가요? <a href="login.html">로그인</a></p>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">비밀번호</label>
+                                    <input type="password" class="form-control" id="password" placeholder="영문/숫자 8자 이상" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">이름</label>
+                                    <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="phone" class="form-label">휴대전화</label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="010-1234-5678" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="terms1" required>
+                                        <label class="form-check-label" for="terms1">
+                                            이용약관 동의 (필수)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms2" required>
+                                        <label class="form-check-label" for="terms2">
+                                            개인정보 처리방침 동의 (필수)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 btn-lg">무료로 시작하기</button>
+                            </form>
+
+                            <div class="mt-4 text-center auth-switch">
+                                이미 ecosync 회원이신가요? <a href="login.html">로그인하기</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -29,48 +29,64 @@
     </nav>
 
     <!-- 히어로 섹션 -->
-    <section class="hero-section">
+    <section class="home-hero">
         <div class="container">
-            <div class="row align-items-center min-vh-75">
-                <div class="col-lg-6" style="position: relative; z-index: 1;">
-                    <h1 class="display-4 fw-bold mb-4" style="font-size: 3rem; line-height: 1.2;">
+            <div class="home-hero-grid">
+                <div class="home-hero-left">
+                    <div class="hero-highlight">
+                        <span role="img" aria-label="sparkles">✨</span> 정부 지원사업과 절약 미션을 한번에
+                    </div>
+                    <h1>
                         복잡한 지원절차는 그만!<br>
-                        <span class="text-primary">에너지 절약하면 자동으로</span><br>
-                        <span class="text-primary">맞춤 지원금 추천과 연결까지</span>
+                        에너지 절약하면 자동으로<br>
+                        맞춤 지원금부터 챌린지까지
                     </h1>
-                    <p class="lead mb-5" style="font-size: 1.25rem; color: #495057; font-weight: 500;">
-                        <span style="color: #22c55e;">지금 바로 지원받으세요</span>
+                    <p class="lead">
+                        실시간으로 연동되는 지원사업과 귀여운 캐릭터 미션이 절약 습관을 만들어 드려요. 지금 ecosync 친구들과 절약 어드벤처를 시작해 보세요!
                     </p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="analyze.html" class="btn btn-lg px-5" style="background-color: #22c55e; border-color: #22c55e; color: white; font-weight: 600; border-radius: 8px;">
+                    <div class="home-cta-group">
+                        <a href="analyze.html" class="btn btn-primary btn-lg">
                             데모 체험하기
                         </a>
-                        <a href="register.html" class="btn btn-outline-primary btn-lg px-5" style="border-color: #22c55e; color: #22c55e; font-weight: 600; border-radius: 8px;">
-                            회원가입
+                        <a href="register.html" class="btn btn-outline btn-lg">
+                            1분 만에 가입하기
+                        </a>
+                        <a href="programs.html" class="btn btn-outline btn-lg">
+                            지원사업 보러가기 →
                         </a>
                     </div>
+                    <div class="home-trust-signals" aria-label="서비스 신뢰 지표">
+                        <div class="home-trust-chip">
+                            <span role="img" aria-label="bolt">⚡</span> 실시간 에너지공단 OPEN API
+                        </div>
+                        <div class="home-trust-chip">
+                            <span role="img" aria-label="people">👨‍👩‍👧‍👦</span> 단체샷 친구들과 커뮤니티 순위
+                        </div>
+                        <div class="home-trust-chip">
+                            <span role="img" aria-label="gift">🎁</span> 미션 완료시 캐릭터 뱃지 지급
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 text-center" style="position: relative; z-index: 1;">
-                    <div class="hero-image p-5">
-                        <div class="card border-0" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                            <div class="card-body p-5">
-                                <h3 class="mb-3" style="color: #22c55e; font-weight: 700;">⚡ 실시간 연동</h3>
-                                <p class="text-muted mb-4" style="color: #6c757d;">에너지공단 OPEN API로</p>
-                                <div class="d-flex justify-content-around mb-4">
-                                    <div>
-                                        <h2 class="mb-0" style="color: #22c55e; font-weight: 700;">12개</h2>
-                                        <small class="text-muted">접수중인 사업</small>
-                                    </div>
-                                    <div>
-                                        <h2 class="mb-0" style="color: #22c55e; font-weight: 700;">3개</h2>
-                                        <small class="text-muted">추천 사업</small>
-                                    </div>
-                                </div>
-                                <a href="programs.html" class="btn w-100" style="background-color: #22c55e; border-color: #22c55e; color: white; font-weight: 600; border-radius: 8px;">
-                                    지원사업 보러가기 →
-                                </a>
+                <div class="home-hero-right">
+                    <div class="home-hero-card">
+                        <h3><span role="img" aria-label="bolt">⚡</span> 실시간 연동 대시보드</h3>
+                        <p class="text-muted mb-2">에너지공단 OPEN API로 가져온 현재 지원 현황입니다.</p>
+                        <div class="home-hero-card-stats">
+                            <div class="home-hero-card-stat">
+                                <strong>12개</strong>
+                                <span>접수중인 사업</span>
+                            </div>
+                            <div class="home-hero-card-stat">
+                                <strong>3개</strong>
+                                <span>내 조건 맞춤 추천</span>
                             </div>
                         </div>
+                        <img src="characters/단체샷.png" alt="ecosync 캐릭터 단체샷" loading="lazy">
+                    </div>
+                    <div class="home-floating-note" aria-label="서비스 미리보기">
+                        <b>🌿 오늘의 절약 미션</b>
+                        <span>Homy와 함께 플러그 뽑기 챌린지를 완료하면 150 에코포인트!</span>
+                        <small>커뮤니티 203명이 함께 도전 중</small>
                     </div>
                 </div>
             </div>
@@ -78,52 +94,73 @@
     </section>
 
     <!-- 주요 기능 섹션 -->
-    <section class="py-5" style="background: white;">
+    <section class="py-5" style="background: #f8fafc;">
         <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-12">
-                    <h2 class="fw-bold mb-3" style="color: #212529;">핵심 기능</h2>
-                    <p class="text-muted" style="color: #6c757d;">실제 데이터 기반의 신뢰할 수 있는 서비스</p>
-                </div>
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3" style="color: #0f172a;">ecosync가 사랑받는 이유</h2>
+                <p class="text-muted mb-0">실제 데이터와 귀여운 캐릭터 경험을 한 번에 만나는 에너지 절약 파트너</p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0" style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-                        <div class="card-body text-center p-4">
-                            <div class="feature-icon mb-3" style="font-size: 48px;">🔌</div>
-                            <h5 class="fw-bold mb-3" style="color: #212529;">실시간 API 연동</h5>
-                            <p class="text-muted" style="color: #6c757d; line-height: 1.6;">에너지공단에서 실시간으로 불러온 최신 지원사업 정보</p>
-                        </div>
-                    </div>
+            <div class="home-feature-grid">
+                <div class="home-feature-card">
+                    <div class="icon">🔌</div>
+                    <h4>실시간 지원금 매칭</h4>
+                    <p>에너지공단 OPEN API와 바로 연동되어 최신 접수 정보를 놓치지 않아요.</p>
+                    <div class="chip">정부 인증 데이터</div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0" style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-                        <div class="card-body text-center p-4">
-                            <div class="feature-icon mb-3" style="font-size: 48px;">📊</div>
-                            <h5 class="fw-bold mb-3" style="color: #212529;">맞춤형 분석</h5>
-                            <p class="text-muted" style="color: #6c757d; line-height: 1.6;">전기 사용량 기반 누진세 계산 및 절감액 추정</p>
-                        </div>
-                    </div>
+                <div class="home-feature-card">
+                    <div class="icon">📊</div>
+                    <h4>맞춤형 절약 분석</h4>
+                    <p>전기 사용량을 기반으로 절감액을 계산하고 가족별 미션을 추천해 드립니다.</p>
+                    <div class="chip">AI 절약 리포트</div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0" style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-                        <div class="card-body text-center p-4">
-                            <div class="feature-icon mb-3" style="font-size: 48px;">🎯</div>
-                            <h5 class="fw-bold mb-3" style="color: #212529;">자동 추천</h5>
-                            <p class="text-muted" style="color: #6c757d; line-height: 1.6;">사용자 조건에 맞는 지원사업 자동 필터링 및 추천</p>
-                        </div>
-                    </div>
+                <div class="home-feature-card">
+                    <div class="icon">🎀</div>
+                    <h4>캐릭터 미션 & 뱃지</h4>
+                    <p>단체샷 친구들과 함께 미션을 수행하며 성장형 뱃지를 수집해 보세요.</p>
+                    <div class="chip">감성 UI 경험</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA 섹션 -->
-    <section class="py-5" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+    <section class="py-5" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 70%, #0ea5e9 100%);">
         <div class="container text-center">
-            <h2 class="fw-bold mb-3" style="color: white;">지금 바로 시작하세요</h2>
-            <p class="lead mb-4" style="color: rgba(255, 255, 255, 0.9);">1분만에 가입하고, 실제 지원사업을 확인해보세요</p>
-            <a href="register.html" class="btn btn-lg px-5" style="background: white; color: #22c55e; font-weight: 600; border-radius: 8px; border: none;">무료로 시작하기</a>
+            <h2 class="fw-bold mb-3" style="color: white;">오늘부터 ecosync와 절약을 시작해요</h2>
+            <p class="lead mb-4" style="color: rgba(255, 255, 255, 0.9);">단체샷 친구들이 기다리고 있어요. 지금 가입하면 첫 미션 가이드가 도착합니다!</p>
+            <a href="register.html" class="btn btn-lg px-5" style="background: white; color: #0f766e; font-weight: 700; border-radius: 16px; border: none;">무료로 시작하기</a>
+        </div>
+    </section>
+
+    <!-- 가입 플로우 섹션 -->
+    <section class="py-5" style="background: white;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3" style="color: #0f172a;">3단계면 시작 완료!</h2>
+                <p class="text-muted mb-0">간단한 정보만 입력하면 맞춤 절약 플랜이 바로 준비돼요.</p>
+            </div>
+            <div class="home-steps">
+                <div class="home-step">
+                    <span>1</span>
+                    <h5>회원가입</h5>
+                    <p>이메일과 기본 정보만 입력하면 준비 완료.</p>
+                </div>
+                <div class="home-step">
+                    <span>2</span>
+                    <h5>생활패턴 입력</h5>
+                    <p>우리 집 사용량과 관심사를 간단히 체크!</p>
+                </div>
+                <div class="home-step">
+                    <span>3</span>
+                    <h5>맞춤 추천 받기</h5>
+                    <p>지원금·미션·챌린지를 한 번에 확인해요.</p>
+                </div>
+                <div class="home-step">
+                    <span>4</span>
+                    <h5>캐릭터와 실천</h5>
+                    <p>단체샷 친구들과 함께 뱃지를 모으며 절약!</p>
+                </div>
+            </div>
         </div>
     </section>
 

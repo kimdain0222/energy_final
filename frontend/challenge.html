@@ -87,7 +87,14 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <img src="characters/flamy.png" alt="Flamy 캐릭터" class="theme-character">
+                    <div class="theme-character-wrapper">
+                        <img src="characters/flamy.png" alt="Flamy 캐릭터" class="theme-character">
+                        <div class="hero-rank-bubble">
+                            <div class="hero-rank-label">내 챌린지 순위</div>
+                            <div class="hero-rank-message" id="heroRankMessage">Flamy가 순위를 확인하고 있어요...</div>
+                            <a href="ranking.html" class="hero-rank-link" id="heroRankLink">전체 랭킹 보기 →</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -361,7 +368,7 @@
             const remainingMoney = convertKwhToMoney(remaining, tier);
 
             document.getElementById('challengeStatus').innerHTML = `
-                <div class="col-md-8">
+                <div class="col-12">
                     <div class="themed-card h-100">
                         <h5 class="fw-bold mb-4">내 챌린지 현황</h5>
                         
@@ -447,14 +454,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="themed-card h-100 text-center">
-                        <h5 class="fw-bold mb-3">내 순위</h5>
-                        <h2 class="display-4 fw-bold mb-2" id="myRank" style="color: var(--theme-strong);">-</h2>
-                        <p class="text-muted mb-4">위</p>
-                        <a href="ranking.html" class="btn btn-theme-secondary w-100">전체 랭킹 보기</a>
-                    </div>
-                </div>
             `;
 
             document.getElementById('userPoints').textContent = (points || 0).toLocaleString();
@@ -494,6 +493,11 @@
                 activeList.classList.add('d-none');
                 activeList.innerHTML = '';
             }
+
+            const heroMessage = document.getElementById('heroRankMessage');
+            if (heroMessage) {
+                heroMessage.textContent = '새 챌린지를 시작하면 Flamy가 순위를 알려줄게요!';
+            }
         }
 
         // 랭킹 조회
@@ -505,11 +509,29 @@
                 if (data.success) {
                     const myRanking = data.rankings.findIndex(r => r.id === user.id);
                     if (myRanking !== -1) {
-                        document.getElementById('myRank').textContent = data.rankings[myRanking].rank || '-';
+                        const rankValue = data.rankings[myRanking].rank;
+                        const messageTarget = document.getElementById('heroRankMessage');
+                        if (messageTarget) {
+                            messageTarget.innerHTML = `<strong>${rankValue}위</strong>에서 열심히 달리는 중!`;
+                        }
+                    } else {
+                        const messageTarget = document.getElementById('heroRankMessage');
+                        if (messageTarget) {
+                            messageTarget.textContent = '아직 순위에 진입하지 않았어요. 이번 주도 도전해볼까요?';
+                        }
+                    }
+                } else {
+                    const messageTarget = document.getElementById('heroRankMessage');
+                    if (messageTarget) {
+                        messageTarget.textContent = '랭킹 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
                     }
                 }
             } catch (error) {
                 console.error('랭킹 조회 실패:', error);
+                const messageTarget = document.getElementById('heroRankMessage');
+                if (messageTarget) {
+                    messageTarget.textContent = 'Flamy가 랭킹 서버와 연결 중이에요...';
+                }
             }
         }
 
