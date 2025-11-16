@@ -1,7 +1,8 @@
 // 공통 JavaScript 함수
 
 // API Base URL 설정 (환경 변수 또는 기본값)
-const API_BASE_URL = window.API_BASE_URL || '';
+// 배포 환경에서는 Railway URL을 기본값으로 사용
+const API_BASE_URL = window.API_BASE_URL || 'https://web-production-c47e7.up.railway.app';
 
 // API URL 생성 헬퍼 함수
 function getApiUrl(path) {
