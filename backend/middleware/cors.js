@@ -10,14 +10,35 @@ const allowedOrigins = [
     'http://127.0.0.1:3000'
 ];
 
+// FRONTEND_URL 환경 변수에서 추가 도메인 허용
+if (process.env.FRONTEND_URL) {
+    const frontendUrl = process.env.FRONTEND_URL.trim().replace(/\/$/, ''); // 끝의 슬래시 제거
+    if (frontendUrl && !allowedOrigins.includes(frontendUrl)) {
+        allowedOrigins.push(frontendUrl);
+        console.log('✅ FRONTEND_URL 추가:', frontendUrl);
+    }
+}
+
+// Netlify 프리뷰 URL 패턴 허용 (동적)
+const isNetlifyOrigin = (origin) => {
+    return origin && (
+        origin.includes('netlify.app') ||
+        origin.includes('netlify.com')
+    );
+};
+
 // 초기화 로그
 console.log('=== CORS 설정 초기화 ===');
 console.log('허용된 CORS 도메인:', allowedOrigins);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || '설정되지 않음');
+console.log('Netlify 자동 허용: 활성화');
 
 // CORS 헤더를 모든 응답에 추가하는 미들웨어
 function setCorsHeaders(req, res, next) {
     const origin = req.headers.origin;
-    const isAllowed = !origin || allowedOrigins.includes(origin);
+    const isExactMatch = origin && allowedOrigins.includes(origin);
+    const isNetlify = isNetlifyOrigin(origin);
+    const isAllowed = !origin || isExactMatch || isNetlify;
     
     if (isAllowed) {
         const allowOrigin = origin || '*';
@@ -52,8 +73,12 @@ module.exports = (app) => {
             console.log('허용된 도메인 목록:', allowedOrigins);
             
             // 허용된 origin인지 확인
-            const isAllowed = !origin || allowedOrigins.includes(origin);
+            const isExactMatch = origin && allowedOrigins.includes(origin);
+            const isNetlify = isNetlifyOrigin(origin);
+            const isAllowed = !origin || isExactMatch || isNetlify;
             
+            console.log('isExactMatch:', isExactMatch);
+            console.log('isNetlify:', isNetlify);
             console.log('isAllowed:', isAllowed);
             
             if (isAllowed) {

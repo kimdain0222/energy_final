@@ -21,16 +21,17 @@
       "createdAt": "2025-11-03T09:55:09.404Z"
     },
     "totalSaved": 15,
-    "points": 400,
+    "points": 500,
     "badges": [
       "badge001",
       "badge000",
       "badge008",
-      "badge022"
+      "badge022",
+      "badge023"
     ],
     "region": "인천",
-    "housingType": "오피스텔",
-    "area": 33,
+    "housingType": "단독주택",
+    "area": 99,
     "householdSize": 4,
     "surveyAnswers": {
       "aircon": "자주 사용",
@@ -60,8 +61,17 @@
         "viewedAt": "2025-11-04T12:49:58.702Z"
       }
     ],
-    "energyTier": 1,
+    "energyTier": 3,
     "analysisHistory": [
+      {
+        "date": "2025-11-16T21:08:33.619Z",
+        "houseType": "단독주택",
+        "area": 99,
+        "monthlyUsage": 480,
+        "monthlyBill": 80381,
+        "tier": 3,
+        "estimatedSavings": 16076
+      },
       {
         "date": "2025-11-14T07:43:57.701Z",
         "houseType": "오피스텔",
@@ -99,7 +109,7 @@
         "estimatedSavings": 9689
       }
     ],
-    "analysisCount": 4
+    "analysisCount": 5
   },
   {
     "id": "demo_user_1",

@@ -132,3 +132,39 @@ energy_final/
 - **계절별 변동 고려**: 겨울/여름/봄·가을 계절 가중치 적용
 - **투명한 신뢰도 표시**: 예측 기준, 출처, 한계 명시
 
+## 🚀 배포 가이드
+
+이 프로젝트는 **Railway (백엔드)**와 **Netlify (프론트엔드)**를 사용하여 배포합니다.
+
+### 빠른 배포 (5분)
+
+자세한 내용은 [QUICK_DEPLOY.md](./QUICK_DEPLOY.md)를 참고하세요.
+
+**Railway (백엔드)**
+1. Railway에서 GitHub 저장소 연결
+2. 환경 변수 설정: `FRONTEND_URL=https://your-app.netlify.app`
+3. 자동 배포 완료
+
+**Netlify (프론트엔드)**
+1. Netlify에서 GitHub 저장소 연결
+2. 빌드 설정:
+   - Build command: `npm run build:netlify`
+   - Publish directory: `frontend`
+3. 환경 변수 설정: `API_BASE_URL=https://your-app.up.railway.app`
+4. 배포 완료
+
+### 상세 가이드
+
+전체 배포 가이드는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 참고하세요.
+
+### 환경 변수
+
+**Railway (백엔드)**
+- `FRONTEND_URL`: Netlify 프론트엔드 URL
+- `ENERGY_API_URL`: 에너지공단 API URL (선택사항)
+- `ENERGY_API_KEY`: 에너지공단 API 키 (선택사항)
+- `PORT`: Railway가 자동으로 설정 (설정 불필요)
+
+**Netlify (프론트엔드)**
+- `API_BASE_URL`: Railway 백엔드 URL
+
