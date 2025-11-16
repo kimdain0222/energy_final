@@ -6,7 +6,7 @@ package-lock.json
 .env
 .env.local
 
-# Data files (optional - 배포 시 유지할 수도 있음)
+# Data files (optional)
 # data/users.json
 # data/programs.json
 # data/challenges.json

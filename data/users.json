@@ -29,8 +29,8 @@
       "badge022"
     ],
     "region": "인천",
-    "housingType": "아파트",
-    "area": 84,
+    "housingType": "오피스텔",
+    "area": 33,
     "householdSize": 4,
     "surveyAnswers": {
       "aircon": "자주 사용",
@@ -39,6 +39,16 @@
       "appliances": "보통"
     },
     "viewedPrograms": [
+      {
+        "id": "prog008",
+        "title": "부산시 에너지 절감 설비 교체 지원",
+        "description": "노후 에너지 설비를 고효율 설비로 교체 시 지원",
+        "region": "부산",
+        "target": "주택/상업시설",
+        "supportAmount": "교체비용의 50% (최대 500만원)",
+        "applyUrl": "https://www.busan.go.kr/energy",
+        "viewedAt": "2025-11-14T07:44:29.850Z"
+      },
       {
         "id": "prog001",
         "title": "주택용 태양광 보급사업",
@@ -50,8 +60,17 @@
         "viewedAt": "2025-11-04T12:49:58.702Z"
       }
     ],
-    "energyTier": 2,
+    "energyTier": 1,
     "analysisHistory": [
+      {
+        "date": "2025-11-14T07:43:57.701Z",
+        "houseType": "오피스텔",
+        "area": 33,
+        "monthlyUsage": 200,
+        "monthlyBill": 20260,
+        "tier": 1,
+        "estimatedSavings": 4052
+      },
       {
         "date": "2025-11-14T04:47:17.723Z",
         "houseType": "아파트",
@@ -80,7 +99,7 @@
         "estimatedSavings": 9689
       }
     ],
-    "analysisCount": 3
+    "analysisCount": 4
   },
   {
     "id": "demo_user_1",
