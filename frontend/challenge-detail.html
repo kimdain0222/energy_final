@@ -6,6 +6,7 @@
     <title>챌린지 상세 - 에너지 절약 플랫폼</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         body {
@@ -20,10 +21,10 @@
         }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<body class="theme-lilac">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-theme shadow-sm py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="index.html">🍃 ecopass</a>
+            <a class="navbar-brand fw-bold" href="index.html">🍃 ecopass</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -54,6 +55,35 @@
             </div>
         </div>
     </nav>
+
+    <div class="container">
+        <section class="themed-hero mt-4">
+            <div class="floating-bubbles">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="themed-hero-inner">
+                <div>
+                    <div class="themed-badge">
+                        <span>🔥 Flamy와 함께</span>
+                        <span>챌린지 상세</span>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">내 챌린지 현황을 확인해보세요!</h1>
+                    <p class="mb-4">열정 리더 Flamy가 함께 목표 달성률과 절약량을 추적합니다. 지금까지의 성과를 확인하고 다음 목표를 세워보세요.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="challenge.html" class="btn btn-theme-secondary">챌린지 목록으로</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="theme-character-wrapper">
+                        <img src="characters/flamy.png" alt="Flamy 캐릭터" class="theme-character">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <div class="container py-5">
         <div id="challengeDetail">
@@ -108,8 +138,12 @@
                     displayChallengeDetail(data.challenge, data.energyTier || 2, data.weeklyProgress, data.prediction);
                 } else {
                     document.getElementById('challengeDetail').innerHTML = `
-                        <div class="alert alert-info">
-                            <p class="mb-0">진행 중인 챌린지가 없습니다. <a href="challenge.html">챌린지를 시작해보세요!</a></p>
+                        <div class="themed-card text-center">
+                            <div class="card-body p-5">
+                                <h4 class="fw-bold mb-3">진행 중인 챌린지가 없습니다</h4>
+                                <p class="text-muted mb-4">새로운 챌린지를 시작하여 에너지 절약 목표를 세워보세요!</p>
+                                <a href="challenge.html" class="btn btn-theme-primary">챌린지 시작하기</a>
+                            </div>
                         </div>
                     `;
                 }
@@ -133,27 +167,29 @@
             document.getElementById('challengeDetail').innerHTML = `
                 <div class="row mb-4">
                     <div class="col-12">
-                        <h2 class="fw-bold mb-2">${challenge.type === 'weekly' ? '주간' : '월간'} 절약 챌린지</h2>
-                        <p class="text-muted">${challenge.startDate} ~ ${challenge.endDate}</p>
-                        <div class="alert alert-info mb-2">
-                            <small><strong>현재 ${tier}구간 기준</strong>으로 금액을 계산합니다.</small>
+                        <div class="soft-section">
+                            <h2 class="fw-bold mb-2">${challenge.type === 'weekly' ? '주간' : '월간'} 절약 챌린지</h2>
+                            <p class="text-muted mb-3">${challenge.startDate} ~ ${challenge.endDate}</p>
+                            <div class="alert alert-info mb-2">
+                                <small><strong>현재 ${tier}구간 기준</strong>으로 금액을 계산합니다.</small>
+                            </div>
+                            ${prediction ? `
+                            <div class="alert alert-light border mb-0">
+                                <small>
+                                    <strong>📊 예측 정보</strong><br>
+                                    예상 사용량: ${prediction.predictedUsage}kWh/월 | 
+                                    신뢰도: ${prediction.confidence} | 
+                                    기준: ${prediction.dataSource}<br>
+                                    <span class="text-muted">${prediction.disclaimer}</span>
+                                </small>
+                            </div>
+                            ` : ''}
                         </div>
-                        ${prediction ? `
-                        <div class="alert alert-light border mb-0">
-                            <small>
-                                <strong>📊 예측 정보</strong><br>
-                                예상 사용량: ${prediction.predictedUsage}kWh/월 | 
-                                신뢰도: ${prediction.confidence} | 
-                                기준: ${prediction.dataSource}<br>
-                                <span class="text-muted">${prediction.disclaimer}</span>
-                            </small>
-                        </div>
-                        ` : ''}
                     </div>
                 </div>
 
                 <!-- 진행률 -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="themed-card mb-4">
                     <div class="card-body p-5">
                         <div class="text-center mb-4">
                             <h3 class="fw-bold mb-2">목표 달성률</h3>
@@ -209,7 +245,7 @@
                 </div>
 
                 <!-- 주간별 달성률 -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="themed-card mb-4">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="fw-bold mb-0">주간별 목표 달성률</h5>
@@ -227,7 +263,7 @@
                 </div>
 
                 <!-- 절약량 그래프 -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="themed-card mb-4">
                     <div class="card-body p-4">
                         <h5 class="fw-bold mb-4">일별 절약량 추이</h5>
                         <div style="height: 250px; position: relative;">
@@ -237,7 +273,7 @@
                 </div>
 
                 <!-- 절약량 입력 -->
-                <div class="card border-0 shadow-sm">
+                <div class="themed-card">
                     <div class="card-body p-4">
                         <h5 class="fw-bold mb-4">절약량 업데이트</h5>
                         <form id="updateForm">
@@ -252,7 +288,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                    <button type="submit" class="btn btn-theme-primary w-100 btn-lg">
                                         업데이트
                                     </button>
                                 </div>
@@ -484,7 +520,7 @@
 
                 return `
                     <div class="col-md-6 col-lg-3">
-                        <div class="card ${statusClass} h-100">
+                        <div class="themed-card ${statusClass} h-100">
                             <div class="card-body p-3">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h6 class="fw-bold mb-0">${week.weekLabel}</h6>
