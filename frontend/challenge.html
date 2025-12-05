@@ -537,7 +537,7 @@
         // 배지 목록 로드
         async function loadBadges() {
             try {
-                const response = await fetch(getApiUrl('/api/badges'));
+                const response = await fetch(getApiUrl('/api/challenge/badges'));
                 const data = await response.json();
 
                 if (data.success) {

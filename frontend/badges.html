@@ -226,7 +226,7 @@
         // 전체 뱃지 목록 로드
         async function loadAllBadges() {
             try {
-                const response = await fetch(getApiUrl('/api/badges'));
+                const response = await fetch(getApiUrl('/api/challenge/badges'));
                 if (!response.ok) {
                     throw new Error(`전체 뱃지 API 오류 (${response.status})`);
                 }
